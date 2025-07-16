@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { getAuthToken } from '../services/auth';
+import Navbar from '../components/Navbar'; // ✅ import the navbar
 
 const BookingForm = () => {
   const [formData, setFormData] = useState({
@@ -30,16 +31,49 @@ const BookingForm = () => {
   };
 
   return (
-    <div className="p-4 max-w-md mx-auto">
-      <h2 className="text-2xl font-bold mb-4">Book a Ride</h2>
-      {message && <p className="mb-2 text-green-600">{message}</p>}
-      <form onSubmit={handleSubmit} className="grid gap-4">
-        <input type="text" name="origin" placeholder="Origin" value={formData.origin} onChange={handleChange} className="p-2 border rounded" required />
-        <input type="text" name="destination" placeholder="Destination" value={formData.destination} onChange={handleChange} className="p-2 border rounded" required />
-        <input type="date" name="travel_date" value={formData.travel_date} onChange={handleChange} className="p-2 border rounded" required />
-        <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">Submit Booking</button>
-      </form>
-    </div>
+    <>
+      <Navbar /> {/* ✅ added here */}
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-tr from-blue-100 to-white px-4">
+        <div className="p-8 bg-white shadow-2xl rounded-xl w-full max-w-md">
+          <h2 className="text-2xl font-bold mb-4 text-blue-700 text-center">Book a Ride</h2>
+          {message && <p className="mb-2 text-green-600 text-center">{message}</p>}
+          <form onSubmit={handleSubmit} className="grid gap-4">
+            <input
+              type="text"
+              name="origin"
+              placeholder="Origin"
+              value={formData.origin}
+              onChange={handleChange}
+              className="p-3 border rounded-lg focus:ring-2 focus:ring-blue-400"
+              required
+            />
+            <input
+              type="text"
+              name="destination"
+              placeholder="Destination"
+              value={formData.destination}
+              onChange={handleChange}
+              className="p-3 border rounded-lg focus:ring-2 focus:ring-blue-400"
+              required
+            />
+            <input
+              type="date"
+              name="travel_date"
+              value={formData.travel_date}
+              onChange={handleChange}
+              className="p-3 border rounded-lg focus:ring-2 focus:ring-blue-400"
+              required
+            />
+            <button
+              type="submit"
+              className="bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition"
+            >
+              Submit Booking
+            </button>
+          </form>
+        </div>
+      </div>
+    </>
   );
 };
 
