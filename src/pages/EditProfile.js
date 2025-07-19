@@ -13,7 +13,7 @@ const EditProfile = () => {
 
   useEffect(() => {
     const token = localStorage.getItem('access_token');
-    axios.get('http://localhost:8000/auth/profile/', {
+    axios.get('https://transport-2-0imo.onrender.com', {
       headers: { Authorization: `Bearer ${token}` },
     }).then(res => {
       setFormData(res.data);

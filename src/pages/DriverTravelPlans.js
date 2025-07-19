@@ -15,7 +15,7 @@ const DriverTravelPlans = () => {
 
   const fetchPlans = async () => {
     try {
-      const res = await axios.get('http://127.0.0.1:8000/api/travel/plans/', {
+      const res = await axios.get('https://transport-2-0imo.onrender.com', {
         headers: { Authorization: `Bearer ${getAuthToken()}` }
       });
       setPlans(res.data);

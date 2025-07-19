@@ -18,7 +18,7 @@ const BookingForm = () => {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      await axios.post('http://127.0.0.1:8000/api/booking/book/', formData, {
+      await axios.post('https://transport-2-0imo.onrender.com', formData, {
         headers: {
           Authorization: `Bearer ${getAuthToken()}`
         }
