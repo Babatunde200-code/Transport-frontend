@@ -15,7 +15,7 @@ const VerifyToken = () => {
     setSuccess("");
 
     try {
-      const response = await axios.post("https://transport-2-0imo.onrender.com/verify/", {
+      const response = await axios.post("https://transport-2-0imo.onrender.com/api/verify/", {
         email,
         code,
       });
