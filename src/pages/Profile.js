@@ -12,7 +12,7 @@ const Profile = () => {
       if (!token) return navigate('/login');
 
       try {
-        const response = await axios.get('https://transport-2-0imo.onrender.com', {
+        const response = await axios.get('https://transport-2-0imo.onrender.com/profile/', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUser(response.data);

@@ -7,7 +7,7 @@ const ForgotPassword = () => {
 
   const handleSubmit = async e => {
     e.preventDefault();
-    const res = await fetch('http://localhost:8000/password-reset/', {
+    const res = await fetch('https://transport-2-0imo.onrender.com/password-reset/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email })

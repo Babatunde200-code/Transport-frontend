@@ -18,7 +18,7 @@ const BookingForm = () => {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      await axios.post('https://transport-2-0imo.onrender.com', formData, {
+      await axios.post('https://transport-2-0imo.onrender.com/api/booking/book/', formData, {
         headers: {
           Authorization: `Bearer ${getAuthToken()}`
         }
@@ -32,7 +32,7 @@ const BookingForm = () => {
 
   return (
     <>
-      <Navbar /> {/* ✅ added here */}
+      <Navbar />
       <div className="min-h-screen flex items-center justify-center bg-gradient-to-tr from-blue-100 to-white px-4">
         <div className="p-8 bg-white shadow-2xl rounded-xl w-full max-w-md">
           <h2 className="text-2xl font-bold mb-4 text-blue-700 text-center">Book a Ride</h2>

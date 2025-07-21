@@ -12,7 +12,7 @@ const ResetPassword = () => {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      const res = await fetch(`https://transport-2-0imo.onrender.com${uid}/${token}/`, {
+      const res = await fetch(`https://transport-2-0imo.onrender.com/reset-password/${uid}/${token}/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ password })
