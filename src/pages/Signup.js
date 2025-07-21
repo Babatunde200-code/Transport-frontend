@@ -24,7 +24,7 @@ const Signup = () => {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      const res = await fetch('https://transport-2-0imo.onrender.com/signup/', {
+      const res = await fetch('https://transport-2-0imo.onrender.com', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
