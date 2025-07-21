@@ -21,7 +21,7 @@ const Login = () => {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      const res = await fetch('https://transport-2-0imo.onrender.com/login/', {
+      const res = await fetch('https://transport-2-0imo.onrender.com/api/login/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
