@@ -84,7 +84,7 @@ const Login = () => {
 </p>
           <p className="mt-4 text-sm text-center">
             Don’t have an account?{' '}
-            <a href="api/signup/" className="text-blue-600 hover:underline">
+            <a href="https://transport-2-0imo.onrender.com" className="text-blue-600 hover:underline">
               Sign up
             </a>
           </p>
