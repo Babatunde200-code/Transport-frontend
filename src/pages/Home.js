@@ -1,144 +1,88 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
+import { FaMapMarkedAlt, FaPlaneDeparture, FaUserFriends, FaPhoneAlt } from 'react-icons/fa';
 
 const Home = () => {
   return (
     <>
       <Navbar />
-
-      {/* Hero Section */}
-      <section className="bg-blue-50 py-20 px-6">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center">
-          <div className="md:w-1/2 text-center md:text-left mb-8 md:mb-0">
-            <h1 className="text-4xl font-bold text-blue-700 mb-4">Welcome to TravelShare</h1>
-            <p className="text-lg text-gray-700 mb-6">
-              Book or share inter-state rides across Nigeria easily and safely.
-            </p>
-            <Link to="/login" className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700">
-              Get Started
-            </Link>
+      <div className="min-h-screen bg-white text-gray-800">
+        {/* Hero Section */}
+        <section className="relative bg-cover bg-center h-[85vh] flex items-center justify-center text-white" style={{ backgroundImage: "url('https://unsplash.it/1200/800?image=1024')" }}>
+          <div className="bg-black bg-opacity-50 p-10 rounded-xl text-center">
+            <h1 className="text-4xl md:text-5xl font-bold mb-4">Seamless Interstate Travel Bookings</h1>
+            <p className="mb-6 text-lg">Connect with verified drivers. Book rides with ease. Travel safely across Nigeria.</p>
+            <a href="/signup" className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold">Get Started</a>
           </div>
-          <div className="md:w-1/2">
-          <img
-                src="https://images.unsplash.com/photo-1502920917128-1aa500764b0e"
-                alt="Interstate Travel"
-                className="w-full max-h-80 object-cover rounded-xl shadow-lg"
-            />
+        </section>
 
-
+        {/* About Us */}
+        <section className="py-20 px-6 bg-blue-50">
+          <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-10">
+            <img src="https://unsplash.it/500/350?image=1061" alt="About Us" className="rounded-xl shadow-lg w-full md:w-1/2" />
+            <div>
+              <h2 className="text-3xl font-bold mb-4 text-blue-700">About Us</h2>
+              <p className="text-lg">We are building a community-driven travel platform that enables easy and secure bookings between states. Whether you're heading to Lagos, Abuja, or Port Harcourt, find a driver who's already going there.</p>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* About Us Section */}
-      <section className="py-16 px-6 bg-white text-center">
-        <h2 className="text-3xl font-semibold text-blue-700 mb-6">About Us</h2>
-        <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-8 items-center">
-          <p className="text-gray-600 text-lg">
-            TravelShare is a peer-to-peer transport platform that connects travelers with drivers heading to the same
-            destination. Our mission is to make inter-state travel more affordable, accessible, and reliable for
-            everyone in Nigeria.
-          </p>
-          <img
-             src="https://images.unsplash.com/photo-1570129477492-45c003edd2be"
-            alt="Users Booking Rides"
-            className="w-full rounded-lg shadow-md"
-        />
-
-
-        </div>
-      </section>
-
-      {/* How It Works */}
-      <section className="py-16 px-6 bg-blue-100 text-center">
-        <h2 className="text-3xl font-semibold text-blue-700 mb-8">How It Works</h2>
-        <div className="grid gap-6 md:grid-cols-3 max-w-5xl mx-auto">
-          {[
-            {
-              title: '1. Sign Up',
-              desc: 'Create your free account to access our travel network.',
-              img: 'https://cdn-icons-png.flaticon.com/512/747/747376.png',
-            },
-            {
-              title: '2. Book a Ride',
-              desc: 'Browse available trips and book a ride that suits your route.',
-              img: 'https://cdn-icons-png.flaticon.com/512/274/274855.png',
-            },
-            {
-              title: '3. Travel Safely',
-              desc: 'Meet your driver and enjoy a safe, smooth journey.',
-              img: 'https://cdn-icons-png.flaticon.com/512/1804/1804539.png',
-            },
-          ].map((step, i) => (
-            <div key={i} className="bg-white shadow-md p-6 rounded-xl">
-              <img src={step.img} alt={step.title} className="w-16 h-16 mx-auto mb-4" />
-              <h3 className="text-xl font-bold text-blue-600">{step.title}</h3>
-              <p className="text-gray-600 mt-2">{step.desc}</p>
+        {/* How It Works */}
+        <section className="py-20 px-6 bg-white text-center">
+          <h2 className="text-3xl font-bold mb-10 text-blue-700">How It Works</h2>
+          <div className="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto">
+            <div className="p-6 rounded-lg shadow-lg bg-blue-100">
+              <FaMapMarkedAlt className="text-4xl text-blue-600 mb-4 mx-auto" />
+              <h3 className="text-xl font-semibold mb-2">Set Your Route</h3>
+              <p>Select where you're coming from and going to, and your travel date.</p>
             </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Features */}
-      <section className="py-16 px-6 bg-white text-center">
-        <h2 className="text-3xl font-semibold text-blue-700 mb-10">Why Choose TravelShare?</h2>
-        <div className="grid gap-6 md:grid-cols-4 max-w-6xl mx-auto">
-          {[
-            {
-              icon: 'https://cdn-icons-png.flaticon.com/512/709/709790.png',
-              title: 'Verified Drivers',
-              text: 'All drivers are vetted for a secure experience.',
-            },
-            {
-              icon: 'https://cdn-icons-png.flaticon.com/512/3030/3030993.png',
-              title: 'Affordable',
-              text: 'Split costs with fellow travelers.',
-            },
-            {
-              icon: 'https://cdn-icons-png.flaticon.com/512/3079/3079029.png',
-              title: 'Simple Booking',
-              text: 'Book a ride in a few easy steps.',
-            },
-            {
-              icon: 'https://cdn-icons-png.flaticon.com/512/1828/1828884.png',
-              title: '24/7 Support',
-              text: 'We’re always here to help you.',
-            },
-          ].map((f, idx) => (
-            <div key={idx} className="bg-blue-50 rounded-xl p-6">
-              <img src={f.icon} alt={f.title} className="w-14 h-14 mx-auto mb-4" />
-              <h3 className="text-lg font-semibold text-blue-600">{f.title}</h3>
-              <p className="text-gray-600 text-sm">{f.text}</p>
+            <div className="p-6 rounded-lg shadow-lg bg-blue-100">
+              <FaUserFriends className="text-4xl text-blue-600 mb-4 mx-auto" />
+              <h3 className="text-xl font-semibold mb-2">Find a Driver</h3>
+              <p>See available drivers already heading your way and book instantly.</p>
             </div>
-          ))}
-        </div>
-      </section>
+            <div className="p-6 rounded-lg shadow-lg bg-blue-100">
+              <FaPlaneDeparture className="text-4xl text-blue-600 mb-4 mx-auto" />
+              <h3 className="text-xl font-semibold mb-2">Enjoy the Ride</h3>
+              <p>Get notified, stay in touch, and enjoy smooth travel to your destination.</p>
+            </div>
+          </div>
+        </section>
 
-      {/* Contact Us */}
-      <section className="py-16 px-6 bg-blue-100 text-center">
-        <h2 className="text-3xl font-semibold text-blue-700 mb-4">Contact Us</h2>
-        <p className="text-gray-600 mb-6">Have questions or need help? Reach out!</p>
-        <p className="text-blue-700 font-medium">Email: support@travelshare.ng</p>
-        <p className="text-blue-700 font-medium">Phone: +234-800-TRAVEL-SHARE</p>
+        {/* Why Choose Us */}
+        <section className="py-20 px-6 bg-blue-50">
+          <div className="max-w-6xl mx-auto text-center">
+            <h2 className="text-3xl font-bold text-blue-700 mb-10">Why Choose Us</h2>
+            <div className="grid md:grid-cols-3 gap-8">
+              <div className="bg-white p-6 rounded-lg shadow-md">
+                <h4 className="text-xl font-semibold text-blue-700 mb-2">Verified Drivers</h4>
+                <p>All drivers go through verification and review processes for safety.</p>
+              </div>
+              <div className="bg-white p-6 rounded-lg shadow-md">
+                <h4 className="text-xl font-semibold text-blue-700 mb-2">Affordable Prices</h4>
+                <p>Share the cost of travel and make long-distance trips more affordable.</p>
+              </div>
+              <div className="bg-white p-6 rounded-lg shadow-md">
+                <h4 className="text-xl font-semibold text-blue-700 mb-2">Easy Booking</h4>
+                <p>Book in seconds, get email confirmation, and keep track of your rides.</p>
+              </div>
+            </div>
+          </div>
+        </section>
 
-        <img
-             src="https://images.unsplash.com/photo-1549921296-3a73f6b51c22"
-             alt="Destination Map"
-             className="w-full rounded-lg shadow-md"
-/>
+        {/* Contact Us */}
+        <section className="py-20 px-6 bg-white text-center">
+          <h2 className="text-3xl font-bold text-blue-700 mb-10">Contact Us</h2>
+          <p className="mb-4 text-lg">Have questions, feedback, or partnership ideas?</p>
+          <p className="text-lg text-blue-700 font-semibold">Email: support@transportshare.ng</p>
+          <p className="text-lg">Phone: +234 800 000 0000</p>
+        </section>
 
-      </section>
-
-      {/* Footer */}
-      <footer className="bg-blue-700 text-white py-6 text-center text-sm">
-        <p>© {new Date().getFullYear()} TravelShare. All rights reserved.</p>
-        <div className="flex justify-center gap-6 mt-2">
-          <Link to="/login" className="hover:underline">Login</Link>
-          <Link to="/signup" className="hover:underline">Signup</Link>
-          <Link to="/about" className="hover:underline">About Us</Link>
-        </div>
-      </footer>
+        {/* Footer */}
+        <footer className="bg-blue-900 text-white py-6 text-center text-sm">
+          &copy; {new Date().getFullYear()} TravelShare. All rights reserved.
+        </footer>
+      </div>
     </>
   );
 };
