@@ -12,7 +12,7 @@ const Home = () => {
           <div className="bg-black bg-opacity-50 p-10 rounded-xl text-center">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">Seamless Interstate Travel Bookings</h1>
             <p className="mb-6 text-lg">Connect with verified drivers. Book rides with ease. Travel safely across Nigeria.</p>
-            <a href="/signup" className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold">Get Started</a>
+            <a href="/login" className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold">Get Started</a>
           </div>
         </section>
 
@@ -74,8 +74,8 @@ const Home = () => {
         <section className="py-20 px-6 bg-white text-center">
           <h2 className="text-3xl font-bold text-blue-700 mb-10">Contact Us</h2>
           <p className="mb-4 text-lg">Have questions, feedback, or partnership ideas?</p>
-          <p className="text-lg text-blue-700 font-semibold">Email: support@transportshare.ng</p>
-          <p className="text-lg">Phone: +234 800 000 0000</p>
+          <p className="text-lg text-blue-700 font-semibold">Email: tunde200.james@gmail.com</p>
+          <p className="text-lg">Phone: +234 8127470107</p>
         </section>
 
         {/* Footer */}
