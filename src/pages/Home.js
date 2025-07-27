@@ -20,11 +20,12 @@ const Home = () => {
             </Link>
           </div>
           <div className="md:w-1/2">
-            <img
-              src="https://cdn.pixabay.com/photo/2020/07/01/12/58/car-5356196_960_720.png"
-              alt="Traveling"
-              className="w-full max-h-80 object-cover rounded-xl shadow-lg"
-            />
+          <img
+             src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e"
+             alt="Traveling"
+             className="w-full max-h-80 object-cover rounded-xl shadow-lg"
+/>
+
           </div>
         </div>
       </section>
@@ -39,10 +40,11 @@ const Home = () => {
             everyone in Nigeria.
           </p>
           <img
-            src="https://cdn.pixabay.com/photo/2020/07/24/06/47/road-trip-5433367_960_720.jpg"
+            src="https://images.unsplash.com/photo-1521295121783-8a321d551ad2"
             alt="About TravelShare"
             className="w-full rounded-lg shadow-md"
-          />
+/>
+
         </div>
       </section>
 
