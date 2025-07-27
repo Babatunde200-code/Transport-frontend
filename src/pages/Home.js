@@ -8,7 +8,7 @@ const Home = () => {
       <Navbar />
       <div className="min-h-screen bg-white text-gray-800">
         {/* Hero Section */}
-        <section className="relative bg-cover bg-center h-[85vh] flex items-center justify-center text-white" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1640522337094-8c71d9c1d6f9?q=80&w=1035&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')" }}>
+        <section className="relative bg-cover bg-center h-[85vh] flex items-center justify-center text-white" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1557223562-6c77ef16210f?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D')" }}>
           <div className="bg-black bg-opacity-50 p-10 rounded-xl text-center">
             <h1 className="text-4xl md:text-5xl font-bold mb-4">Seamless Interstate Travel Bookings</h1>
             <p className="mb-6 text-lg">Connect with verified drivers. Book rides with ease. Travel safely across Nigeria.</p>
