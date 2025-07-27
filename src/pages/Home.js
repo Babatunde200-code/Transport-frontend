@@ -19,7 +19,7 @@ const Home = () => {
         {/* About Us */}
         <section className="py-20 px-6 bg-blue-50">
           <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-10">
-            <img src="https://unsplash.it/500/350?image=1061" alt="About Us" className="rounded-xl shadow-lg w-full md:w-1/2" />
+            <img src="https://images.unsplash.com/photo-1606299747068-ea8669f678b8?q=80&w=2833&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="About Us" className="rounded-xl shadow-lg w-full md:w-1/2" />
             <div>
               <h2 className="text-3xl font-bold mb-4 text-blue-700">About Us</h2>
               <p className="text-lg">We are building a community-driven travel platform that enables easy and secure bookings between states. Whether you're heading to Lagos, Abuja, or Port Harcourt, find a driver who's already going there.</p>
