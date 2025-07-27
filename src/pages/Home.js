@@ -21,10 +21,11 @@ const Home = () => {
           </div>
           <div className="md:w-1/2">
           <img
-             src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e"
-             alt="Traveling"
-             className="w-full max-h-80 object-cover rounded-xl shadow-lg"
-/>
+                src="https://images.unsplash.com/photo-1502920917128-1aa500764b0e"
+                alt="Interstate Travel"
+                className="w-full max-h-80 object-cover rounded-xl shadow-lg"
+            />
+
 
           </div>
         </div>
@@ -40,10 +41,11 @@ const Home = () => {
             everyone in Nigeria.
           </p>
           <img
-            src="https://images.unsplash.com/photo-1521295121783-8a321d551ad2"
-            alt="About TravelShare"
+             src="https://images.unsplash.com/photo-1570129477492-45c003edd2be"
+            alt="Users Booking Rides"
             className="w-full rounded-lg shadow-md"
-/>
+        />
+
 
         </div>
       </section>
@@ -119,6 +121,13 @@ const Home = () => {
         <p className="text-gray-600 mb-6">Have questions or need help? Reach out!</p>
         <p className="text-blue-700 font-medium">Email: support@travelshare.ng</p>
         <p className="text-blue-700 font-medium">Phone: +234-800-TRAVEL-SHARE</p>
+
+        <img
+             src="https://images.unsplash.com/photo-1549921296-3a73f6b51c22"
+             alt="Destination Map"
+             className="w-full rounded-lg shadow-md"
+/>
+
       </section>
 
       {/* Footer */}
