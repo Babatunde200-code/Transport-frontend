@@ -1,87 +1,77 @@
 import React from 'react';
 import Navbar from '../components/Navbar';
-import { FaMapMarkedAlt, FaPlaneDeparture, FaUserFriends, FaPhoneAlt } from 'react-icons/fa';
+import { FaMapMarkedAlt, FaPlaneDeparture, FaPhoneAlt } from 'react-icons/fa';
 
 const Home = () => {
   return (
     <>
       <Navbar />
-      <div className="min-h-screen bg-white text-gray-800">
+      <div className="min-h-screen bg-blue-50">
         {/* Hero Section */}
-        <section className="relative bg-cover bg-center h-[85vh] flex items-center justify-center text-white" style={{ backgroundImage: "url('https://unsplash.it/1200/800?image=1024')" }}>
-          <div className="bg-black bg-opacity-50 p-10 rounded-xl text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4">Seamless Interstate Travel Bookings</h1>
-            <p className="mb-6 text-lg">Connect with verified drivers. Book rides with ease. Travel safely across Nigeria.</p>
-            <a href="/signup" className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold">Get Started</a>
-          </div>
+        <section className="text-center py-16 bg-white shadow-md">
+          <h1 className="text-4xl font-bold text-blue-700">Welcome to ASAP Travels</h1>
+          <p className="mt-4 text-gray-600 max-w-xl mx-auto">
+            Connecting you with safe, affordable, and fast interstate travel services. 
+            Book, ride, and review — all in one place.
+          </p>
+          <img
+            src="https://images.unsplash.com/photo-1576773813919-2b07f67df3b0?auto=format&fit=crop&w=1600&q=80"
+            alt="Travel"
+            className="mx-auto mt-8 w-full max-w-3xl rounded-xl shadow"
+          />
         </section>
 
         {/* About Us */}
-        <section className="py-20 px-6 bg-blue-50">
-          <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-10">
-            <img src="https://unsplash.it/500/350?image=1061" alt="About Us" className="rounded-xl shadow-lg w-full md:w-1/2" />
-            <div>
-              <h2 className="text-3xl font-bold mb-4 text-blue-700">About Us</h2>
-              <p className="text-lg">We are building a community-driven travel platform that enables easy and secure bookings between states. Whether you're heading to Lagos, Abuja, or Port Harcourt, find a driver who's already going there.</p>
-            </div>
-          </div>
-        </section>
-
-        {/* How It Works */}
-        <section className="py-20 px-6 bg-white text-center">
-          <h2 className="text-3xl font-bold mb-10 text-blue-700">How It Works</h2>
-          <div className="grid md:grid-cols-3 gap-10 max-w-6xl mx-auto">
-            <div className="p-6 rounded-lg shadow-lg bg-blue-100">
-              <FaMapMarkedAlt className="text-4xl text-blue-600 mb-4 mx-auto" />
-              <h3 className="text-xl font-semibold mb-2">Set Your Route</h3>
-              <p>Select where you're coming from and going to, and your travel date.</p>
-            </div>
-            <div className="p-6 rounded-lg shadow-lg bg-blue-100">
-              <FaUserFriends className="text-4xl text-blue-600 mb-4 mx-auto" />
-              <h3 className="text-xl font-semibold mb-2">Find a Driver</h3>
-              <p>See available drivers already heading your way and book instantly.</p>
-            </div>
-            <div className="p-6 rounded-lg shadow-lg bg-blue-100">
-              <FaPlaneDeparture className="text-4xl text-blue-600 mb-4 mx-auto" />
-              <h3 className="text-xl font-semibold mb-2">Enjoy the Ride</h3>
-              <p>Get notified, stay in touch, and enjoy smooth travel to your destination.</p>
+        <section className="py-16 px-6 md:px-20 bg-blue-100">
+          <div className="flex flex-col md:flex-row items-center gap-10">
+            <img
+              src="https://images.unsplash.com/photo-1532375810709-75b1da00537c?auto=format&fit=crop&w=1600&q=80"
+              alt="About"
+              className="w-full md:w-1/2 rounded-xl shadow"
+            />
+            <div className="md:w-1/2">
+              <h2 className="text-3xl font-bold text-blue-700 mb-4">About Us</h2>
+              <p className="text-gray-700">
+                ASAP Travels is a modern travel-sharing platform built for seamless, safe and efficient interstate trips.
+                We connect passengers with drivers already on the move, enabling cost-effective and sustainable travel.
+              </p>
             </div>
           </div>
         </section>
 
         {/* Why Choose Us */}
-        <section className="py-20 px-6 bg-blue-50">
-          <div className="max-w-6xl mx-auto text-center">
-            <h2 className="text-3xl font-bold text-blue-700 mb-10">Why Choose Us</h2>
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="bg-white p-6 rounded-lg shadow-md">
-                <h4 className="text-xl font-semibold text-blue-700 mb-2">Verified Drivers</h4>
-                <p>All drivers go through verification and review processes for safety.</p>
-              </div>
-              <div className="bg-white p-6 rounded-lg shadow-md">
-                <h4 className="text-xl font-semibold text-blue-700 mb-2">Affordable Prices</h4>
-                <p>Share the cost of travel and make long-distance trips more affordable.</p>
-              </div>
-              <div className="bg-white p-6 rounded-lg shadow-md">
-                <h4 className="text-xl font-semibold text-blue-700 mb-2">Easy Booking</h4>
-                <p>Book in seconds, get email confirmation, and keep track of your rides.</p>
-              </div>
+        <section className="py-16 px-6 md:px-20 bg-white">
+          <h2 className="text-3xl font-bold text-center text-blue-700 mb-10">Why Choose Us</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+            <div className="bg-blue-100 p-6 rounded-xl shadow-md text-center">
+              <FaPlaneDeparture className="text-4xl text-blue-600 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold mb-2">Reliable Rides</h3>
+              <p className="text-gray-700">We only list verified and active travel plans for trusted connections.</p>
+            </div>
+            <div className="bg-blue-100 p-6 rounded-xl shadow-md text-center">
+              <FaMapMarkedAlt className="text-4xl text-blue-600 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold mb-2">Track Your Route</h3>
+              <p className="text-gray-700">Monitor and manage your bookings with a clear travel itinerary.</p>
+            </div>
+            <div className="bg-blue-100 p-6 rounded-xl shadow-md text-center">
+              <FaPhoneAlt className="text-4xl text-blue-600 mx-auto mb-4" />
+              <h3 className="text-xl font-semibold mb-2">24/7 Support</h3>
+              <p className="text-gray-700">Our team is available around the clock to support your journey.</p>
             </div>
           </div>
         </section>
 
-        {/* Contact Us */}
-        <section className="py-20 px-6 bg-white text-center">
-          <h2 className="text-3xl font-bold text-blue-700 mb-10">Contact Us</h2>
-          <p className="mb-4 text-lg">Have questions, feedback, or partnership ideas?</p>
-          <p className="text-lg text-blue-700 font-semibold">Email: support@transportshare.ng</p>
-          <p className="text-lg">Phone: +234 800 000 0000</p>
+        {/* Contact Section */}
+        <section className="py-16 px-6 md:px-20 bg-blue-50">
+          <div className="max-w-2xl mx-auto text-center">
+            <h2 className="text-3xl font-bold text-blue-700 mb-4">Contact Us</h2>
+            <p className="text-gray-700 mb-6">
+              Have questions or need help? Reach out to us via email or call, and we’ll get back to you.
+            </p>
+            <p className="text-gray-600">📧 support@asaptravels.com</p>
+            <p className="text-gray-600">📞 +234 800 000 0000</p>
+          </div>
         </section>
-
-        {/* Footer */}
-        <footer className="bg-blue-900 text-white py-6 text-center text-sm">
-          &copy; {new Date().getFullYear()} TravelShare. All rights reserved.
-        </footer>
       </div>
     </>
   );
