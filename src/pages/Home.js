@@ -22,9 +22,7 @@ const Home = () => {
             <img src="https://images.unsplash.com/photo-1606299747068-ea8669f678b8?q=80&w=2833&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="About Us" className="rounded-xl shadow-lg w-full md:w-1/2" />
             <div>
               <h2 className="text-3xl font-bold mb-4 text-blue-700">About Us</h2>
-              <p className="text-lg">ASAP Travels is an innovative web-based platform designed to streamline interstate travel bookings in Nigeria and other developing regions with similar transport challenges. While apps like Uber and Bolt dominate urban mobility, there's a glaring gap in safe, reliable, and tech-driven city-to-city transportation — especially for students, business professionals, traders, and families who travel across states for work, school, or events.
-                        ASAP Travels bridges this gap by creating a peer-to-peer ride-sharing network focused entirely on interstate travel. Drivers heading from one city to another (e.g., Lagos to Ibadan or Abuja to Ilorin) can post their available trips, set the number of seats and price, and receive booking requests. Passengers, on the other hand, can easily browse available routes, book a seat, and make secure payments online.
-              </p>
+              <p className="text-lg">ASAP Travels is an innovative web-based platform designed to streamline interstate travel bookings in Nigeria and other developing regions with similar transport challenges. While apps like Uber and Bolt dominate urban mobility, there's a glaring gap in safe, reliable, and tech-driven city-to-city transportation — especially for students, business professionals, traders, and families who travel across states for work, school, or events</p>
             </div>
           </div>
         </section>
