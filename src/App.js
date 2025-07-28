@@ -10,6 +10,7 @@ import BookingForm from './pages/BookingForm';
 import Navbar from './components/Navbar';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
+import PaymentPage from "./pages/PaymentPage";
 function App() {
   return (
     <Router>
@@ -24,6 +25,7 @@ function App() {
         <Route path="/book" element={<BookingForm />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:uid/:token" element={<ResetPassword />} />
+        <Route path="/pay" element={<PaymentPage />} />
 
       </Routes>
     </Router>

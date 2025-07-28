@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { getAuthToken } from '../services/auth';
+import { useNavigate } from 'react-router-dom';
+import { getAuthToken, getUserInfo } from '../services/auth'; // Make sure this returns user email
 import Navbar from '../components/Navbar';
 
 const BookingForm = () => {
@@ -11,6 +12,8 @@ const BookingForm = () => {
   });
   const [message, setMessage] = useState('');
   const [bookings, setBookings] = useState([]);
+  const navigate = useNavigate();
+  const user = getUserInfo(); // Must return at least { email: "..." }
 
   const fetchBookings = async () => {
     try {
@@ -37,14 +40,23 @@ const BookingForm = () => {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      await axios.post('https://transport-2-0imo.onrender.com/api/booking/book/', formData, {
-        headers: {
-          Authorization: `Bearer ${getAuthToken()}`
-        }
+      const token = getAuthToken();
+      const res = await axios.post('https://transport-2-0imo.onrender.com/api/booking/book/', formData, {
+        headers: { Authorization: `Bearer ${token}` }
       });
-      setMessage('Booking successful! Confirmation email sent.');
-      setFormData({ origin: '', destination: '', travel_date: '' });
-      fetchBookings(); // 🔄 Refresh bookings
+      if (res.status === 201 || res.status === 200) {
+        setMessage('Booking successful! Confirmation email sent.');
+        setFormData({ origin: '', destination: '', travel_date: '' });
+        fetchBookings();
+
+        // Navigate to payment page with amount and email
+        navigate("/pay", {
+          state: {
+            amount: 3000, // You can make this dynamic later
+            email: user.email
+          }
+        });
+      }
     } catch (error) {
       setMessage('Error creating booking. Please try again.');
     }
