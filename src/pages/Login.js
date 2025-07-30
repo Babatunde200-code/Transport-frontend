@@ -33,7 +33,7 @@ const Login = () => {
       if (res.ok) {
         localStorage.setItem('authToken', data.token);
         localStorage.setItem('user', JSON.stringify(data.user));
-        navigate('/booking');
+        navigate('/book');
       } else {
         setError(data.detail || 'Login failed. Please check your credentials.');
       }
