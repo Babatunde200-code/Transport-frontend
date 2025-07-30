@@ -22,7 +22,7 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/edit-profile" element={<EditProfile />} />
         <Route path="/travel-plans" element={<DriverTravelPlans />} />
-        <Route path="/book" element={<BookingForm />} />
+        <Route path="/booking" element={<BookingForm />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:uid/:token" element={<ResetPassword />} />
         <Route path="/pay" element={<PaymentPage />} />
