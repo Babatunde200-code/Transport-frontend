@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { getAuthToken, getUserInfo } from '../services/auth'; // Make sure this returns user email
+import { getAuthToken, getUserInfo } from '../services/auth';
 import Navbar from '../components/Navbar';
 
 const BookingForm = () => {
@@ -13,15 +13,17 @@ const BookingForm = () => {
   const [message, setMessage] = useState('');
   const [bookings, setBookings] = useState([]);
   const navigate = useNavigate();
-  const user = getUserInfo(); // Must return at least { email: "..." }
+  const user = getUserInfo(); // Should return { email: ... }
+
+  useEffect(() => {
+    fetchBookings();
+  }, []);
 
   const fetchBookings = async () => {
     try {
       const token = getAuthToken();
       const res = await axios.get('https://transport-2-0imo.onrender.com/api/booking/my-bookings/', {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+        headers: { Authorization: `Bearer ${token}` }
       });
       setBookings(res.data);
     } catch (error) {
@@ -29,36 +31,41 @@ const BookingForm = () => {
     }
   };
 
-  useEffect(() => {
-    fetchBookings();
-  }, []);
-
-  const handleChange = e => {
-    setFormData({...formData, [e.target.name]: e.target.value});
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const token = getAuthToken();
+    console.log('Token:', token);
+    console.log('Form Data:', formData);
+
     try {
-      const token = getAuthToken();
-      const res = await axios.post('https://transport-2-0imo.onrender.com/api/booking/book/', formData, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const res = await axios.post(
+        'https://transport-2-0imo.onrender.com/api/booking/book/',
+        formData,
+        {
+          headers: { Authorization: `Bearer ${token}` }
+        }
+      );
+
       if (res.status === 201 || res.status === 200) {
         setMessage('Booking successful! Confirmation email sent.');
         setFormData({ origin: '', destination: '', travel_date: '' });
         fetchBookings();
 
-        // Navigate to payment page with amount and email
         navigate("/pay", {
           state: {
-            amount: 3000, // You can make this dynamic later
+            amount: 3000, // Static for now
             email: user.email
           }
         });
       }
     } catch (error) {
-      setMessage('Error creating booking. Please try again.');
+      console.error('Booking error:', error.response?.data || error.message);
+      setMessage(error.response?.data?.detail || 'Error creating booking. Please try again.');
     }
   };
 
