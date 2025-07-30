@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 
 const Signup = () => {
@@ -47,78 +47,76 @@ const Signup = () => {
   return (
     <>
       <Navbar />
-      <div className="max-w-xl mx-auto mt-10 bg-white shadow-xl rounded-xl p-8">
-        <h2 className="text-2xl font-bold mb-4 text-center text-blue-600">Create an Account</h2>
+      <div className="min-h-screen bg-gradient-to-br from-blue-100 to-white flex items-center justify-center px-4 py-12">
+        <div className="w-full max-w-lg bg-white shadow-2xl rounded-xl p-8">
+          <h2 className="text-3xl font-bold text-center text-blue-700 mb-6">Create Your Account</h2>
 
-        <div className="min-h-screen flex items-center justify-center bg-gradient-to-tr from-blue-100 to-white px-4">
-          <div className="bg-white shadow-2xl rounded-xl w-full max-w-md p-8">
-            {error && <p className="text-red-600 text-sm mb-4 text-center">{error}</p>}
-            {success && <p className="text-green-600 text-sm mb-4 text-center">{success}</p>}
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="text-sm font-medium">Fullname</label>
-                <input
-                  type="text"
-                  name="full_name"
-                  onChange={handleChange}
-                  required
-                  className="w-full mt-1 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                />
-              </div>
-              <div>
-                <label className="text-sm font-medium">Username</label>
-                <input
-                  type="text"
-                  name="username"
-                  onChange={handleChange}
-                  required
-                  className="w-full mt-1 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                />
-              </div>
-              <div>
-                <label className="text-sm font-medium">Email</label>
-                <input
-                  type="email"
-                  name="email"
-                  onChange={handleChange}
-                  required
-                  className="w-full mt-1 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                />
-              </div>
-              <div>
-                <label className="text-sm font-medium">Phone Number</label>
-                <input
-                  type="tel"
-                  name="phone_number"
-                  onChange={handleChange}
-                  required
-                  className="w-full mt-1 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                />
-              </div>
-              <div>
-                <label className="text-sm font-medium">Password</label>
-                <input
-                  type="password"
-                  name="password"
-                  onChange={handleChange}
-                  required
-                  className="w-full mt-1 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
-                />
-              </div>
-              <button
-                type="submit"
-                className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition"
-              >
-                Sign Up
-              </button>
-            </form>
-            <p className="mt-4 text-sm text-center">
-              Already have an account?{' '}
-              <a href="/login" className="text-blue-600 hover:underline">
-                Login
-              </a>
-            </p>
-          </div>
+          {error && <p className="text-red-600 text-sm mb-4 text-center">{error}</p>}
+          {success && <p className="text-green-600 text-sm mb-4 text-center">{success}</p>}
+
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <div>
+              <label className="text-sm font-medium">Full Name</label>
+              <input
+                type="text"
+                name="full_name"
+                onChange={handleChange}
+                required
+                className="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium">Username</label>
+              <input
+                type="text"
+                name="username"
+                onChange={handleChange}
+                required
+                className="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium">Email</label>
+              <input
+                type="email"
+                name="email"
+                onChange={handleChange}
+                required
+                className="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium">Phone Number</label>
+              <input
+                type="tel"
+                name="phone_number"
+                onChange={handleChange}
+                required
+                className="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
+            </div>
+            <div>
+              <label className="text-sm font-medium">Password</label>
+              <input
+                type="password"
+                name="password"
+                onChange={handleChange}
+                required
+                className="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+              />
+            </div>
+            <button
+              type="submit"
+              className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition"
+            >
+              Sign Up
+            </button>
+          </form>
+
+          <p className="mt-6 text-sm text-center text-gray-600">
+            Already have an account?{' '}
+            <Link to="/login" className="text-blue-600 hover:underline font-medium">Login</Link>
+          </p>
         </div>
       </div>
     </>
