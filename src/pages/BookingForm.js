@@ -10,29 +10,25 @@ const BookingForm = () => {
     destination: '',
     travel_date: '',
   });
+
   const [message, setMessage] = useState('');
   const [bookings, setBookings] = useState([]);
   const navigate = useNavigate();
-
   const user = getUserInfo();
-  const email = user?.email || '';
 
   const fetchBookings = async () => {
     try {
       const token = getAuthToken();
-      console.log('Fetching bookings with token:', token);
-
-      const res = await axios.get(
-        'https://transport-2-0imo.onrender.com/api/booking/my-bookings/',
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      if (!token) {
+        setMessage('You are not logged in.');
+        return;
+      }
+      const res = await axios.get('https://transport-2-0imo.onrender.com/api/booking/my-bookings/', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       setBookings(res.data);
     } catch (error) {
-      console.error('❌ Failed to fetch bookings:', error.response?.data || error.message);
+      console.error('Failed to fetch bookings:', error);
     }
   };
 
@@ -40,25 +36,19 @@ const BookingForm = () => {
     fetchBookings();
   }, []);
 
-  const handleChange = (e) => {
+  const handleChange = e => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async e => {
     e.preventDefault();
     const token = getAuthToken();
-
-    console.log('🔐 Token:', token);
-    console.log('📦 Form Data:', formData);
-
     try {
       const res = await axios.post(
         'https://transport-2-0imo.onrender.com/api/booking/book/',
         formData,
         {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
+          headers: { Authorization: `Bearer ${token}` }
         }
       );
 
@@ -69,14 +59,14 @@ const BookingForm = () => {
 
         navigate('/pay', {
           state: {
-            amount: 3000, // Make dynamic later
-            email: email,
-          },
+            amount: 3000,
+            email: user?.email || '',
+          }
         });
       }
     } catch (error) {
-      console.error('❌ Booking error:', error.response?.data || error.message);
-      setMessage(error.response?.data?.detail || 'Error creating booking. Please try again.');
+      console.error('Booking error:', error.response?.data || error.message);
+      setMessage(error.response?.data?.detail || 'Error creating booking.');
     }
   };
 
@@ -86,15 +76,7 @@ const BookingForm = () => {
       <div className="min-h-screen bg-gradient-to-tr from-blue-100 to-white flex flex-col items-center justify-start px-4 pt-8 pb-20">
         <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md mb-8">
           <h2 className="text-2xl font-bold mb-4 text-center text-blue-700">Book a Ride</h2>
-          {message && (
-            <p
-              className={`mb-2 text-center ${
-                message.includes('successful') ? 'text-green-600' : 'text-red-500'
-              }`}
-            >
-              {message}
-            </p>
-          )}
+          {message && <p className="mb-2 text-green-600 text-center">{message}</p>}
           <form onSubmit={handleSubmit} className="grid gap-4">
             <input
               type="text"
@@ -137,15 +119,9 @@ const BookingForm = () => {
             <ul className="space-y-4">
               {bookings.map((booking, index) => (
                 <li key={index} className="bg-white p-4 rounded-lg shadow">
-                  <p className="text-gray-800">
-                    <strong>From:</strong> {booking.origin}
-                  </p>
-                  <p className="text-gray-800">
-                    <strong>To:</strong> {booking.destination}
-                  </p>
-                  <p className="text-gray-800">
-                    <strong>Date:</strong> {booking.travel_date}
-                  </p>
+                  <p className="text-gray-800"><strong>From:</strong> {booking.origin}</p>
+                  <p className="text-gray-800"><strong>To:</strong> {booking.destination}</p>
+                  <p className="text-gray-800"><strong>Date:</strong> {booking.travel_date}</p>
                 </li>
               ))}
             </ul>
