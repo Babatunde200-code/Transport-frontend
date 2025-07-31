@@ -5,7 +5,7 @@ const Login = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
-    password: ''
+    password: '',
   });
   const [error, setError] = useState('');
 
@@ -16,35 +16,38 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      const res = await fetch('https://transport-2-0imo.onrender.com/api/login/', {
+      const response = await fetch('https://transport-2-0imo.onrender.com/api/login/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-        }),
+        body: JSON.stringify(formData),
       });
 
-      const data = await res.json();
+      const data = await response.json();
 
-      if (res.ok) {
-        localStorage.setItem('authToken', data.token);
-        localStorage.setItem('user', JSON.stringify(data.user));
+      if (response.ok) {
+        // ✅ Store token and user info
+        localStorage.setItem('token', data.token); // Fix: use "token" key
+        localStorage.setItem('user', JSON.stringify(data.user || {}));
         navigate('/booking');
       } else {
         setError(data.detail || 'Login failed. Please check your credentials.');
       }
     } catch (err) {
       setError('Network error. Please try again later.');
+      console.error('Login error:', err);
     }
   };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-blue-50 px-4">
-      <form onSubmit={handleSubmit} className="bg-white shadow-lg p-8 rounded-xl w-full max-w-md">
+      <form
+        onSubmit={handleSubmit}
+        className="bg-white shadow-lg p-8 rounded-xl w-full max-w-md"
+      >
         <h2 className="text-2xl font-bold text-center text-blue-700 mb-4">Login</h2>
 
         {error && <p className="text-red-600 text-center mb-4">{error}</p>}
@@ -56,7 +59,7 @@ const Login = () => {
           value={formData.email}
           onChange={handleChange}
           required
-          className="w-full mb-4 p-3 border border-gray-300 rounded-md"
+          className="w-full mb-4 p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400"
         />
 
         <input
@@ -66,7 +69,7 @@ const Login = () => {
           value={formData.password}
           onChange={handleChange}
           required
-          className="w-full mb-4 p-3 border border-gray-300 rounded-md"
+          className="w-full mb-4 p-3 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400"
         />
 
         <button
