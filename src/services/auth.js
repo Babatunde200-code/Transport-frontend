@@ -1,13 +1,14 @@
-// services/auth.js
-
-export const getAuthToken = () => localStorage.getItem('authToken');
-
-export const getUserInfo = () => {
-  const user = localStorage.getItem('user');
-  return user ? JSON.parse(user) : null;
-};
-
-export const logout = () => {
-  localStorage.removeItem('authToken');
-  localStorage.removeItem('user');
-};
+export const getAuthToken = () => {
+    return localStorage.getItem('token');
+  };
+  
+  export const getUserInfo = () => {
+    try {
+      const storedUser = localStorage.getItem('user');
+      return storedUser ? JSON.parse(storedUser) : null;
+    } catch (error) {
+      console.error("Error parsing user from localStorage", error);
+      return null;
+    }
+  };
+  

@@ -127,7 +127,7 @@ const Home = () => {
 
         {/* Footer */}
         <footer className="bg-blue-900 text-white py-6 text-center text-sm">
-          &copy; {new Date().getFullYear()} TravelShare. All rights reserved.
+          &copy; {new Date().getFullYear()} ASAP TRAVELS. All rights reserved.
         </footer>
       </div>
     </>

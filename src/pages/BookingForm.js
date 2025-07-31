@@ -13,8 +13,17 @@ const BookingForm = () => {
 
   const [message, setMessage] = useState('');
   const [bookings, setBookings] = useState([]);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const user = getUserInfo();
+
+  useEffect(() => {
+    if (!user) {
+      navigate('/login'); // Redirect to login if not authenticated
+    } else {
+      fetchBookings();
+    }
+  }, []);
 
   const fetchBookings = async () => {
     try {
@@ -23,33 +32,33 @@ const BookingForm = () => {
         setMessage('You are not logged in.');
         return;
       }
-      const res = await axios.get('https://transport-2-0imo.onrender.com/api/booking/my-bookings/', {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+
+      const res = await axios.get(
+        'https://transport-2-0imo.onrender.com/api/booking/my-bookings/',
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
       setBookings(res.data);
     } catch (error) {
       console.error('Failed to fetch bookings:', error);
+      setMessage('Could not load bookings.');
+    } finally {
+      setLoading(false);
     }
   };
 
-  useEffect(() => {
-    fetchBookings();
-  }, []);
-
   const handleChange = e => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
   const handleSubmit = async e => {
     e.preventDefault();
     const token = getAuthToken();
+
     try {
       const res = await axios.post(
         'https://transport-2-0imo.onrender.com/api/booking/book/',
         formData,
-        {
-          headers: { Authorization: `Bearer ${token}` }
-        }
+        { headers: { Authorization: `Bearer ${token}` } }
       );
 
       if (res.status === 201 || res.status === 200) {
@@ -69,6 +78,8 @@ const BookingForm = () => {
       setMessage(error.response?.data?.detail || 'Error creating booking.');
     }
   };
+
+  if (!user) return null; // Don't render if user not loaded
 
   return (
     <>
@@ -113,7 +124,7 @@ const BookingForm = () => {
           </form>
         </div>
 
-        {bookings.length > 0 && (
+        {!loading && bookings.length > 0 && (
           <div className="w-full max-w-md">
             <h3 className="text-xl font-semibold mb-4 text-blue-700 text-center">Your Bookings</h3>
             <ul className="space-y-4">
