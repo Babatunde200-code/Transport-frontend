@@ -30,7 +30,7 @@ const PaymentPage = () => {
         console.log("Payment modal closed");
       },
       customizations: {
-        title: "TravelShare",
+        title: "ASAP TRAVELS",
         description: "Payment for ride booking",
         logo: "https://yourlogo.png",
       },
