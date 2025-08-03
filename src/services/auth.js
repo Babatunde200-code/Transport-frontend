@@ -1,31 +1,31 @@
 // src/services/auth.js
-import jwt_decode from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 
-// Token helpers
-export const getAccessToken = () => localStorage.getItem('access');
-export const getRefreshToken = () => localStorage.getItem('refresh');
+export const getAuthToken = () => {
+  return localStorage.getItem('access');
+};
 
-// Decode user info from access token
+export const getAccessToken = () => {
+  return localStorage.getItem('access');
+};
+
+export const getRefreshToken = () => {
+  return localStorage.getItem('refresh');
+};
+
 export const getUserInfo = () => {
-  const token = getAccessToken();
+  const token = getAuthToken();
   if (!token) return null;
 
   try {
-    return jwt_decode(token); // This gives you user_id, email, etc. if included in token payload
+    return jwtDecode(token);
   } catch (error) {
     console.error('Invalid token:', error);
     return null;
   }
 };
 
-// Get user email (from decoded token)
 export const getUserEmail = () => {
   const user = getUserInfo();
   return user?.email || '';
-};
-
-// Optional: Logout helper
-export const logoutUser = () => {
-  localStorage.removeItem('access');
-  localStorage.removeItem('refresh');
 };
