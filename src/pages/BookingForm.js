@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { getAuthToken, getUserInfo } from '../services/auth';
 import Navbar from '../components/Navbar';
 
 const BookingForm = () => {
@@ -14,12 +13,17 @@ const BookingForm = () => {
   const [message, setMessage] = useState('');
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
+
   const navigate = useNavigate();
-  const user = getUserInfo();
+
+  const accessToken = localStorage.getItem('access');
+  const refreshToken = localStorage.getItem('refresh');
+
+  const userEmail = JSON.parse(localStorage.getItem('user'))?.email || '';
 
   useEffect(() => {
-    if (!user) {
-      navigate('/login'); // Redirect to login if not authenticated
+    if (!accessToken) {
+      navigate('/login');
     } else {
       fetchBookings();
     }
@@ -27,38 +31,39 @@ const BookingForm = () => {
 
   const fetchBookings = async () => {
     try {
-      const token = getAuthToken();
-      if (!token) {
-        setMessage('You are not logged in.');
-        return;
-      }
-
       const res = await axios.get(
         'https://transport-2-0imo.onrender.com/api/booking/my-bookings/',
-        { headers: { Authorization: `Bearer ${token}` } }
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
       );
       setBookings(res.data);
     } catch (error) {
-      console.error('Failed to fetch bookings:', error);
+      console.error('Fetch error:', error);
       setMessage('Could not load bookings.');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    const token = getAuthToken();
 
     try {
       const res = await axios.post(
         'https://transport-2-0imo.onrender.com/api/booking/book/',
         formData,
-        { headers: { Authorization: `Bearer ${token}` } }
+        {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        }
       );
 
       if (res.status === 201 || res.status === 200) {
@@ -69,17 +74,19 @@ const BookingForm = () => {
         navigate('/pay', {
           state: {
             amount: 3000,
-            email: user?.email || '',
-          }
+            email: userEmail,
+          },
         });
       }
     } catch (error) {
       console.error('Booking error:', error.response?.data || error.message);
-      setMessage(error.response?.data?.detail || 'Error creating booking.');
+      setMessage(
+        error.response?.data?.detail || 'Error creating booking.'
+      );
     }
   };
 
-  if (!user) return null; // Don't render if user not loaded
+  if (!accessToken) return null;
 
   return (
     <>
@@ -87,7 +94,9 @@ const BookingForm = () => {
       <div className="min-h-screen bg-gradient-to-tr from-blue-100 to-white flex flex-col items-center justify-start px-4 pt-8 pb-20">
         <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md mb-8">
           <h2 className="text-2xl font-bold mb-4 text-center text-blue-700">Book a Ride</h2>
-          {message && <p className="mb-2 text-green-600 text-center">{message}</p>}
+          {message && (
+            <p className="mb-2 text-green-600 text-center">{message}</p>
+          )}
           <form onSubmit={handleSubmit} className="grid gap-4">
             <input
               type="text"

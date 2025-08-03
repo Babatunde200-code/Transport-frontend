@@ -29,12 +29,19 @@ const Login = () => {
       const data = await response.json();
 
       if (response.ok) {
-        // ✅ Store token and user info
-        localStorage.setItem('token', data.token); // Fix: use "token" key
-        localStorage.setItem('user', JSON.stringify(data.user || {}));
+        // ✅ Store access & refresh tokens
+        localStorage.setItem('access', data.access);
+        localStorage.setItem('refresh', data.refresh);
+        // (Optional) store user info if your backend returns it
+        // localStorage.setItem('user', JSON.stringify(data.user || {}));
+
+        // Redirect to booking
         navigate('/booking');
       } else {
-        setError(data.detail || 'Login failed. Please check your credentials.');
+        setError(
+          data.detail ||
+          'Login failed. Please check your credentials.'
+        );
       }
     } catch (err) {
       setError('Network error. Please try again later.');
@@ -50,7 +57,9 @@ const Login = () => {
       >
         <h2 className="text-2xl font-bold text-center text-blue-700 mb-4">Login</h2>
 
-        {error && <p className="text-red-600 text-center mb-4">{error}</p>}
+        {error && (
+          <p className="text-red-600 text-center mb-4">{error}</p>
+        )}
 
         <input
           type="email"

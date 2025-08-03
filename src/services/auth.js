@@ -1,3 +1,4 @@
+import { getAccessToken, getUserEmail } from '../services/auth';
 export const getAuthToken = () => {
     return localStorage.getItem('token');
   };
@@ -11,4 +12,9 @@ export const getAuthToken = () => {
       return null;
     }
   };
-  
+  export const getAccessToken = () => localStorage.getItem('access');
+export const getRefreshToken = () => localStorage.getItem('refresh');
+export const getUserEmail = () => {
+  const user = localStorage.getItem('user');
+  return user ? JSON.parse(user).email : '';
+};
