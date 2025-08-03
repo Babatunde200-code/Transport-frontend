@@ -1,5 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import { getUserInfo } from '../services/auth';
+
+const user = getUserInfo();
+console.log('Logged in user:', user);
+
 
 const Login = () => {
   const navigate = useNavigate();
@@ -50,6 +55,7 @@ const Login = () => {
   };
 
   return (
+    
     <div className="min-h-screen flex items-center justify-center bg-blue-50 px-4">
       <form
         onSubmit={handleSubmit}
