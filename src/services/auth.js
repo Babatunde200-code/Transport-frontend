@@ -1,5 +1,8 @@
-export const getAccessToken = () => localStorage.getItem('access');
+// src/services/auth.js
 
+export const getAuthToken = () => localStorage.getItem('access'); 
+
+export const getAccessToken = () => localStorage.getItem('access');
 export const getRefreshToken = () => localStorage.getItem('refresh');
 
 export const getUserInfo = () => {
