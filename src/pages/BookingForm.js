@@ -1,155 +1,75 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
-import Navbar from '../components/Navbar';
+import React, { useEffect, useState } from "react";
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { useNavigate } from "react-router-dom";
 
-const BookingForm = () => {
-  const [formData, setFormData] = useState({
-    origin: '',
-    destination: '',
-    travel_date: '',
-  });
-
-  const [message, setMessage] = useState('');
-  const [bookings, setBookings] = useState([]);
-  const [loading, setLoading] = useState(true);
-
+export default function AvailableRides() {
+  const [rides, setRides] = useState([]);
   const navigate = useNavigate();
 
-  const accessToken = localStorage.getItem('access');
-  const refreshToken = localStorage.getItem('refresh');
-
-  const userEmail = JSON.parse(localStorage.getItem('user'))?.email || '';
-
   useEffect(() => {
-    if (!accessToken) {
-      navigate('/login');
-    } else {
-      fetchBookings();
-    }
-  }, []);
-
-  const fetchBookings = async () => {
-    try {
-      const res = await axios.get(
-        'https://transport-2-0imo.onrender.com/api/booking/my-bookings/',
-        {
+    // Fetch rides from backend API
+    const fetchRides = async () => {
+      try {
+        const response = await fetch("https://transport-2-0imo.onrender.com/api/booking/my-bookings/", {
           headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-      setBookings(res.data);
-    } catch (error) {
-      console.error('Fetch error:', error);
-      setMessage('Could not load bookings.');
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleChange = (e) => {
-    setFormData(prev => ({ ...prev, [e.target.name]: e.target.value }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    try {
-      const res = await axios.post(
-        'https://transport-2-0imo.onrender.com/api/booking/book/',
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
-
-      if (res.status === 201 || res.status === 200) {
-        setMessage('Booking successful! Confirmation email sent.');
-        setFormData({ origin: '', destination: '', travel_date: '' });
-        fetchBookings();
-
-        navigate('/pay', {
-          state: {
-            amount: 3000,
-            email: userEmail,
+            Authorization: `Bearer ${localStorage.getItem("access")}`, // JWT token
           },
         });
+        const data = await response.json();
+        setRides(data);
+      } catch (error) {
+        console.error("Error fetching rides:", error);
       }
-    } catch (error) {
-      console.error('Booking error:', error.response?.data || error.message);
-      setMessage(
-        error.response?.data?.detail || 'Error creating booking.'
-      );
-    }
+    };
+
+    fetchRides();
+  }, []);
+
+  const handleBook = (ride) => {
+    // Pass selected ride details to booking page
+    navigate("/booking", { state: { ride } });
   };
 
-  if (!accessToken) return null;
-
   return (
-    <>
-      <Navbar />
-      <div className="min-h-screen bg-gradient-to-tr from-blue-100 to-white flex flex-col items-center justify-start px-4 pt-8 pb-20">
-        <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md mb-8">
-          <h2 className="text-2xl font-bold mb-4 text-center text-blue-700">Book a Ride</h2>
-          {message && (
-            <p className="mb-2 text-green-600 text-center">{message}</p>
-          )}
-          <form onSubmit={handleSubmit} className="grid gap-4">
-            <input
-              type="text"
-              name="origin"
-              placeholder="Origin"
-              value={formData.origin}
-              onChange={handleChange}
-              className="p-3 border rounded-lg focus:ring-2 focus:ring-blue-400"
-              required
-            />
-            <input
-              type="text"
-              name="destination"
-              placeholder="Destination"
-              value={formData.destination}
-              onChange={handleChange}
-              className="p-3 border rounded-lg focus:ring-2 focus:ring-blue-400"
-              required
-            />
-            <input
-              type="date"
-              name="travel_date"
-              value={formData.travel_date}
-              onChange={handleChange}
-              className="p-3 border rounded-lg focus:ring-2 focus:ring-blue-400"
-              required
-            />
-            <button
-              type="submit"
-              className="bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition"
-            >
-              Submit Booking
-            </button>
-          </form>
-        </div>
+    <div className="p-6 max-w-5xl mx-auto space-y-6">
+      <h1 className="text-2xl font-bold">Available Rides</h1>
+      <p className="text-gray-600">Choose your preferred ride and book a seat</p>
 
-        {!loading && bookings.length > 0 && (
-          <div className="w-full max-w-md">
-            <h3 className="text-xl font-semibold mb-4 text-blue-700 text-center">Your Bookings</h3>
-            <ul className="space-y-4">
-              {bookings.map((booking, index) => (
-                <li key={index} className="bg-white p-4 rounded-lg shadow">
-                  <p className="text-gray-800"><strong>From:</strong> {booking.origin}</p>
-                  <p className="text-gray-800"><strong>To:</strong> {booking.destination}</p>
-                  <p className="text-gray-800"><strong>Date:</strong> {booking.travel_date}</p>
-                </li>
-              ))}
-            </ul>
-          </div>
+      <div className="grid md:grid-cols-2 gap-6">
+        {rides.length > 0 ? (
+          rides.map((ride) => (
+            <Card key={ride.id} className="shadow-lg border">
+              <CardContent className="p-5 space-y-3">
+                <div className="flex justify-between items-center">
+                  <h2 className="text-lg font-semibold">
+                    {ride.origin} → {ride.destination}
+                  </h2>
+                  <span className="text-sm text-gray-500">
+                    {ride.date} | {ride.time}
+                  </span>
+                </div>
+
+                <p className="text-gray-700">
+                  Available Seats:{" "}
+                  <span className="font-semibold">{ride.available_seats}</span>
+                </p>
+                <p className="text-indigo-600 font-bold">₦{ride.price}</p>
+
+                <Button
+                  onClick={() => handleBook(ride)}
+                  disabled={ride.available_seats === 0}
+                  className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
+                >
+                  {ride.available_seats > 0 ? "Book Seat" : "Sold Out"}
+                </Button>
+              </CardContent>
+            </Card>
+          ))
+        ) : (
+          <p className="text-gray-500">No rides available right now.</p>
         )}
       </div>
-    </>
+    </div>
   );
-};
-
-export default BookingForm;
+}
