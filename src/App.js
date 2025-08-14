@@ -11,6 +11,7 @@ import Navbar from './components/Navbar';
 import ForgotPassword from './pages/ForgotPassword';
 import ResetPassword from './pages/ResetPassword';
 import PaymentPage from "./pages/PaymentPage";
+import WalletDashboard from './pages/WalletDashboard';
 function App() {
   return (
     <Router>
@@ -26,6 +27,7 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:uid/:token" element={<ResetPassword />} />
         <Route path="/pay" element={<PaymentPage />} />
+        <Route path="/wallet" element={<WalletDashboard />} />
 
       </Routes>
     </Router>

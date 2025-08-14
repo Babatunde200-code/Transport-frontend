@@ -2,6 +2,7 @@ import React from 'react';
 import Navbar from '../components/Navbar';
 import { motion } from 'framer-motion';
 import { FaMapMarkedAlt, FaPlaneDeparture, FaUserFriends, FaPhoneAlt } from 'react-icons/fa';
+import { Link } from "react-router-dom";
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
@@ -29,6 +30,19 @@ const Home = () => {
             <a href="/login" className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-semibold">Get Started</a>
           </motion.div>
         </section>
+
+        <section className="py-20 px-6 bg-gradient-to-r from-indigo-50 to-blue-100 text-center">
+  <h2 className="text-3xl font-bold text-blue-700 mb-4">Manage Your Wallet</h2>
+  <p className="mb-6 text-lg">
+    Save money, auto-debit from your bank, and pay for rides directly with your wallet.
+  </p>
+  <Link
+    to="/wallet"
+    className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-3 rounded-lg font-semibold shadow-md"
+  >
+    Go to Wallet Dashboard
+  </Link>
+</section>
 
         {/* About Us */}
         <section className="py-20 px-6 bg-blue-50">
