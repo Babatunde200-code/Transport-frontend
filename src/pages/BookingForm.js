@@ -5,21 +5,32 @@ import { useNavigate } from "react-router-dom";
 
 export default function AvailableRides() {
   const [rides, setRides] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch rides from backend API
     const fetchRides = async () => {
       try {
-        const response = await fetch("https://transport-2-0imo.onrender.com/api/booking/my-bookings/", {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("access")}`, // JWT token
-          },
-        });
+        const response = await fetch(
+          "https://transport-2-0imo.onrender.com/api/booking/my-bookings/",
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("access")}`, // JWT
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch rides. Please try again later.");
+        }
+
         const data = await response.json();
         setRides(data);
-      } catch (error) {
-        console.error("Error fetching rides:", error);
+      } catch (err) {
+        setError(err.message);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -27,8 +38,23 @@ export default function AvailableRides() {
   }, []);
 
   const handleBook = (ride) => {
-    // Pass selected ride details to booking page
     navigate("/booking", { state: { ride } });
+  };
+
+  // Utility: format date & time nicely
+  const formatDateTime = (date, time) => {
+    try {
+      const formatted = new Date(`${date}T${time}`).toLocaleString("en-NG", {
+        weekday: "short",
+        month: "short",
+        day: "numeric",
+        hour: "2-digit",
+        minute: "2-digit",
+      });
+      return formatted;
+    } catch {
+      return `${date} | ${time}`;
+    }
   };
 
   return (
@@ -36,17 +62,20 @@ export default function AvailableRides() {
       <h1 className="text-2xl font-bold">Available Rides</h1>
       <p className="text-gray-600">Choose your preferred ride and book a seat</p>
 
+      {loading && <p className="text-gray-500">Loading rides...</p>}
+      {error && <p className="text-red-600">{error}</p>}
+
       <div className="grid md:grid-cols-2 gap-6">
-        {rides.length > 0 ? (
+        {!loading && !error && rides.length > 0 ? (
           rides.map((ride) => (
-            <Card key={ride.id} className="shadow-lg border">
+            <Card key={ride.id} className="shadow-md border rounded-2xl">
               <CardContent className="p-5 space-y-3">
                 <div className="flex justify-between items-center">
                   <h2 className="text-lg font-semibold">
                     {ride.origin} → {ride.destination}
                   </h2>
                   <span className="text-sm text-gray-500">
-                    {ride.date} | {ride.time}
+                    {formatDateTime(ride.date, ride.time)}
                   </span>
                 </div>
 
@@ -59,7 +88,7 @@ export default function AvailableRides() {
                 <Button
                   onClick={() => handleBook(ride)}
                   disabled={ride.available_seats === 0}
-                  className="w-full bg-indigo-600 hover:bg-indigo-700 text-white"
+                  className="w-full bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg"
                 >
                   {ride.available_seats > 0 ? "Book Seat" : "Sold Out"}
                 </Button>
@@ -67,7 +96,12 @@ export default function AvailableRides() {
             </Card>
           ))
         ) : (
-          <p className="text-gray-500">No rides available right now.</p>
+          !loading &&
+          !error && (
+            <p className="text-gray-500 italic">
+              No rides available at the moment. Please check back later.
+            </p>
+          )
         )}
       </div>
     </div>
