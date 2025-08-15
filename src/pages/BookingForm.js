@@ -5,13 +5,17 @@ export default function BookingForm() {
   const [rides, setRides] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [bookingId, setBookingId] = useState(null); // Track which ride is booking
+  const [bookingId, setBookingId] = useState(null);
 
+  // Base API (switch between local + production)
   const API_BASE =
-    process.env.REACT_APP_API_URL || "https://transport-2-0imo.onrender.com/api/travel/";
+    process.env.REACT_APP_API_URL ||
+    "http://127.0.0.1:8000/api/travel"; // remove double `/`
 
+  // ✅ Fetch rides
   useEffect(() => {
-    const token = localStorage.getItem("access");
+    const token = localStorage.getItem("access"); // always use "access"
+
     if (!token) {
       setError("❌ Please login to see available rides.");
       setLoading(false);
@@ -35,8 +39,9 @@ export default function BookingForm() {
       });
   }, [API_BASE]);
 
+  // ✅ Handle booking
   const handleBook = async (rideId) => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("access"); // consistent key
     if (!token) {
       alert("❌ Please login first!");
       return;
@@ -51,6 +56,7 @@ export default function BookingForm() {
       );
 
       alert("✅ Booking successful!");
+      // update seat count locally
       setRides((prev) =>
         prev.map((ride) =>
           ride.id === rideId
@@ -67,10 +73,13 @@ export default function BookingForm() {
     }
   };
 
+  // ✅ UI States
   if (loading) {
     return (
       <div className="p-6">
-        <p className="animate-pulse text-gray-600">Loading available rides...</p>
+        <p className="animate-pulse text-gray-600">
+          ⏳ Loading available rides...
+        </p>
       </div>
     );
   }
@@ -89,6 +98,7 @@ export default function BookingForm() {
     );
   }
 
+  // ✅ Main UI
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
       {rides.length === 0 ? (
