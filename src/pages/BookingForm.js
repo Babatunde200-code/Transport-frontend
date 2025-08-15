@@ -11,7 +11,7 @@ export default function BookingForm() {
     process.env.REACT_APP_API_URL || "https://transport-2-0imo.onrender.com/api/travel/";
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("access");
     if (!token) {
       setError("❌ Please login to see available rides.");
       setLoading(false);
