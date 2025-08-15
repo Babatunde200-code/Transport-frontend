@@ -6,53 +6,98 @@ export default function BookingForm() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  const API_BASE = process.env.REACT_APP_API_URL || "https://transport-2-0imo.onrender.com/api";
+
   useEffect(() => {
-    axios.get("https://asaptravels.ng/api/travel-plans/") // backend endpoint
-      .then(res => {
+    axios.get(`${API_BASE}/travel-plans/`)
+      .then((res) => {
         setRides(res.data);
         setLoading(false);
       })
-      .catch(err => {
-        setError("Failed to load rides");
+      .catch(() => {
+        setError("⚠️ Failed to load rides. Please try again.");
         setLoading(false);
       });
   }, []);
 
-  const handleBook = (rideId) => {
-    axios.post(`/api/book-ride/${rideId}/`, { seats_booked: 1 }, {
-      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
-    })
-    .then(res => {
-      alert("Booking successful ✅");
-      window.location.reload();
-    })
-    .catch(err => {
-      alert("Booking failed ❌");
-    });
+  const handleBook = async (rideId) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        alert("❌ Please login first!");
+        return;
+      }
+
+      await axios.post(`${API_BASE}/book-ride/${rideId}/`, 
+        { seats_booked: 1 }, 
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+
+      alert("✅ Booking successful!");
+      setRides((prev) =>
+        prev.map((ride) =>
+          ride.id === rideId
+            ? { ...ride, available_seats: ride.available_seats - 1 }
+            : ride
+        )
+      );
+    } catch {
+      alert("❌ Booking failed, try again.");
+    }
   };
 
-  if (loading) return <p>Loading rides...</p>;
-  if (error) return <p>{error}</p>;
+  if (loading) {
+    return (
+      <div className="p-6">
+        <p className="animate-pulse text-gray-600">Loading available rides...</p>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="p-6 text-center">
+        <p className="text-red-600">{error}</p>
+        <button
+          onClick={() => window.location.reload()}
+          className="mt-3 px-4 py-2 bg-blue-600 text-white rounded-lg"
+        >
+          🔄 Retry
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
-      {rides.map((ride) => (
-        <div key={ride.id} className="border rounded-2xl shadow p-4">
-          <img 
-            src={ride.car_image || "https://via.placeholder.com/300"} 
-            alt="Car" 
-            className="w-full h-40 object-cover rounded-xl mb-2"
-          />
-          <h2 className="text-lg font-semibold">{ride.from_location} ➝ {ride.to_location}</h2>
-          <p className="text-sm">Available Seats: {ride.available_seats}</p>
-          <button 
-            onClick={() => handleBook(ride.id)} 
-            className="mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg"
-          >
-            Book Seat
-          </button>
-        </div>
-      ))}
+      {rides.length === 0 ? (
+        <p className="text-center col-span-2 text-gray-500">No rides available at the moment 🚗</p>
+      ) : (
+        rides.map((ride) => (
+          <div key={ride.id} className="border rounded-2xl shadow p-4 hover:shadow-lg transition">
+            <img
+              src={ride.car_image || "https://via.placeholder.com/300"}
+              alt="Car"
+              className="w-full h-40 object-cover rounded-xl mb-2"
+            />
+            <h2 className="text-lg font-semibold">
+              {ride.from_location} ➝ {ride.to_location}
+            </h2>
+            <p className="text-sm text-gray-600">Available Seats: {ride.available_seats}</p>
+            <button
+              onClick={() => handleBook(ride.id)}
+              disabled={ride.available_seats <= 0}
+              className={`mt-2 px-4 py-2 rounded-lg w-full ${
+                ride.available_seats > 0
+                  ? "bg-blue-600 text-white hover:bg-blue-700"
+                  : "bg-gray-400 text-gray-700 cursor-not-allowed"
+              }`}
+            >
+              {ride.available_seats > 0 ? "Book Seat" : "Fully Booked"}
+            </button>
+          </div>
+        ))
+      )}
     </div>
   );
 }
