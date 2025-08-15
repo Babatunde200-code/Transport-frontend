@@ -8,7 +8,7 @@ export default function BookingForm() {
   const [bookingId, setBookingId] = useState(null); // Track which ride is booking
 
   const API_BASE =
-    process.env.REACT_APP_API_URL || "https://transport-2-0imo.onrender.com/api";
+    process.env.REACT_APP_API_URL || "https://transport-2-0imo.onrender.com/api/travel/";
 
   useEffect(() => {
     const token = localStorage.getItem("token");
