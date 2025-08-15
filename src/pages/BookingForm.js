@@ -1,79 +1,58 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
-export default function AvailableRides() {
+export default function BookingForm() {
   const [rides, setRides] = useState([]);
-  const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
   useEffect(() => {
-    const fetchRides = async () => {
-      try {
-        const response = await fetch(
-          "https://transport-2-0imo.onrender.com/api/booking/my-bookings/",
-          {
-            headers: {
-              Authorization: `Bearer ${localStorage.getItem("access")}`, // JWT token
-            },
-          }
-        );
-        const data = await response.json();
-        setRides(data);
-      } catch (error) {
-        console.error("Error fetching rides:", error);
-      }
-    };
-
-    fetchRides();
+    axios.get("https://transport-2-0imo.onrender.com/api/travel-plans/") // backend endpoint
+      .then(res => {
+        setRides(res.data);
+        setLoading(false);
+      })
+      .catch(err => {
+        setError("Failed to load rides");
+        setLoading(false);
+      });
   }, []);
 
-  const handleBook = (ride) => {
-    navigate("/booking", { state: { ride } });
+  const handleBook = (rideId) => {
+    axios.post(`/api/book-ride/${rideId}/`, { seats_booked: 1 }, {
+      headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    })
+    .then(res => {
+      alert("Booking successful ✅");
+      window.location.reload();
+    })
+    .catch(err => {
+      alert("Booking failed ❌");
+    });
   };
 
+  if (loading) return <p>Loading rides...</p>;
+  if (error) return <p>{error}</p>;
+
   return (
-    <div className="p-6 max-w-5xl mx-auto space-y-6">
-      <h1 className="text-2xl font-bold">Available Rides</h1>
-      <p className="text-gray-600">Choose your preferred ride and book a seat</p>
-
-      <div className="grid md:grid-cols-2 gap-6">
-        {rides.length > 0 ? (
-          rides.map((ride) => (
-            <div
-              key={ride.id}
-              className="bg-white rounded-2xl shadow-md border p-5 space-y-3"
-            >
-              <div className="flex justify-between items-center">
-                <h2 className="text-lg font-semibold">
-                  {ride.origin} → {ride.destination}
-                </h2>
-                <span className="text-sm text-gray-500">
-                  {ride.date} | {ride.time}
-                </span>
-              </div>
-
-              <p className="text-gray-700">
-                Available Seats:{" "}
-                <span className="font-semibold">{ride.available_seats}</span>
-              </p>
-              <p className="text-indigo-600 font-bold">₦{ride.price}</p>
-
-              <button
-                onClick={() => handleBook(ride)}
-                disabled={ride.available_seats === 0}
-                className={`w-full py-2 px-4 rounded-lg font-medium text-white ${
-                  ride.available_seats > 0
-                    ? "bg-indigo-600 hover:bg-indigo-700"
-                    : "bg-gray-400 cursor-not-allowed"
-                }`}
-              >
-                {ride.available_seats > 0 ? "Book Seat" : "Sold Out"}
-              </button>
-            </div>
-          ))
-        ) : (
-          <p className="text-gray-500">No rides available right now.</p>
-        )}
-      </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
+      {rides.map((ride) => (
+        <div key={ride.id} className="border rounded-2xl shadow p-4">
+          <img 
+            src={ride.car_image || "https://via.placeholder.com/300"} 
+            alt="Car" 
+            className="w-full h-40 object-cover rounded-xl mb-2"
+          />
+          <h2 className="text-lg font-semibold">{ride.from_location} ➝ {ride.to_location}</h2>
+          <p className="text-sm">Available Seats: {ride.available_seats}</p>
+          <button 
+            onClick={() => handleBook(ride.id)} 
+            className="mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg"
+          >
+            Book Seat
+          </button>
+        </div>
+      ))}
     </div>
   );
 }
