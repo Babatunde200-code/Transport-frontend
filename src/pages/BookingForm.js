@@ -5,31 +5,48 @@ export default function BookingForm() {
   const [rides, setRides] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  const [bookingId, setBookingId] = useState(null); // Track which ride is booking
 
-  const API_BASE = process.env.REACT_APP_API_URL || "https://transport-2-0imo.onrender.com/api";
+  const API_BASE =
+    process.env.REACT_APP_API_URL || "https://transport-2-0imo.onrender.com/api";
 
   useEffect(() => {
-    axios.get(`${API_BASE}/travel-plans/`)
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setError("❌ Please login to see available rides.");
+      setLoading(false);
+      return;
+    }
+
+    axios
+      .get(`${API_BASE}/travel-plans/`, {
+        headers: { Authorization: `Bearer ${token}` },
+      })
       .then((res) => {
         setRides(res.data);
         setLoading(false);
       })
-      .catch(() => {
-        setError("⚠️ Failed to load rides. Please try again.");
+      .catch((err) => {
+        const message =
+          err.response?.data?.detail ||
+          "⚠️ Failed to load rides. Please try again.";
+        setError(message);
         setLoading(false);
       });
-  }, []);
+  }, [API_BASE]);
 
   const handleBook = async (rideId) => {
-    try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        alert("❌ Please login first!");
-        return;
-      }
+    const token = localStorage.getItem("token");
+    if (!token) {
+      alert("❌ Please login first!");
+      return;
+    }
 
-      await axios.post(`${API_BASE}/book-ride/${rideId}/`, 
-        { seats_booked: 1 }, 
+    try {
+      setBookingId(rideId);
+      await axios.post(
+        `${API_BASE}/book-ride/${rideId}/`,
+        { seats_booked: 1 },
         { headers: { Authorization: `Bearer ${token}` } }
       );
 
@@ -41,8 +58,12 @@ export default function BookingForm() {
             : ride
         )
       );
-    } catch {
-      alert("❌ Booking failed, try again.");
+    } catch (err) {
+      const message =
+        err.response?.data?.detail || "❌ Booking failed, try again.";
+      alert(message);
+    } finally {
+      setBookingId(null);
     }
   };
 
@@ -71,10 +92,15 @@ export default function BookingForm() {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
       {rides.length === 0 ? (
-        <p className="text-center col-span-2 text-gray-500">No rides available at the moment 🚗</p>
+        <p className="text-center col-span-2 text-gray-500">
+          No rides available at the moment 🚗
+        </p>
       ) : (
         rides.map((ride) => (
-          <div key={ride.id} className="border rounded-2xl shadow p-4 hover:shadow-lg transition">
+          <div
+            key={ride.id}
+            className="border rounded-2xl shadow p-4 hover:shadow-lg transition"
+          >
             <img
               src={ride.car_image || "https://via.placeholder.com/300"}
               alt="Car"
@@ -83,17 +109,23 @@ export default function BookingForm() {
             <h2 className="text-lg font-semibold">
               {ride.from_location} ➝ {ride.to_location}
             </h2>
-            <p className="text-sm text-gray-600">Available Seats: {ride.available_seats}</p>
+            <p className="text-sm text-gray-600">
+              Available Seats: {ride.available_seats}
+            </p>
             <button
               onClick={() => handleBook(ride.id)}
-              disabled={ride.available_seats <= 0}
+              disabled={ride.available_seats <= 0 || bookingId === ride.id}
               className={`mt-2 px-4 py-2 rounded-lg w-full ${
                 ride.available_seats > 0
                   ? "bg-blue-600 text-white hover:bg-blue-700"
                   : "bg-gray-400 text-gray-700 cursor-not-allowed"
               }`}
             >
-              {ride.available_seats > 0 ? "Book Seat" : "Fully Booked"}
+              {bookingId === ride.id
+                ? "⏳ Booking..."
+                : ride.available_seats > 0
+                ? "Book Seat"
+                : "Fully Booked"}
             </button>
           </div>
         ))
