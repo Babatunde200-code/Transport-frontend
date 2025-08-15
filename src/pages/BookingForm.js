@@ -7,7 +7,7 @@ export default function BookingForm() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    axios.get("https://transport-2-0imo.onrender.com/api/travel-plans/") // backend endpoint
+    axios.get("https://asaptravels.ng/api/travel-plans/") // backend endpoint
       .then(res => {
         setRides(res.data);
         setLoading(false);
