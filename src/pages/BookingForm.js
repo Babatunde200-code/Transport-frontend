@@ -31,6 +31,7 @@ export default function BookingForm() {
         setLoading(false);
       })
       .catch((err) => {
+        console.log(err)
         const message =
           err.response?.data?.detail ||
           "⚠️ Failed to load rides. Please try again.";
