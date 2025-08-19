@@ -14,15 +14,20 @@ const Signup = () => {
 
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setError('');
     setSuccess('');
   };
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError('');
+    setSuccess('');
+
     try {
       const res = await fetch('https://transport-2-0imo.onrender.com/api/signup/', {
         method: 'POST',
@@ -32,15 +37,34 @@ const Signup = () => {
         body: JSON.stringify(formData),
       });
 
+      const data = await res.json();
+
       if (res.ok) {
         setSuccess('Signup successful. Check your email or phone for the verification code.');
-        setTimeout(() => navigate("/verify"), 2000);
+        setFormData({
+          full_name: '',
+          username: '',
+          email: '',
+          phone_number: '',
+          password: '',
+        });
+        setTimeout(() => navigate('/verify'), 2000);
       } else {
-        const data = await res.json();
-        setError(data.message || 'Signup failed.');
+        let errorMsg = 'Signup failed.';
+        if (data) {
+          if (typeof data === 'object') {
+            const firstError = Object.values(data)[0];
+            errorMsg = Array.isArray(firstError) ? firstError[0] : firstError;
+          } else if (data.message) {
+            errorMsg = data.message;
+          }
+        }
+        setError(errorMsg);
       }
     } catch (err) {
-      setError('Server error. Please try again.');
+      setError('Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -60,6 +84,7 @@ const Signup = () => {
               <input
                 type="text"
                 name="full_name"
+                value={formData.full_name}
                 onChange={handleChange}
                 required
                 className="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -70,6 +95,7 @@ const Signup = () => {
               <input
                 type="text"
                 name="username"
+                value={formData.username}
                 onChange={handleChange}
                 required
                 className="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -80,6 +106,7 @@ const Signup = () => {
               <input
                 type="email"
                 name="email"
+                value={formData.email}
                 onChange={handleChange}
                 required
                 className="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -90,6 +117,7 @@ const Signup = () => {
               <input
                 type="tel"
                 name="phone_number"
+                value={formData.phone_number}
                 onChange={handleChange}
                 required
                 className="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -100,6 +128,7 @@ const Signup = () => {
               <input
                 type="password"
                 name="password"
+                value={formData.password}
                 onChange={handleChange}
                 required
                 className="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -107,15 +136,18 @@ const Signup = () => {
             </div>
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition"
+              disabled={loading}
+              className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition disabled:opacity-50"
             >
-              Sign Up
+              {loading ? 'Signing Up...' : 'Sign Up'}
             </button>
           </form>
 
           <p className="mt-6 text-sm text-center text-gray-600">
             Already have an account?{' '}
-            <Link to="/login" className="text-blue-600 hover:underline font-medium">Login</Link>
+            <Link to="/login" className="text-blue-600 hover:underline font-medium">
+              Login
+            </Link>
           </p>
         </div>
       </div>
