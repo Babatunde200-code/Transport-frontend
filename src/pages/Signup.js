@@ -27,46 +27,44 @@ const Signup = () => {
     setLoading(true);
     setError('');
     setSuccess('');
-
+  
     try {
       const res = await fetch('https://transport-2-0imo.onrender.com/api/signup/', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
-
-      const data = await res.json();
-
+  
+      const raw = await res.text();             // <-- read as text first
+      let data = null;
+      try { data = raw ? JSON.parse(raw) : null; } catch { /* non-JSON */ }
+  
       if (res.ok) {
         setSuccess('Signup successful. Check your email or phone for the verification code.');
-        setFormData({
-          full_name: '',
-          username: '',
-          email: '',
-          phone_number: '',
-          password: '',
-        });
+        setFormData({ full_name:'', username:'', email:'', phone_number:'', password:'' });
         setTimeout(() => navigate('/verify'), 2000);
       } else {
-        let errorMsg = 'Signup failed.';
+        // Try to extract a helpful message
+        let msg = 'Signup failed.';
         if (data) {
-          if (typeof data === 'object') {
-            const firstError = Object.values(data)[0];
-            errorMsg = Array.isArray(firstError) ? firstError[0] : firstError;
-          } else if (data.message) {
-            errorMsg = data.message;
+          if (data.message) msg = data.message;
+          else if (data.detail) msg = data.detail;
+          else if (typeof data === 'object') {
+            const [_, v] = Object.entries(data)[0] || [];
+            msg = Array.isArray(v) ? v[0] : String(v ?? msg);
           }
+        } else if (raw) {
+          msg = raw.slice(0, 200); // surface text from HTML/traceback
         }
-        setError(errorMsg);
+        setError(msg);
       }
     } catch (err) {
-      setError('Something went wrong. Please try again.');
+      setError('Network error. Please try again.');
     } finally {
       setLoading(false);
     }
   };
+  
 
   return (
     <>
