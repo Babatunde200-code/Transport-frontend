@@ -24,7 +24,7 @@ const Signup = () => {
   const handleSubmit = async e => {
     e.preventDefault();
     try {
-      const res = await fetch('http://127.0.0.1:8000/api/signup/', {
+      const res = await fetch('https://transport-2-0imo.onrender.com/api/signup/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
