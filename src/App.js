@@ -13,6 +13,7 @@ import ResetPassword from './pages/ResetPassword';
 import PaymentPage from "./pages/PaymentPage";
 import WalletDashboard from './pages/WalletDashboard';
 import MyBookings from './pages/MyBookings';
+import AdminUpload from "./pages/Adminupload";
 function App() {
   return (
     <Router>
@@ -30,6 +31,7 @@ function App() {
         <Route path="/pay" element={<PaymentPage />} />
         <Route path="/wallet" element={<WalletDashboard />} />
         <Route path="/my-bookings" element={<MyBookings />} />
+        <Route path="/admin" element={<AdminUpload onUploaded={() => window.location.reload()} />} />
 
       </Routes>
     </Router>
