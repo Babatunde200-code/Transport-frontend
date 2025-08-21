@@ -14,35 +14,57 @@ const Signup = () => {
 
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [loading, setLoading] = useState(false);
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setError('');
     setSuccess('');
   };
 
-  const handleSubmit = async e => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setError('');
+    setSuccess('');
+  
     try {
-      const res = await fetch('https://transport-2-0imo.onrender.com/api/signup/', {
+      const res = await fetch('https://transport-2-0imo.onrender.com/api/accounts/signup/', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
-
+  
+      const raw = await res.text();             // <-- read as text first
+      let data = null;
+      try { data = raw ? JSON.parse(raw) : null; } catch { /* non-JSON */ }
+  
       if (res.ok) {
         setSuccess('Signup successful. Check your email or phone for the verification code.');
-        setTimeout(() => navigate("/verify"), 2000);
+        setFormData({ full_name:'', username:'', email:'', phone_number:'', password:'' });
+        setTimeout(() => navigate('/verify'), 2000);
       } else {
-        const data = await res.json();
-        setError(data.message || 'Signup failed.');
+        // Try to extract a helpful message
+        let msg = 'Signup failed.';
+        if (data) {
+          if (data.message) msg = data.message;
+          else if (data.detail) msg = data.detail;
+          else if (typeof data === 'object') {
+            const [_, v] = Object.entries(data)[0] || [];
+            msg = Array.isArray(v) ? v[0] : String(v ?? msg);
+          }
+        } else if (raw) {
+          msg = raw.slice(0, 200); // surface text from HTML/traceback
+        }
+        setError(msg);
       }
     } catch (err) {
-      setError('Server error. Please try again.');
+      setError('Network error. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
+  
 
   return (
     <>
@@ -60,6 +82,7 @@ const Signup = () => {
               <input
                 type="text"
                 name="full_name"
+                value={formData.full_name}
                 onChange={handleChange}
                 required
                 className="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -70,6 +93,7 @@ const Signup = () => {
               <input
                 type="text"
                 name="username"
+                value={formData.username}
                 onChange={handleChange}
                 required
                 className="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -80,6 +104,7 @@ const Signup = () => {
               <input
                 type="email"
                 name="email"
+                value={formData.email}
                 onChange={handleChange}
                 required
                 className="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -90,6 +115,7 @@ const Signup = () => {
               <input
                 type="tel"
                 name="phone_number"
+                value={formData.phone_number}
                 onChange={handleChange}
                 required
                 className="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -100,6 +126,7 @@ const Signup = () => {
               <input
                 type="password"
                 name="password"
+                value={formData.password}
                 onChange={handleChange}
                 required
                 className="w-full mt-1 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -107,15 +134,18 @@ const Signup = () => {
             </div>
             <button
               type="submit"
-              className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition"
+              disabled={loading}
+              className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition disabled:opacity-50"
             >
-              Sign Up
+              {loading ? 'Signing Up...' : 'Sign Up'}
             </button>
           </form>
 
           <p className="mt-6 text-sm text-center text-gray-600">
             Already have an account?{' '}
-            <Link to="/login" className="text-blue-600 hover:underline font-medium">Login</Link>
+            <Link to="/login" className="text-blue-600 hover:underline font-medium">
+              Login
+            </Link>
           </p>
         </div>
       </div>
