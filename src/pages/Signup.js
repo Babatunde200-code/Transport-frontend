@@ -27,44 +27,45 @@ const Signup = () => {
     setLoading(true);
     setError('');
     setSuccess('');
-  
+
     try {
-      const res = await fetch('https://transport-2-0imo.onrender.com/api/accounts/signup/', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+      const res = await fetch("https://transport-2-0imo.onrender.com/api/signup/", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-  
-      const raw = await res.text();             // <-- read as text first
-      let data = null;
-      try { data = raw ? JSON.parse(raw) : null; } catch { /* non-JSON */ }
-  
+
+      const data = await res.json().catch(() => null);
+
       if (res.ok) {
-        setSuccess('Signup successful. Check your email or phone for the verification code.');
-        setFormData({ full_name:'', username:'', email:'', phone_number:'', password:'' });
-        setTimeout(() => navigate('/verify'), 2000);
+        setSuccess("Signup successful! Check your email/phone for verification code.");
+        setFormData({ full_name: "", username: "", email: "", phone_number: "", password: "" });
+
+        // redirect to verify page, passing email/phone for context
+        setTimeout(() => {
+          navigate("/verify", { state: { email: data?.email || formData.email } });
+        }, 2000);
       } else {
-        // Try to extract a helpful message
-        let msg = 'Signup failed.';
+        // extract backend error messages
+        let msg = "Signup failed.";
         if (data) {
-          if (data.message) msg = data.message;
+          if (typeof data === "string") msg = data;
+          else if (data.message) msg = data.message;
           else if (data.detail) msg = data.detail;
-          else if (typeof data === 'object') {
-            const [_, v] = Object.entries(data)[0] || [];
-            msg = Array.isArray(v) ? v[0] : String(v ?? msg);
+          else {
+            // Show the first field error
+            const firstError = Object.values(data)[0];
+            msg = Array.isArray(firstError) ? firstError[0] : String(firstError);
           }
-        } else if (raw) {
-          msg = raw.slice(0, 200); // surface text from HTML/traceback
         }
         setError(msg);
       }
     } catch (err) {
-      setError('Network error. Please try again.');
+      setError("Network error. Please try again.");
     } finally {
       setLoading(false);
     }
   };
-  
 
   return (
     <>
@@ -137,12 +138,12 @@ const Signup = () => {
               disabled={loading}
               className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition disabled:opacity-50"
             >
-              {loading ? 'Signing Up...' : 'Sign Up'}
+              {loading ? "Signing Up..." : "Sign Up"}
             </button>
           </form>
 
           <p className="mt-6 text-sm text-center text-gray-600">
-            Already have an account?{' '}
+            Already have an account?{" "}
             <Link to="/login" className="text-blue-600 hover:underline font-medium">
               Login
             </Link>
