@@ -35,25 +35,23 @@ const Signup = () => {
         body: JSON.stringify(formData),
       });
 
-      const data = await res.json().catch(() => null);
+      const data = await res.json();
 
       if (res.ok) {
-        setSuccess("Signup successful! Check your email/phone for verification code.");
+        setSuccess(data.message || "Signup successful! Please verify your account.");
         setFormData({ full_name: "", username: "", email: "", phone_number: "", password: "" });
 
-        // redirect to verify page, passing email/phone for context
+        // Redirect to verify page with email
         setTimeout(() => {
-          navigate("/verify", { state: { email: data?.email || formData.email } });
+          navigate("/verify", { state: { email: data?.user?.email || formData.email } });
         }, 2000);
       } else {
-        // extract backend error messages
+        // Extract errors from backend response
         let msg = "Signup failed.";
         if (data) {
-          if (typeof data === "string") msg = data;
-          else if (data.message) msg = data.message;
-          else if (data.detail) msg = data.detail;
+          if (data.message) msg = data.message;
           else {
-            // Show the first field error
+            // Take the first validation error
             const firstError = Object.values(data)[0];
             msg = Array.isArray(firstError) ? firstError[0] : String(firstError);
           }
