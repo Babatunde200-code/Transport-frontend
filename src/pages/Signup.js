@@ -16,54 +16,53 @@ const Signup = () => {
   const [success, setSuccess] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    setError('');
-    setSuccess('');
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
     setSuccess('');
-
+  
     try {
       const res = await fetch("https://transport-2-0imo.onrender.com/api/signup/", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
+        // mode: "cors", // default, but explicit is fine
       });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        setSuccess(data.message || "Signup successful! Please verify your account.");
-        setFormData({ full_name: "", username: "", email: "", phone_number: "", password: "" });
-
-        // Redirect to verify page with email
-        setTimeout(() => {
-          navigate("/verify", { state: { email: data?.user?.email || formData.email } });
-        }, 2000);
-      } else {
-        // Extract errors from backend response
-        let msg = "Signup failed.";
-        if (data) {
-          if (data.message) msg = data.message;
-          else {
-            // Take the first validation error
-            const firstError = Object.values(data)[0];
-            msg = Array.isArray(firstError) ? firstError[0] : String(firstError);
-          }
-        }
-        setError(msg);
+  
+      // Try JSON first; if it fails, fall back to text
+      const raw = await res.text();
+      let data = null;
+      try { data = raw ? JSON.parse(raw) : null; } catch (_) {}
+  
+      if (!res.ok) {
+        // Prefer backend message/field errors; else raw text; else status
+        let msg =
+          data?.message ||
+          (data && Array.isArray(Object.values(data)[0]) ? Object.values(data)[0][0] : Object.values(data || {})[0]) ||
+          raw ||
+          `Request failed with status ${res.status}`;
+        setError(String(msg));
+        return;
       }
+  
+      // Success
+      setSuccess(data?.message || "Signup successful! Please verify your account.");
+      setFormData({ full_name: "", username: "", email: "", phone_number: "", password: "" });
+  
+      setTimeout(() => {
+        const emailForVerify = data?.user?.email || data?.email || formData.email;
+        navigate("/verify", { state: { email: emailForVerify } });
+      }, 1200);
     } catch (err) {
-      setError("Network error. Please try again.");
+      // Most common here: CORS blocked or server unreachable
+      setError("Could not reach the API (CORS/server). Please try again in a moment.");
     } finally {
       setLoading(false);
     }
   };
+  
 
   return (
     <>
