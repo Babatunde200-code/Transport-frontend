@@ -34,7 +34,7 @@ const Signup = () => {
 
     try {
       const res = await fetch(
-        "https://transport-2-0imo.onrender.com/api/signup/",
+        "https://transport-2-0imo.onrender.com/api/accounts/signup/",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
