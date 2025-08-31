@@ -1,78 +1,108 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import Navbar from '../components/Navbar';
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import Navbar from "../components/Navbar";
 
 const Signup = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    full_name: '',
-    username: '',
-    email: '',
-    phone_number: '',
-    password: '',
+    full_name: "",
+    username: "",
+    email: "",
+    phone_number: "",
+    password: "",
   });
 
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // ✅ Handle input changes
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
 
+  // ✅ Handle form submit
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError('');
-    setSuccess('');
-  
+    setError("");
+    setSuccess("");
+
     try {
-      const res = await fetch("https://transport-2-0imo.onrender.com/api/signup/", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-        // mode: "cors", // default, but explicit is fine
-      });
-  
-      // Try JSON first; if it fails, fall back to text
+      const res = await fetch(
+        "https://transport-2-0imo.onrender.com/api/signup/",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
+        }
+      );
+
       const raw = await res.text();
       let data = null;
-      try { data = raw ? JSON.parse(raw) : null; } catch (_) {}
-  
+      try {
+        data = raw ? JSON.parse(raw) : null;
+      } catch (_) {}
+
       if (!res.ok) {
-        // Prefer backend message/field errors; else raw text; else status
         let msg =
           data?.message ||
-          (data && Array.isArray(Object.values(data)[0]) ? Object.values(data)[0][0] : Object.values(data || {})[0]) ||
+          (data && Array.isArray(Object.values(data)[0])
+            ? Object.values(data)[0][0]
+            : Object.values(data || {})[0]) ||
           raw ||
           `Request failed with status ${res.status}`;
         setError(String(msg));
         return;
       }
-  
-      // Success
-      setSuccess(data?.message || "Signup successful! Please verify your account.");
-      setFormData({ full_name: "", username: "", email: "", phone_number: "", password: "" });
-  
+
+      setSuccess(
+        data?.message || "Signup successful! Please verify your account."
+      );
+
+      // Clear form
+      setFormData({
+        full_name: "",
+        username: "",
+        email: "",
+        phone_number: "",
+        password: "",
+      });
+
+      // Navigate to verify page
       setTimeout(() => {
-        const emailForVerify = data?.user?.email || data?.email || formData.email;
+        const emailForVerify =
+          data?.user?.email || data?.email || formData.email;
         navigate("/verify", { state: { email: emailForVerify } });
       }, 1200);
     } catch (err) {
-      // Most common here: CORS blocked or server unreachable
-      setError("Could not reach the API (CORS/server). Please try again in a moment.");
+      setError(
+        "Could not reach the API (CORS/server). Please try again in a moment."
+      );
     } finally {
       setLoading(false);
     }
   };
-  
 
   return (
     <>
       <Navbar />
       <div className="min-h-screen bg-gradient-to-br from-blue-100 to-white flex items-center justify-center px-4 py-12">
         <div className="w-full max-w-lg bg-white shadow-2xl rounded-xl p-8">
-          <h2 className="text-3xl font-bold text-center text-blue-700 mb-6">Create Your Account</h2>
+          <h2 className="text-3xl font-bold text-center text-blue-700 mb-6">
+            Create Your Account
+          </h2>
 
-          {error && <p className="text-red-600 text-sm mb-4 text-center">{error}</p>}
-          {success && <p className="text-green-600 text-sm mb-4 text-center">{success}</p>}
+          {error && (
+            <p className="text-red-600 text-sm mb-4 text-center">{error}</p>
+          )}
+          {success && (
+            <p className="text-green-600 text-sm mb-4 text-center">{success}</p>
+          )}
 
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
@@ -141,7 +171,10 @@ const Signup = () => {
 
           <p className="mt-6 text-sm text-center text-gray-600">
             Already have an account?{" "}
-            <Link to="/login" className="text-blue-600 hover:underline font-medium">
+            <Link
+              to="/login"
+              className="text-blue-600 hover:underline font-medium"
+            >
               Login
             </Link>
           </p>
