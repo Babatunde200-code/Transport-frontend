@@ -16,6 +16,9 @@ const Signup = () => {
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // ✅ API Base URL (env variable or fallback)
+  const API_BASE = import.meta.env.VITE_API_BASE_URL || "https://transport-2-0imo.onrender.com";
+
   // ✅ Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -33,14 +36,11 @@ const Signup = () => {
     setSuccess("");
 
     try {
-      const res = await fetch(
-        "https://transport-2-0imo.onrender.com/api/signup/",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData),
-        }
-      );
+      const res = await fetch(`${API_BASE}/api/signup/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
 
       const raw = await res.text();
       let data = null;
@@ -49,10 +49,11 @@ const Signup = () => {
       } catch (_) {}
 
       if (!res.ok) {
+        // Handle Django-style error responses
         let msg =
           data?.message ||
           (data && Array.isArray(Object.values(data)[0])
-            ? Object.values(data)[0][0]
+            ? Object.values(data)[0][0] // first array message
             : Object.values(data || {})[0]) ||
           raw ||
           `Request failed with status ${res.status}`;
@@ -73,15 +74,15 @@ const Signup = () => {
         password: "",
       });
 
-      // Navigate to verify page
+      // Navigate to verify page with email
       setTimeout(() => {
         const emailForVerify =
           data?.user?.email || data?.email || formData.email;
         navigate("/verify", { state: { email: emailForVerify } });
-      }, 1200);
+      }, 1500);
     } catch (err) {
       setError(
-        "Could not reach the API (CORS/server). Please try again in a moment."
+        "Could not reach the server. Please check your connection and try again."
       );
     } finally {
       setLoading(false);

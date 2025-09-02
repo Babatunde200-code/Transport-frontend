@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 
 const VerifyToken = () => {
   const [email, setEmail] = useState("");
-  const [code, setToken] = useState("");
+  const [code, setCode] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
@@ -15,15 +15,17 @@ const VerifyToken = () => {
     setSuccess("");
 
     try {
-      const response = await axios.post("https://transport-2-0imo.onrender.com/api/verify/", {
-        email,
-        code,
-      });
+      const response = await axios.post(
+        "https://transport-2-0imo.onrender.com/api/verify/",
+        { email, code }
+      );
 
-      setSuccess("Verification successful! You can now log in.");
-      setTimeout(() => navigate("/login"), 1500);
+      setSuccess(response.data?.message || "Verification successful! Redirecting to login...");
+      
+      // Redirect to login page after short delay
+      setTimeout(() => navigate("/login"), 2000);
     } catch (err) {
-      setError(err.response?.data?.detail || "Invalid or expired token.");
+      setError(err.response?.data?.detail || "Invalid or expired verification code.");
     }
   };
 
@@ -35,12 +37,12 @@ const VerifyToken = () => {
         </h2>
 
         {error && (
-          <div className="bg-red-100 text-red-700 px-4 py-2 mb-4 rounded-md">
+          <div className="bg-red-100 text-red-700 px-4 py-2 mb-4 rounded-md text-sm">
             {error}
           </div>
         )}
         {success && (
-          <div className="bg-green-100 text-green-700 px-4 py-2 mb-4 rounded-md">
+          <div className="bg-green-100 text-green-700 px-4 py-2 mb-4 rounded-md text-sm">
             {success}
           </div>
         )}
@@ -64,9 +66,9 @@ const VerifyToken = () => {
               type="text"
               className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
               value={code}
-              onChange={(e) => setToken(e.target.value)}
+              onChange={(e) => setCode(e.target.value)}
               required
-              placeholder="Enter the token sent to your email"
+              placeholder="Enter the code sent to your email"
             />
           </div>
 
@@ -74,7 +76,7 @@ const VerifyToken = () => {
             type="submit"
             className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
           >
-            Verify
+            Verify Account
           </button>
         </form>
       </div>
