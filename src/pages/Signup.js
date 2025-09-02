@@ -35,9 +35,12 @@ const Signup = () => {
 
       setSuccess("Signup successful! Please check your email to verify.");
       setTimeout(() => navigate("/verify"), 1500);
-    } catch (err) {
-      setError(err.response?.data?.detail || "Signup failed. Try again.");
+    } 
+    catch (err) {
+      console.error("Signup error:", err.response?.data); // 👈 log full response
+      setError(err.response?.data?.detail || JSON.stringify(err.response?.data) || "Signup failed. Try again.");
     }
+  }    
   };
 
   return (
