@@ -28,7 +28,7 @@ const Signup = () => {
     }
 
     try {
-      const response = await axios.post(
+      const res = await axios.post(
         "https://transport-2-0imo.onrender.com/api/signup/",
         {
           email: formData.email,
@@ -36,16 +36,12 @@ const Signup = () => {
         }
       );
 
-      if (response.data?.message) {
-        setSuccess(response.data.message);
+      console.log("Signup response:", res.data); // 👀 log server response
 
-        // Redirect and pass email to Verify page
-        setTimeout(() => {
-          navigate("/verify", { state: { email: formData.email } });
-        }, 1500);
-      }
+      setSuccess("Signup successful! Please check your email to verify.");
+      setTimeout(() => navigate("/verify"), 1500);
     } catch (err) {
-      console.error("Signup error:", err.response?.data);
+      console.error("Signup error:", err.response?.data || err.message);
       setError(
         err.response?.data?.detail ||
           JSON.stringify(err.response?.data) ||
