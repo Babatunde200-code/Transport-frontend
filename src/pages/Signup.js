@@ -28,19 +28,30 @@ const Signup = () => {
     }
 
     try {
-      await axios.post("https://transport-2-0imo.onrender.com/api/signup/", {
-        email: formData.email,
-        password: formData.password,
-      });
+      const response = await axios.post(
+        "https://transport-2-0imo.onrender.com/api/signup/",
+        {
+          email: formData.email,
+          password: formData.password,
+        }
+      );
 
-      setSuccess("Signup successful! Please check your email to verify.");
-      setTimeout(() => navigate("/verify"), 1500);
-    } 
-    catch (err) {
-      console.error("Signup error:", err.response?.data); // 👈 log full response
-      setError(err.response?.data?.detail || JSON.stringify(err.response?.data) || "Signup failed. Try again.");
+      if (response.data?.message) {
+        setSuccess(response.data.message);
+
+        // Redirect and pass email to Verify page
+        setTimeout(() => {
+          navigate("/verify", { state: { email: formData.email } });
+        }, 1500);
+      }
+    } catch (err) {
+      console.error("Signup error:", err.response?.data);
+      setError(
+        err.response?.data?.detail ||
+          JSON.stringify(err.response?.data) ||
+          "Signup failed. Try again."
+      );
     }
-  }    
   };
 
   return (
