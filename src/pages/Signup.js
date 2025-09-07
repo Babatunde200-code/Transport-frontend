@@ -13,44 +13,47 @@ const Signup = () => {
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
 
+  // Handle input change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  // Handle signup submission
   const handleSignup = async (e) => {
     e.preventDefault();
     console.log("🔹 Signup form submitted with:", formData);
-  
+
     setError("");
     setSuccess("");
-  
+
+    // Local check before hitting API
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match.");
       return;
     }
-  
+
     try {
       const res = await axios.post(
         "https://transport-2-0imo.onrender.com/api/signup/",
         {
           email: formData.email,
           password: formData.password,
+          confirm_password: formData.confirmPassword, // ✅ match backend
         }
       );
-  
+
       console.log("✅ Signup response:", res.data);
       setSuccess("Signup successful! Please check your email to verify.");
-      setTimeout(() => navigate("/verify"), 1500);
+      setTimeout(() => navigate("/verify"), 2000);
     } catch (err) {
       console.error("❌ Signup error:", err.response?.data || err.message);
       setError(
         err.response?.data?.detail ||
-          JSON.stringify(err.response?.data) ||
+          Object.values(err.response?.data).flat().join(", ") || // show validation messages
           "Signup failed. Try again."
       );
     }
   };
-  
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
@@ -59,11 +62,14 @@ const Signup = () => {
           Create an Account
         </h2>
 
+        {/* Error message */}
         {error && (
           <div className="bg-red-100 text-red-700 px-4 py-2 mb-4 rounded-md">
             {error}
           </div>
         )}
+
+        {/* Success message */}
         {success && (
           <div className="bg-green-100 text-green-700 px-4 py-2 mb-4 rounded-md">
             {success}
