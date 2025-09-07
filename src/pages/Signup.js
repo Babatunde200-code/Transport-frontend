@@ -19,14 +19,16 @@ const Signup = () => {
 
   const handleSignup = async (e) => {
     e.preventDefault();
+    console.log("🔹 Signup form submitted with:", formData);
+  
     setError("");
     setSuccess("");
-
+  
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match.");
       return;
     }
-
+  
     try {
       const res = await axios.post(
         "https://transport-2-0imo.onrender.com/api/signup/",
@@ -35,13 +37,12 @@ const Signup = () => {
           password: formData.password,
         }
       );
-
-      console.log("Signup response:", res.data); // 👀 log server response
-
+  
+      console.log("✅ Signup response:", res.data);
       setSuccess("Signup successful! Please check your email to verify.");
       setTimeout(() => navigate("/verify"), 1500);
     } catch (err) {
-      console.error("Signup error:", err.response?.data || err.message);
+      console.error("❌ Signup error:", err.response?.data || err.message);
       setError(
         err.response?.data?.detail ||
           JSON.stringify(err.response?.data) ||
@@ -49,6 +50,7 @@ const Signup = () => {
       );
     }
   };
+  
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
