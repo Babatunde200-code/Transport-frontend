@@ -7,14 +7,12 @@ export default function BookingForm() {
   const [error, setError] = useState("");
   const [bookingId, setBookingId] = useState(null);
 
-  // Base API (switch between local + production)
+  // ✅ Correct API base
   const API_BASE =
-    process.env.REACT_APP_API_URL ||
-    "http://127.0.0.1:8000/api/travel"; // remove double `/`
+    process.env.REACT_APP_API_URL || "http://127.0.0.1:8000/api";
 
-  // ✅ Fetch rides
   useEffect(() => {
-    const token = localStorage.getItem("access"); // always use "access"
+    const token = localStorage.getItem("access"); // ✅ consistent
 
     if (!token) {
       setError("❌ Please login to see available rides.");
@@ -31,7 +29,7 @@ export default function BookingForm() {
         setLoading(false);
       })
       .catch((err) => {
-        console.log(err)
+        console.error("Ride fetch error:", err);
         const message =
           err.response?.data?.detail ||
           "⚠️ Failed to load rides. Please try again.";
@@ -40,9 +38,8 @@ export default function BookingForm() {
       });
   }, [API_BASE]);
 
-  // ✅ Handle booking
   const handleBook = async (rideId) => {
-    const token = localStorage.getItem("access"); // consistent key
+    const token = localStorage.getItem("access");
     if (!token) {
       alert("❌ Please login first!");
       return;
@@ -57,7 +54,6 @@ export default function BookingForm() {
       );
 
       alert("✅ Booking successful!");
-      // update seat count locally
       setRides((prev) =>
         prev.map((ride) =>
           ride.id === rideId
@@ -66,6 +62,7 @@ export default function BookingForm() {
         )
       );
     } catch (err) {
+      console.error("Booking error:", err);
       const message =
         err.response?.data?.detail || "❌ Booking failed, try again.";
       alert(message);
@@ -74,7 +71,6 @@ export default function BookingForm() {
     }
   };
 
-  // ✅ UI States
   if (loading) {
     return (
       <div className="p-6">
@@ -99,7 +95,6 @@ export default function BookingForm() {
     );
   }
 
-  // ✅ Main UI
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
       {rides.length === 0 ? (
