@@ -13,7 +13,7 @@ const BookingForm = () => {
   useEffect(() => {
     const fetchRides = async () => {
       try {
-        const res = await fetch("http://127.0.0.1:8000/api/travel-plans/", {
+        const res = await fetch("http://transport-2-0imo.onrender.com/api/travel-plans/", {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await res.json();
