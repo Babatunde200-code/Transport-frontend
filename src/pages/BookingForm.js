@@ -1,141 +1,127 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-export default function BookingForm() {
+const BookingForm = () => {
   const [rides, setRides] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [bookingId, setBookingId] = useState(null);
+  const [selectedRide, setSelectedRide] = useState(null);
+  const [selectedSeat, setSelectedSeat] = useState(null);
+  const navigate = useNavigate();
 
-  // ✅ Correct API base
-  const API_BASE =
-    process.env.REACT_APP_API_URL || "http://127.0.0.1:8000/api";
+  const token = localStorage.getItem("access");
 
+  // ✅ Fetch rides on load
   useEffect(() => {
-    const token = localStorage.getItem("access"); // ✅ consistent
+    const fetchRides = async () => {
+      try {
+        const res = await fetch("http://127.0.0.1:8000/api/travel-plans/", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const data = await res.json();
+        setRides(data);
+      } catch (err) {
+        console.error("Error fetching rides:", err);
+      }
+    };
+    fetchRides();
+  }, [token]);
 
-    if (!token) {
-      setError("❌ Please login to see available rides.");
-      setLoading(false);
-      return;
-    }
-
-    axios
-      .get(`${API_BASE}/travel-plans/`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => {
-        setRides(res.data);
-        setLoading(false);
-      })
-      .catch((err) => {
-        console.error("Ride fetch error:", err);
-        const message =
-          err.response?.data?.detail ||
-          "⚠️ Failed to load rides. Please try again.";
-        setError(message);
-        setLoading(false);
-      });
-  }, [API_BASE]);
-
-  const handleBook = async (rideId) => {
-    const token = localStorage.getItem("access");
-    if (!token) {
-      alert("❌ Please login first!");
-      return;
-    }
+  // ✅ Handle booking
+  const handleBooking = async () => {
+    if (!selectedRide || !selectedSeat) return alert("Pick a ride & seat!");
 
     try {
-      setBookingId(rideId);
-      await axios.post(
-        `${API_BASE}/book-ride/${rideId}/`,
-        { seats_booked: 1 },
-        { headers: { Authorization: `Bearer ${token}` } }
+      const res = await fetch(
+        `http://127.0.0.1:8000/api/book-ride/${selectedRide._id}/`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ seat_number: selectedSeat }),
+        }
       );
 
-      alert("✅ Booking successful!");
-      setRides((prev) =>
-        prev.map((ride) =>
-          ride.id === rideId
-            ? { ...ride, available_seats: ride.available_seats - 1 }
-            : ride
-        )
-      );
+      const data = await res.json();
+      if (res.ok) {
+        alert("✅ Booking successful!");
+        navigate("/my-bookings");
+      } else {
+        alert(data.error || "Booking failed");
+      }
     } catch (err) {
       console.error("Booking error:", err);
-      const message =
-        err.response?.data?.detail || "❌ Booking failed, try again.";
-      alert(message);
-    } finally {
-      setBookingId(null);
     }
   };
 
-  if (loading) {
-    return (
-      <div className="p-6">
-        <p className="animate-pulse text-gray-600">
-          ⏳ Loading available rides...
-        </p>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="p-6 text-center">
-        <p className="text-red-600">{error}</p>
-        <button
-          onClick={() => window.location.reload()}
-          className="mt-3 px-4 py-2 bg-blue-600 text-white rounded-lg"
-        >
-          🔄 Retry
-        </button>
-      </div>
-    );
-  }
-
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4">
-      {rides.length === 0 ? (
-        <p className="text-center col-span-2 text-gray-500">
-          No rides available at the moment 🚗
-        </p>
-      ) : (
-        rides.map((ride) => (
-          <div
-            key={ride.id}
-            className="border rounded-2xl shadow p-4 hover:shadow-lg transition"
+    <div className="p-6 max-w-3xl mx-auto">
+      <h2 className="text-2xl font-bold mb-4">Available Rides</h2>
+
+      {/* ✅ List of rides */}
+      <ul className="space-y-4">
+        {rides.map((ride) => (
+          <li
+            key={ride._id}
+            className={`p-4 border rounded-lg cursor-pointer ${
+              selectedRide?._id === ride._id ? "bg-blue-100" : ""
+            }`}
+            onClick={() => {
+              setSelectedRide(ride);
+              setSelectedSeat(null); // reset seat
+            }}
           >
-            <img
-              src={ride.car_image || "https://via.placeholder.com/300"}
-              alt="Car"
-              className="w-full h-40 object-cover rounded-xl mb-2"
-            />
-            <h2 className="text-lg font-semibold">
-              {ride.from_location} ➝ {ride.to_location}
-            </h2>
-            <p className="text-sm text-gray-600">
-              Available Seats: {ride.available_seats}
-            </p>
-            <button
-              onClick={() => handleBook(ride.id)}
-              disabled={ride.available_seats <= 0 || bookingId === ride.id}
-              className={`mt-2 px-4 py-2 rounded-lg w-full ${
-                ride.available_seats > 0
-                  ? "bg-blue-600 text-white hover:bg-blue-700"
-                  : "bg-gray-400 text-gray-700 cursor-not-allowed"
-              }`}
-            >
-              {bookingId === ride.id
-                ? "⏳ Booking..."
-                : ride.available_seats > 0
-                ? "Book Seat"
-                : "Fully Booked"}
-            </button>
+            {ride.from_location} → {ride.to_location} on{" "}
+            {new Date(ride.date).toLocaleDateString()} — ₦{ride.price}  
+            ({ride.available_seats} seats left)
+          </li>
+        ))}
+      </ul>
+
+      {/* ✅ Seat selection */}
+      {selectedRide && (
+        <div className="mt-6">
+          <h3 className="text-lg font-semibold mb-2">
+            Select a seat for {selectedRide.from_location} →{" "}
+            {selectedRide.to_location}
+          </h3>
+          <div className="grid grid-cols-4 gap-3 max-w-xs">
+            {Array.from({ length: selectedRide.seats }, (_, i) => i + 1).map(
+              (seat) => {
+                const isBooked = selectedRide.booked_seats?.includes(seat);
+                return (
+                  <button
+                    key={seat}
+                    disabled={isBooked}
+                    onClick={() => setSelectedSeat(seat)}
+                    className={`p-3 rounded-lg border ${
+                      isBooked
+                        ? "bg-gray-300 cursor-not-allowed"
+                        : selectedSeat === seat
+                        ? "bg-blue-600 text-white"
+                        : "bg-white hover:bg-blue-100"
+                    }`}
+                  >
+                    Seat {seat}
+                  </button>
+                );
+              }
+            )}
           </div>
-        ))
+        </div>
+      )}
+
+      {/* ✅ Confirm booking */}
+      {selectedSeat && (
+        <button
+          onClick={handleBooking}
+          className="mt-6 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700"
+        >
+          Confirm Booking (Seat {selectedSeat})
+        </button>
       )}
     </div>
   );
-}
+};
+
+export default BookingForm;
