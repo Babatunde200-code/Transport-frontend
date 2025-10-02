@@ -1,55 +1,55 @@
-import React, { useEffect } from "react";
+import React from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { FlutterWaveButton, closePaymentModal } from "flutterwave-react-v3";
 
-const PaymentPage = () => {
-  useEffect(() => {
-    const script = document.createElement("script");
-    script.src = "https://checkout.flutterwave.com/v3.js";
-    script.async = true;
-    document.body.appendChild(script);
-    return () => {
-      document.body.removeChild(script);
-    };
-  }, []);
+export default function PaymentPage() {
+  const location = useLocation();
+  const navigate = useNavigate();
 
-  const makePayment = () => {
-    window.FlutterwaveCheckout({
-      public_key: "FLWPUBK_TEST-2577c5ca58d448731dbf083c8e5e4cdd-X", // Replace with your public key
-      tx_ref: Date.now().toString(),
-      amount: 3000,
-      currency: "NGN",
-      payment_options: "card,ussd",
-      customer: {
-        email: "user@example.com",
-        name: "John Doe",
-      },
-      callback: function (response) {
-        console.log("Payment callback:", response);
-        alert("Payment successful!");
-      },
-      onclose: function () {
-        console.log("Payment modal closed");
-      },
-      customizations: {
-        title: "ASAP TRAVELS",
-        description: "Payment for ride booking",
-        logo: "https://yourlogo.png",
-      },
-    });
+  const bookingId = location.state?.bookingId;
+  const amount = location.state?.amount;
+
+  if (!bookingId || !amount) {
+    return <p className="text-center mt-10 text-red-600">Invalid payment request</p>;
+  }
+
+  const config = {
+    public_key: "FLWPUBK_TEST-2577c5ca58d448731dbf083c8e5e4cdd-X", // replace with your Flutterwave public key
+    tx_ref: Date.now(),
+    amount,
+    currency: "NGN",
+    payment_options: "card, banktransfer, ussd",
+    customer: {
+      email: "tunde200.james@gmail.com", // ideally from booking data
+      phone_number: "08012345678",
+      name: "Customer Name",
+    },
+    customizations: {
+      title: "Ride Booking Payment",
+      description: `Payment for booking #${bookingId}`,
+      logo: "https://your-logo-url.com/logo.png",
+    },
+  };
+
+  const fwConfig = {
+    ...config,
+    text: "Pay Now",
+    callback: (response) => {
+      console.log("Payment response:", response);
+      closePaymentModal();
+      navigate("/"); // ✅ redirect after payment
+    },
+    onClose: () => {
+      console.log("Payment modal closed");
+    },
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-blue-50">
-      <div className="bg-white shadow-md p-6 rounded-md text-center">
-        <h2 className="text-xl font-semibold mb-4">Make Payment</h2>
-        <button
-          onClick={makePayment}
-          className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition"
-        >
-          Pay Now
-        </button>
+    <div className="flex justify-center items-center min-h-screen bg-gray-50">
+      <div className="bg-white rounded-2xl shadow-lg p-8">
+        <h2 className="text-xl font-bold mb-6 text-center">Complete Your Payment</h2>
+        <FlutterWaveButton {...fwConfig} className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg font-medium" />
       </div>
     </div>
   );
-};
-
-export default PaymentPage;
+}

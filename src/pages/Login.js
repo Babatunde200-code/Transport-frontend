@@ -3,10 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 
 const Login = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
 
   const handleChange = (e) => {
@@ -19,12 +16,10 @@ const Login = () => {
 
     try {
       const response = await fetch(
-        "https://transport-2-0imo.onrender.com/api/login/",
+        "https://transport-2-0imo.onrender.com/api/login/", // ✅ only one login endpoint
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
+          headers: { "Content-Type": "application/json" },
           body: JSON.stringify(formData),
         }
       );
@@ -32,16 +27,16 @@ const Login = () => {
       const data = await response.json();
 
       if (response.ok) {
-        // ✅ Store JWT + role
+        // ✅ Save JWT + role consistently
         localStorage.setItem("token", data.token);
         localStorage.setItem("email", data.email);
-        localStorage.setItem("is_admin", data.is_admin);
+        localStorage.setItem("is_admin", data.is_admin ? "true" : "false");
 
-        // Redirect: Admin → /upload-ride, User → /booking
+        // ✅ Redirect based on role
         if (data.is_admin) {
-          navigate("/upload-ride");
+          navigate("/upload-ride"); // admin dashboard
         } else {
-          navigate("/booking");
+          navigate("/booking"); // user booking page
         }
       } else {
         setError(data.error || "Login failed. Please check your credentials.");
