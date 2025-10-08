@@ -13,7 +13,7 @@ const Home = () => {
   const [showOffer, setShowOffer] = useState(false);
   const isAdmin = localStorage.getItem("is_staff") === "true";
 
-  // 🎯 Automatically show promo once per session
+  // 🎯 Show promo only once per session
   useEffect(() => {
     const hasSeenOffer = sessionStorage.getItem("hasSeenOffer");
     if (!hasSeenOffer) {
@@ -38,7 +38,7 @@ const Home = () => {
           {showOffer && (
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50">
               <motion.div
-                className="bg-white rounded-2xl shadow-2xl max-w-lg p-8 text-center"
+                className="bg-white rounded-2xl shadow-2xl max-w-lg p-8 text-center max-h-[90vh] overflow-y-auto"
                 initial={{ scale: 0.8, opacity: 0 }}
                 animate={{ scale: 1, opacity: 1 }}
                 transition={{ duration: 0.4 }}
@@ -46,26 +46,36 @@ const Home = () => {
                 <h2 className="text-2xl font-bold mb-4 text-blue-700">
                   🚐 ASAP Travels – Special Launch Offer 🚐
                 </h2>
-                <p className="text-gray-700 mb-4">
-                  We are excited to announce that{" "}
+
+                <p className="text-gray-700 mb-4 leading-relaxed">
+                  We’re excited to announce that{" "}
                   <strong>ASAP Travels</strong> is offering{" "}
                   <span className="text-blue-600 font-semibold">
-                    50% travel discount 
+                    50% off travel fares
                   </span>{" "}
                   for the first set of passengers booking from{" "}
-                  <b>Ife to Ibadan</b>! we also take booking for <b>Ibadan to Ife</b>
+                  <b>Ife to Ibadan</b>! We also accept bookings for{" "}
+                  <b>Ibadan to Ife</b>.
                 </p>
-                <p className="text-gray-600 mb-2">
-                  Experience our comfort and reliability — absolutely free for
-                  a limited time.
-                </p>
+
                 <ul className="text-left text-gray-700 mb-6 list-disc list-inside">
                   <li>📌 Limited seats available – first come, first served.</li>
                   <li>📌 Fill out the form below to secure your spot.</li>
                 </ul>
-                <h3><b>N.B: the discount is only for Ife to Ibadan and runs for only fridays for a month, other days are in full payment</b></h3>
-                <h3><b>If you are bringing heavy load you will sort that out with the driver</b></h3>
-                <div className="flex justify-center gap-4">
+
+                <h3 className="text-sm text-gray-700 font-medium mb-2">
+                  <b>N.B:</b> The discount applies only to{" "}
+                  <b>Ife ↔ Ibadan</b> routes and runs{" "}
+                  <b>every Friday for one month</b>. Other days require full
+                  payment.
+                </h3>
+
+                <h3 className="text-sm text-gray-700 font-medium mb-6">
+                  <b>Note:</b> If you’re bringing heavy luggage, please make
+                  arrangements directly with the driver.
+                </h3>
+
+                <div className="flex justify-center gap-4 mt-4">
                   <button
                     onClick={() => setShowOffer(false)}
                     className="px-6 py-2 rounded-lg border border-gray-400 hover:bg-gray-100"
@@ -96,7 +106,7 @@ const Home = () => {
               Seamless Interstate Travel Bookings
             </h1>
             <p className="mb-6 text-lg">
-              Connect with verified drivers. Book rides with ease. Travel safely
+              Connect with verified drivers. Book rides easily. Travel safely
               across Nigeria.
             </p>
             <div className="space-x-4">
@@ -139,10 +149,10 @@ const Home = () => {
                 About Us
               </h2>
               <p className="text-lg leading-relaxed">
-                <strong>ASAP Travels</strong> is an innovative web-based platform
-                designed to simplify interstate travel bookings in Nigeria and
-                other developing regions. Our mission is to make travel safer,
-                smarter, and more accessible for everyone.
+                <strong>ASAP Travels</strong> is an innovative platform designed
+                to simplify interstate travel bookings in Nigeria and other
+                regions with similar challenges. Our mission is to make travel
+                safer, smarter, and more accessible for everyone.
               </p>
             </div>
           </motion.div>
@@ -174,7 +184,7 @@ const Home = () => {
                   <FaPlaneDeparture className="text-4xl text-blue-600 mb-4 mx-auto" />
                 ),
                 title: "Enjoy the Ride",
-                desc: "Get notified, stay in touch, and travel smoothly to your destination.",
+                desc: "Stay updated, stay connected, and travel with ease.",
               },
             ].map((step, i) => (
               <motion.div
