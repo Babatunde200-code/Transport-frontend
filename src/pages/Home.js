@@ -50,10 +50,10 @@ const Home = () => {
                   We are excited to announce that{" "}
                   <strong>ASAP Travels</strong> is offering{" "}
                   <span className="text-blue-600 font-semibold">
-                    100% free travel
+                    50% travel discount 
                   </span>{" "}
                   for the first set of passengers booking from{" "}
-                  <b>Ife to Ibadan</b>!
+                  <b>Ife to Ibadan</b>! we also take booking for <b>Ibadan to Ife</b>
                 </p>
                 <p className="text-gray-600 mb-2">
                   Experience our comfort and reliability — absolutely free for
@@ -63,7 +63,8 @@ const Home = () => {
                   <li>📌 Limited seats available – first come, first served.</li>
                   <li>📌 Fill out the form below to secure your spot.</li>
                 </ul>
-
+                <h3><b>N.B: the discount is only for Ife to Ibadan and runs for only fridays for a month, other days are in full payment</b></h3>
+                <h3><b>If you are bringing heavy load you will sort that out with the driver</b></h3>
                 <div className="flex justify-center gap-4">
                   <button
                     onClick={() => setShowOffer(false)}
