@@ -28,6 +28,51 @@ const Home = () => {
               "url('https://images.unsplash.com/photo-1557223562-6c77ef16210f?q=80&w=2070&auto=format&fit=crop')",
           }}
         >
+          {/* 🚐 Launch Offer Modal */}
+      {showOffer && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50">
+          <motion.div
+            className="bg-white rounded-2xl shadow-2xl max-w-lg p-8 text-center"
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.4 }}
+          >
+            <h2 className="text-2xl font-bold mb-4 text-blue-700">
+              🚐 ASAP Travels – Special Launch Offer 🚐
+            </h2>
+            <p className="text-gray-700 mb-4">
+              We are pleased to announce that <strong>ASAP Travels</strong> is
+              offering <span className="text-blue-600 font-semibold">100% free travel</span> 
+              for the first set of passengers booking their trip from <b>Ife to Ibadan</b>.
+            </p>
+            <p className="text-gray-600 mb-2">
+              This limited-time offer is our way of introducing you to our service and
+              ensuring you experience the comfort and reliability we stand for.
+            </p>
+            <ul className="text-left text-gray-700 mb-6 list-disc list-inside">
+              <li>📌 Limited seats available – first-come, first-served.</li>
+              <li>📌 Fill out the form below to secure your spot.</li>
+            </ul>
+
+            <div className="flex justify-center gap-4">
+              <button
+                onClick={() => setShowOffer(false)}
+                className="px-6 py-2 rounded-lg border border-gray-400 hover:bg-gray-100"
+              >
+                Cancel
+              </button>
+              <Link
+                to="https://docs.google.com/forms/d/e/1FAIpQLScGdw6BLu7UjD0V0O_K1DHlWjdW1zxPr11HBdemvLQg1biZ8g/viewform?usp=header"
+                className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold"
+                onClick={() => setShowOffer(false)}
+              >
+                Get Started
+              </Link>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
           <motion.div
             className="bg-black bg-opacity-50 p-10 rounded-xl text-center"
             initial="hidden"
