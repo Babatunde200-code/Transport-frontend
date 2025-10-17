@@ -14,15 +14,15 @@ export default function PaymentPage() {
   }
 
   const config = {
-    public_key: "FLWPUBK_TEST-2577c5ca58d448731dbf083c8e5e4cdd-X", // replace with your Flutterwave public key
+    public_key: "FLWPUBK-671ef24d9faacb12a1ed1a0017b42c96-X",
     tx_ref: Date.now(),
     amount,
     currency: "NGN",
     payment_options: "card, banktransfer, ussd",
     customer: {
-      email: "tunde200.james@gmail.com", // ideally from booking data
-      phone_number: "08012345678",
-      name: "Customer Name",
+      email: location.state?.email || "tunde200.james@gmail.com",  // ✅ Add a valid email
+      phone_number: location.state?.phone || "08127470107",   // optional but good to include
+      name: location.state?.name || "Test User",               // optional
     },
     customizations: {
       title: "Ride Booking Payment",
@@ -30,7 +30,7 @@ export default function PaymentPage() {
       logo: "https://your-logo-url.com/logo.png",
     },
   };
-
+  
   const fwConfig = {
     ...config,
     text: "Pay Now",

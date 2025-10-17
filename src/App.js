@@ -27,6 +27,8 @@ import ProtectedRoute from "./routes/ProtectedRoute";
 import AdminRoute from "./routes/AdminRoute";
 
 function App() {
+
+
   return (
     <Router>
       <Routes>
@@ -40,6 +42,7 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/reset-password/:uid/:token" element={<ResetPassword />} />
         <Route path="/review-booking" element={<ReviewBooking />} />
+        <Route path="/payment" element={<PaymentPage />} ></Route>
 
         {/* 👨‍💼 Admin auth */}
         <Route path="/admin/signup" element={<SignupAdmin />} />
@@ -75,14 +78,6 @@ function App() {
           element={
             <ProtectedRoute>
               <BookingForm />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/pay"
-          element={
-            <ProtectedRoute>
-              <PaymentPage />
             </ProtectedRoute>
           }
         />
