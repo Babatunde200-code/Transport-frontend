@@ -16,6 +16,7 @@ import BookingForm from "./pages/BookingForm";
 import PaymentPage from "./pages/PaymentPage";
 import MyBookings from "./pages/MyBookings";
 import ReviewBooking from "./pages/ReviewBooking";
+import TicketPage from "./pages/TicketPage";
 
 // 👨‍💼 Admin features
 import SignupAdmin from "./Admin/Signup_admin";
@@ -43,6 +44,8 @@ function App() {
         <Route path="/reset-password/:uid/:token" element={<ResetPassword />} />
         <Route path="/review-booking" element={<ReviewBooking />} />
         <Route path="/payment" element={<PaymentPage />} ></Route>
+        <Route path="/ticket" element={<TicketPage />} />
+
 
         {/* 👨‍💼 Admin auth */}
         <Route path="/admin/signup" element={<SignupAdmin />} />
