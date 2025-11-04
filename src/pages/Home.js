@@ -31,13 +31,15 @@ const Home = () => {
 <section className="relative h-[85vh] flex items-center justify-center text-white overflow-hidden">
   {/* 🎥 Background Video */}
   <video
-    className="absolute inset-0 w-full h-full object-cover"
-    autoPlay
-    loop
-    muted
-    playsInline
-    src="https://videos.pexels.com/video-files/8571956/8571956-uhd_2560_1440_24fps.mp4"
-  />
+  className="absolute inset-0 w-full h-full object-cover"
+  autoPlay
+  loop
+  muted
+  playsInline
+  preload="auto"
+  src="https://videos.pexels.com/video-files/3129702/3129702-uhd_3840_2160_25fps.mp4"
+/>
+
 
   {/* Dark overlay for better text contrast */}
   <div className="absolute inset-0 bg-black opacity-50"></div>
@@ -79,7 +81,7 @@ const Home = () => {
             Cancel
           </button>
           <Link
-            to="https://docs.google.com/forms/d/e/1FAIpQLScGdw6BLu7UjD0V0O_K1DHlWjdW1zxPr11HBdemvLQg1biZ8g/viewform?usp=header"
+            to="/login"
             className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold"
             onClick={() => setShowOffer(false)}
           >
@@ -178,22 +180,22 @@ const Home = () => {
         price: "₦5,150",
         duration: "2h 15m",
         image:
-          "https://images.unsplash.com/photo-1604079628040-d1b60c3a9a41?q=80&w=1470",
+          "https://images.unsplash.com/photo-1597076537024-193fb8a4cf9c?q=80&w=1470&auto=format&fit=crop",
       },
       {
         route: "Ibadan → Lagos",
         price: "₦10,100",
         duration: "2h 45m",
         image:
-          "https://images.unsplash.com/photo-1623428187969-5eab4b493ba0?q=80&w=1470",
+          "https://images.unsplash.com/photo-1604079628040-d1b60c3a9a41?q=80&w=1470&auto=format&fit=crop",
       },
       {
         route: "Lagos → Ife",
         price: "₦10,100",
         duration: "3h 00m",
         image:
-          "https://images.unsplash.com/photo-1578762170131-8be0b4fd25ce?q=80&w=1470",
-      },
+          "https://images.unsplash.com/photo-1578762170131-8be0b4fd25ce?q=80&w=1470&auto=format&fit=crop",
+      },      
     ].map((r, i) => (
       <motion.div
         key={i}
