@@ -66,9 +66,6 @@ const Signup = () => {
           backgroundPosition: "center",
         }}
       >
-        <div className="bg-black bg-opacity-40 p-10 rounded-3xl backdrop-blur-md">
-          <h1 className="text-4xl font-semibold text-center">Let’s Get Started!</h1>
-        </div>
       </div>
 
       {/* RIGHT PANEL (FORM) */}
