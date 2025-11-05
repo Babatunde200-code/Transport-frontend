@@ -91,7 +91,7 @@ const Home = () => {
                     Cancel
                   </button>
                   <Link
-                    to="https://docs.google.com/forms/d/e/1FAIpQLScGdw6BLu7UjD0V0O_K1DHlWjdW1zxPr11HBdemvLQg1biZ8g/viewform?usp=header"
+                    to="/login"
                     className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-semibold"
                     onClick={() => setShowOffer(false)}
                   >
