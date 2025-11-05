@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import parkImage from "../assets/park.jpg"; // ✅ image here
+import parkImage from "../assets/park.jpg"; //
+import asapLogo from "../assets/Asap_logo.png",
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -66,9 +67,13 @@ const Signup = () => {
           backgroundPosition: "center",
         }}
       >
-        <div className="bg-black bg-opacity-40 p-10 rounded-3xl backdrop-blur-md">
-          <h1 className="text-4xl font-semibold text-center">Let’s Get Started!</h1>
-        </div>
+        <div className="bg-black bg-opacity-40 p-10 rounded-3xl backdrop-blur-md flex justify-center">
+      <img
+        src={asapLogo}
+        alt="ASAP Travels Logo"
+        className="w-48" // adjust logo size here (w-32, w-40, w-52 ...)
+      />
+    </div>
       </div>
 
       {/* RIGHT PANEL (FORM) */}
