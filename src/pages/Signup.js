@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import parkImage from "../assets/park.jpg"; // ✅ image here
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -13,20 +14,15 @@ const Signup = () => {
   const [success, setSuccess] = useState("");
   const navigate = useNavigate();
 
-  // Handle input change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  // Handle signup submission
   const handleSignup = async (e) => {
     e.preventDefault();
-    console.log("🔹 Signup form submitted with:", formData);
-
     setError("");
     setSuccess("");
 
-    // Local check before hitting API
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match.");
       return;
@@ -38,91 +34,108 @@ const Signup = () => {
         {
           email: formData.email,
           password: formData.password,
-          confirm_password: formData.confirmPassword, // ✅ match backend
+          confirm_password: formData.confirmPassword,
         }
       );
 
-      console.log("✅ Signup response:", res.data);
       setSuccess("Signup successful! Please check your email to verify.");
-      setTimeout(() => navigate("/verify"), 2000);
+      setTimeout(() => navigate("/verify"), 1500);
     } catch (err) {
-      console.error("❌ Signup error:", err.response?.data || err.message);
       setError(
         err.response?.data?.detail ||
-          Object.values(err.response?.data).flat().join(", ") || // show validation messages
-          "Signup failed. Try again."
+        Object.values(err.response?.data).flat().join(", ") ||
+        "Signup failed. Try again."
       );
     }
   };
 
+  // ✅ Google signup handler (placeholder for now)
+  const handleGoogleSignup = () => {
+    window.location.href = "https://transport-2-0imo.onrender.com/api/auth/google/";
+  };
+
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
-      <div className="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-semibold mb-6 text-center text-gray-800">
-          Create an Account
-        </h2>
+    <div className="min-h-screen flex flex-col md:flex-row bg-[#D0D3FF]">
 
-        {/* Error message */}
-        {error && (
-          <div className="bg-red-100 text-red-700 px-4 py-2 mb-4 rounded-md">
-            {error}
-          </div>
-        )}
+      {/* LEFT PANEL */}
+      <div
+        className="md:w-1/2 w-full flex items-center justify-center text-white p-10"
+        style={{
+          backgroundImage: `url(${parkImage})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
+        <div className="bg-black bg-opacity-40 p-10 rounded-3xl backdrop-blur-md">
+          <h1 className="text-4xl font-semibold text-center">Let’s Get Started!</h1>
+        </div>
+      </div>
 
-        {/* Success message */}
-        {success && (
-          <div className="bg-green-100 text-green-700 px-4 py-2 mb-4 rounded-md">
-            {success}
-          </div>
-        )}
+      {/* RIGHT PANEL (FORM) */}
+      <div className="md:w-1/2 w-full flex items-center justify-center p-10 bg-white">
+        <div className="w-full max-w-md">
 
-        <form onSubmit={handleSignup}>
-          <div className="mb-4">
-            <label className="block mb-1 text-gray-700">Email</label>
+          <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">
+            Create Account
+          </h2>
+
+          {error && <div className="bg-red-100 text-red-600 px-4 py-2 rounded-md mb-3">{error}</div>}
+          {success && <div className="bg-green-100 text-green-600 px-4 py-2 rounded-md mb-3">{success}</div>}
+
+          <form onSubmit={handleSignup}>
+            <label className="block mb-2 font-medium">Email</label>
             <input
               type="email"
               name="email"
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
-              value={formData.email}
-              onChange={handleChange}
               required
-              placeholder="Enter your email"
+              onChange={handleChange}
+              value={formData.email}
+              className="w-full mb-4 px-4 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-blue-400"
             />
-          </div>
 
-          <div className="mb-4">
-            <label className="block mb-1 text-gray-700">Password</label>
+            <label className="block mb-2 font-medium">Password</label>
             <input
               type="password"
               name="password"
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
-              value={formData.password}
-              onChange={handleChange}
               required
-              placeholder="Enter password"
+              onChange={handleChange}
+              value={formData.password}
+              className="w-full mb-4 px-4 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-blue-400"
             />
-          </div>
 
-          <div className="mb-6">
-            <label className="block mb-1 text-gray-700">Confirm Password</label>
+            <label className="block mb-2 font-medium">Confirm Password</label>
             <input
               type="password"
               name="confirmPassword"
-              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring focus:border-blue-300"
-              value={formData.confirmPassword}
-              onChange={handleChange}
               required
-              placeholder="Re-enter password"
+              onChange={handleChange}
+              value={formData.confirmPassword}
+              className="w-full mb-6 px-4 py-2 border rounded-lg outline-none focus:ring-2 focus:ring-blue-400"
             />
-          </div>
+
+            <button type="submit" className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">
+              Create Account
+            </button>
+          </form>
+
+          <div className="text-center my-4 text-gray-500">or</div>
 
           <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors"
+            onClick={handleGoogleSignup}
+            className="w-full py-2 border rounded-lg flex items-center justify-center gap-2 hover:bg-gray-50 transition"
           >
-            Sign Up
+            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="" className="w-5" />
+            Sign up with Google
           </button>
-        </form>
+
+          <p className="text-center text-gray-600 mt-4">
+            Already have an account?{" "}
+            <span className="text-blue-600 font-medium cursor-pointer" onClick={() => navigate("/login")}>
+              Login
+            </span>
+          </p>
+
+        </div>
       </div>
     </div>
   );
