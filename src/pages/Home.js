@@ -55,7 +55,7 @@ export default function HomePage() {
       Connecting Travelers, Making Trips Easier.
     </p>
 
-    <button className="mt-8 px-8 py-3 bg-[#3348A2] text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition">
+    <button href = "/login" className="mt-8 px-8 py-3 bg-[#3348A2] text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition">
       Book a Ride
     </button>
   </div>
