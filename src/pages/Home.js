@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 export default function HomePage() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
   return (
     <div className="w-full min-h-screen bg-white text-gray-900">
 {/* NAVBAR */}
@@ -55,7 +57,10 @@ export default function HomePage() {
       Connecting Travelers, Making Trips Easier.
     </p>
 
-    <button href = "/login" className="mt-8 px-8 py-3 bg-[#3348A2] text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition">
+    <button
+      onClick={() => navigate("/login")}
+      className="mt-8 px-8 py-3 bg-[#3348A2] text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition"
+    >
       Book a Ride
     </button>
   </div>
@@ -63,7 +68,7 @@ export default function HomePage() {
   {/* RIGHT IMAGE */}
   <div className="flex-1 flex justify-center">
     <img
-      src="/bus.jpg" // <-- save your uploaded image with this name
+      src="/asap.png" // <-- save your uploaded image with this name
       alt="Interstate Vehicle"
       className="w-full max-w-md rounded-2xl object-cover shadow-md"
     />
