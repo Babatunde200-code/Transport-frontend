@@ -5,36 +5,35 @@ export default function HomePage() {
     <div className="w-full min-h-screen bg-white text-gray-900">
 
       {/* HERO SECTION */}
-      <section className="relative w-full bg-[#3348A2] overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6 py-20 grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+      <section className="h-[90vh] flex flex-col md:flex-row items-center justify-between px-6 md:px-16 gap-8">
+  {/* LEFT TEXT */}
+  <div className="flex-1 text-center md:text-left">
+    <h1 className="text-4xl md:text-6xl font-bold text-[#3348A2] leading-tight">
+      Travel Smarter Across Cities
+    </h1>
 
-          {/* Left Text */}
-          <div className="animate-fadeIn">
-            <h1 class="text-4xl font-bold text-[#0077FF]">Travel Smarter Across Cities</h1>
-            <p class="text-lg text-[#111111]">Affordable Interstate Rides, Anytime.<br/>Connecting Travelers, Making Trips Easier.</p>
-            <p className="mt-2 text-white/80 md:text-lg">
-              Connecting Travelers, Making Trips Easier.
-            </p>
+    <p className="mt-4 text-lg md:text-2xl text-gray-700 font-light">
+      Affordable Interstate Rides, Anytime.
+    </p>
 
-            <a href="#plans">
-              <button className="mt-8 px-8 py-3 bg-white text-[#3348A2] font-semibold rounded-lg shadow-lg hover:shadow-xl transition">
-                Book a Ride
-              </button>
-            </a>
-          </div>
+    <p className="mt-1 text-gray-600 md:text-lg">
+      Connecting Travelers, Making Trips Easier.
+    </p>
 
-          {/* Right Image */}
-          <div className="relative animate-fadeIn">
-            <div className="absolute inset-0 blur-2xl opacity-30 rounded-[28px] bg-white"></div>
-            <img
-              src="/park2.jpg"
-              alt="Travel Ride"
-              className="relative w-full h-[450px] md:h-[520px] object-cover rounded-[28px] shadow-[0_8px_30px_rgba(0,0,0,0.25)]"
-            />
-          </div>
+    <button className="mt-8 px-8 py-3 bg-[#3348A2] text-white font-semibold rounded-lg shadow-lg hover:shadow-xl transition">
+      Book a Ride
+    </button>
+  </div>
 
-        </div>
-      </section>
+  {/* RIGHT IMAGE */}
+  <div className="flex-1 flex justify-center">
+    <img
+      src="/hero-bus.jpg" // <-- save your uploaded image with this name
+      alt="Interstate Vehicle"
+      className="w-full max-w-md rounded-2xl object-cover shadow-md"
+    />
+  </div>
+</section>
 
 
       {/* TRAVEL PLANS SECTION */}
