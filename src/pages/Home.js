@@ -40,12 +40,10 @@ export default function HomePage() {
         )}
       </header>
       {/* HERO SECTION */}
-      <section className="h-[90vh] flex flex-col md:flex-row items-center justify-between px-6 md:px-16 gap-8">
+      <section className="pt-36 md:pt-40 h-auto flex flex-col md:flex-row items-center justify-between px-6 md:px-16 gap-8">
   {/* LEFT TEXT */}
   <div className="flex-1 text-center md:text-left">
     <h1 className="text-4xl md:text-6xl font-bold text-[#3348A2] leading-tight">
-
-      
       Travel Smarter Across Cities
     </h1>
 
