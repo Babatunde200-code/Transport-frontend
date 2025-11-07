@@ -4,29 +4,39 @@ export default function HomePage() {
   return (
     <div className="w-full min-h-screen bg-white text-gray-900">
       {/* Hero Section */}
-      <section
-        className="relative h-[90vh] flex items-center justify-center bg-cover bg-center"
-        style={{ backgroundImage: "url('/hero-carpark.jpg')" }} // ✅ Update this path if needed
-      >
-        <div className="absolute inset-0 bg-[#3348A2]/65 backdrop-blur-sm" />
-        <div className="relative z-10 text-center px-6 max-w-3xl">
-          <h1 className="text-4xl md:text-6xl font-bold text-white leading-tight">
-            Travel Smarter Across Cities
-          </h1>
+      <section className="relative w-full bg-[#3348A2]">
+  <div className="max-w-7xl mx-auto px-6 py-20 grid grid-cols-1 md:grid-cols-2 gap-10 items-center">
 
-          <p className="mt-4 text-lg md:text-2xl text-white/90 font-light">
-            Affordable Interstate Rides, Anytime.
-          </p>
+    {/* Left Text */}
+    <div>
+      <h1 className="text-4xl md:text-6xl font-bold text-white leading-tight">
+        Travel Smarter Across Cities
+      </h1>
 
-          <p className="mt-1 text-white/80 md:text-lg">
-            Connecting Travelers, Making Trips Easier.
-          </p>
+      <p className="mt-4 text-lg md:text-2xl text-white/90 font-light">
+        Affordable Interstate Rides, Anytime.
+      </p>
 
-          <button className="mt-8 px-8 py-3 bg-white text-[#3348A2] font-semibold rounded-lg shadow-lg hover:shadow-xl transition">
-            Book a Ride
-          </button>
-        </div>
-      </section>
+      <p className="mt-2 text-white/80 md:text-lg">
+        Connecting Travelers, Making Trips Easier.
+      </p>
+
+      <button className="mt-8 px-8 py-3 bg-white text-[#3348A2] font-semibold rounded-lg shadow-lg hover:shadow-xl transition">
+        Book a Ride
+      </button>
+    </div>
+
+    {/* Right Image */}
+    <div className="w-full h-[420px] md:h-[500px] rounded-lg overflow-hidden shadow-xl">
+      <img
+        src="/park2.jpg" // ✅ Make sure this matches your uploaded filename
+        alt="Travel Ride"
+        className="w-full h-full object-cover"
+      />
+    </div>
+
+  </div>
+</section>
 
       {/* Tariffs Section */}
       <section className="py-20 bg-white text-center">
