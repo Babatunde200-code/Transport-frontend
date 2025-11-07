@@ -28,7 +28,7 @@ export default function HomePage() {
   {/* RIGHT IMAGE */}
   <div className="flex-1 flex justify-center">
     <img
-      src="/hero-bus.jpg" // <-- save your uploaded image with this name
+      src="/bus.jpg" // <-- save your uploaded image with this name
       alt="Interstate Vehicle"
       className="w-full max-w-md rounded-2xl object-cover shadow-md"
     />
