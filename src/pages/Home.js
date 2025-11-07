@@ -44,6 +44,8 @@ export default function HomePage() {
   {/* LEFT TEXT */}
   <div className="flex-1 text-center md:text-left">
     <h1 className="text-4xl md:text-6xl font-bold text-[#3348A2] leading-tight">
+
+      
       Travel Smarter Across Cities
     </h1>
 
