@@ -78,7 +78,7 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-8 px-6 animate-fadeIn">
           {[{ title: "Economy Ride", price: "₦5,150 / Seat" }, { title: "Standard Ride", price: "₦7,500 / Seat" }, { title: "Business Ride", price: "₦12,000 / Seat" }].map((plan, i) => (
             <div key={i} className="border p-8 rounded-xl shadow hover:shadow-xl transition bg-white">
-              <img src="/bus1.jpg" alt="car" className="mx-auto mb-6 w-24" />
+              <img src="/bus1.jpeg" alt="car" className="mx-auto mb-6 w-24" />
               <h3 className="text-xl font-semibold mb-2">{plan.title}</h3>
               <p className="text-[#3348A2] text-2xl font-bold mb-4">{plan.price}</p>
               <button className="bg-[#3348A2] text-white px-5 py-2 rounded-lg hover:bg-[#2d3e82] transition">
