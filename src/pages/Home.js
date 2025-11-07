@@ -68,7 +68,7 @@ export default function HomePage() {
   {/* RIGHT IMAGE */}
   <div className="flex-1 flex justify-center">
     <img
-      src="/asap1.png" // <-- save your uploaded image with this name
+      src="/asap.png" // <-- save your uploaded image with this name
       alt="Interstate Vehicle"
       className="w-full max-w-md rounded-2xl object-cover shadow-md"
     />
@@ -113,7 +113,7 @@ export default function HomePage() {
       {/* FOOTER */}
       <footer className="bg-[#3348A2] text-white text-center py-10">
         <p className="text-lg font-semibold">We are available 24/7 — Book anytime!</p>
-        <p className="text-3xl font-bold my-4">+234 901 234 5678</p>
+        <p className="text-3xl font-bold my-4">+234 9033692772</p>
         <p className="text-sm opacity-75">© {new Date().getFullYear()} ASAP Travels</p>
       </footer>
 
