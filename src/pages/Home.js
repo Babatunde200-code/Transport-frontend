@@ -1,9 +1,45 @@
 import React from "react";
 
 export default function HomePage() {
+  const [menuOpen, setMenuOpen] = useState(false);
   return (
     <div className="w-full min-h-screen bg-white text-gray-900">
+{/* NAVBAR */}
+<header className="w-full bg-white shadow-sm fixed top-0 left-0 z-50">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
 
+          {/* LOGO */}
+          <h1 className="text-2xl font-bold text-[#3348A2]">ASAP Travels</h1>
+
+          {/* DESKTOP MENU */}
+          <nav className="hidden md:flex gap-10 text-[#3348A2] font-medium">
+            <a href="#" className="hover:text-gray-600">Home</a>
+            <a href="#about" className="hover:text-gray-600">About Us</a>
+            <a href="#services" className="hover:text-gray-600">Service</a>
+            <a href="#book" className="hover:text-gray-600">Book Ride</a>
+            <a href="#contact" className="hover:text-gray-600">Contact Us</a>
+          </nav>
+
+          {/* MOBILE TOGGLE BUTTON */}
+          <button
+            className="md:hidden text-[#3348A2] text-3xl"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            ☰
+          </button>
+        </div>
+
+        {/* MOBILE MENU */}
+        {menuOpen && (
+          <div className="md:hidden bg-white px-6 pb-4 space-y-3 text-[#3348A2] font-medium">
+            <a href="#" className="block">Home</a>
+            <a href="#about" className="block">About Us</a>
+            <a href="#services" className="block">Service</a>
+            <a href="#book" className="block">Book Ride</a>
+            <a href="#contact" className="block">Contact Us</a>
+          </div>
+        )}
+      </header>
       {/* HERO SECTION */}
       <section className="h-[90vh] flex flex-col md:flex-row items-center justify-between px-6 md:px-16 gap-8">
   {/* LEFT TEXT */}
