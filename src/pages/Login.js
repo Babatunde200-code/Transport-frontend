@@ -28,7 +28,7 @@ const Login = () => {
       );
 
       localStorage.setItem("token", res.data.token);
-      navigate("/dashboard"); // ✅ Update this route to your app page
+      navigate("/booking"); // ✅ Update this route to your app page
     } catch (err) {
       setError("Invalid login credentials. Try again.");
     }
