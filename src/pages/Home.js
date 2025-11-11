@@ -34,12 +34,12 @@ export default function HomePage() {
         {/* MOBILE MENU */}
         {menuOpen && (
           <div className="md:hidden bg-white px-6 pb-4 space-y-3 text-[#3348A2] font-medium">
-            <a href="#" className="block">Home</a>
-            <a href="#about" className="block">About Us</a>
-            <a href="#services" className="block">Service</a>
-            <a href="#book" className="block">Book Ride</a>
-            <a href="#contact" className="block">Contact Us</a>
-          </div>
+          <Link to="/" className="block">Home</Link>
+          <Link to="/about" className="block">About Us</Link>
+          <Link to="/services" className="block">Service</Link>
+          <Link to="/book" className="block">Book Ride</Link>
+          <Link to="/contact" className="block">Contact Us</Link>
+        </div>
         )}
       </header>
       {/* HERO SECTION */}

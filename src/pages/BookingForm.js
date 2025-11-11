@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import {Search } from "lucide-react";
+import { Search } from "lucide-react";
 
 export default function BookingForm() {
   const [rides, setRides] = useState([]);
@@ -15,7 +15,8 @@ export default function BookingForm() {
   const API_BASE = "https://transport-2-0imo.onrender.com/api";
   const navigate = useNavigate();
 
-  const fetchRides = async () => {
+  // FIX: Wrap fetchRides in useCallback so it is stable
+  const fetchRides = useCallback(async () => {
     try {
       const res = await axios.get(`${API_BASE}/rides/`, {
         headers: { Authorization: `Bearer ${token}` },
@@ -28,11 +29,12 @@ export default function BookingForm() {
     } finally {
       setLoading(false);
     }
-  };
-// eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [API_BASE, token]);
+
   useEffect(() => {
     fetchRides();
-  }, []);
+  }, [fetchRides]);
+
 
   useEffect(() => {
     if (!searchQuery.trim()) {
