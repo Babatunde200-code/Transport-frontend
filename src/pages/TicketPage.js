@@ -13,22 +13,23 @@ export default function TicketPage() {
   const API_BASE = "https://transport-2-0imo.onrender.com/api";
   const token = localStorage.getItem("token");
 
-  useEffect(() => {
-    if (!bookingId) return;
-    const fetchBooking = async () => {
-      try {
-        const res = await axios.get(`${API_BASE}/bookings/${bookingId}/`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
-        setBooking(res.data);
-      } catch (err) {
-        console.error("Error loading booking:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchBooking();
-  }, [bookingId]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+useEffect(() => {
+  if (!bookingId) return;
+  const fetchBooking = async () => {
+    try {
+      const res = await axios.get(`${API_BASE}/bookings/${bookingId}/`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      setBooking(res.data);
+    } catch (err) {
+      console.error("Error loading booking:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+  fetchBooking();
+}, [bookingId]);
 
   const downloadTicket = () => {
     const doc = new jsPDF();

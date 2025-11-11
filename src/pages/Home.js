@@ -15,11 +15,11 @@ export default function HomePage() {
 
           {/* DESKTOP MENU */}
           <nav className="hidden md:flex gap-10 text-[#3348A2] font-medium">
-            <a href="/" className="hover:text-gray-600">Home</a>
-            <a href="/about" className="hover:text-gray-600">About Us</a>
-            <a href="/services" className="hover:text-gray-600">Service</a>
-            <a href="/book" className="hover:text-gray-600">Book Ride</a>
-            <a href="/contact" className="hover:text-gray-600">Contact Us</a>
+            <Link to="/" className="hover:text-gray-600">Home</Link>
+            <Link to="/about" className="hover:text-gray-600">About Us</Link>
+            <Link to="/services" className="hover:text-gray-600">Service</Link>
+            <Link to="/book" className="hover:text-gray-600">Book Ride</Link>
+            <Link to="/contact" className="hover:text-gray-600">Contact Us</Link>
           </nav>
 
           {/* MOBILE TOGGLE BUTTON */}
