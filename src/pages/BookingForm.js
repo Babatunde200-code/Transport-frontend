@@ -130,7 +130,7 @@ export default function BookingForm() {
                   {/* Card Placeholder Image */}
                   <div className="h-44 bg-gray-200">
                     <img
-                      src="/bus.jpg"
+                      src="/bus1.jpeg"
                       className="w-full h-full object-cover"
                       alt="Ride bus"
                     />
