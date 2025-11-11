@@ -80,123 +80,103 @@ export default function BookingForm() {
   if (loading)
     return <p className="text-center mt-12 text-lg text-gray-600">Loading rides...</p>;
 
-  return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-10">
-      {/* Header */}
-      <h2 className="text-4xl md:text-5xl font-extrabold mb-10 text-center text-blue-800 drop-shadow-sm">
-        🚗 Book Your Ride
-      </h2>
-
-      {/* Search Bar */}
-      <div className="flex justify-center mb-10">
-        <div className="relative w-full sm:w-2/3 md:w-1/2">
-          <input
-            type="text"
-            placeholder="🔍 Search by origin or destination..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full border border-gray-300 rounded-2xl pl-12 pr-5 py-4 text-base sm:text-lg focus:ring-2 focus:ring-blue-500 shadow-md"
-          />
-          <Search className="absolute left-4 top-4 w-6 h-6 text-gray-400" />
+    return (
+      <div className="bg-gray-50 min-h-screen pb-20">
+    
+        {/* Top Search Section */}
+        <section className="bg-[#3348A2] py-12">
+          <div className="max-w-4xl mx-auto text-center text-white px-6">
+            <h1 className="text-3xl md:text-5xl font-bold mb-4">
+              Find Your Perfect Ride
+            </h1>
+            <p className="text-white/90 text-lg mb-8">Travel affordably and conveniently across cities.</p>
+    
+            <div className="relative max-w-2xl mx-auto">
+              <input
+                type="text"
+                placeholder="Search for city or destination..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full rounded-full py-4 pl-14 pr-5 text-lg text-[#3348A2] border border-white shadow-lg outline-none"
+              />
+              <Search className="absolute left-5 top-4 w-6 h-6 text-white opacity-75" />
+            </div>
+          </div>
+        </section>
+    
+        {/* Ride Cards Section */}
+        <div className="max-w-6xl mx-auto px-6 mt-12">
+    
+          {/* Status Message */}
+          {message.text && (
+            <div className={`mb-6 p-4 text-center rounded-xl font-medium ${
+              message.type === "success"
+                ? "bg-green-100 text-green-700"
+                : "bg-red-100 text-red-700"
+            }`}>
+              {message.text}
+            </div>
+          )}
+    
+          {filteredRides.length === 0 ? (
+            <p className="text-center text-gray-600 text-lg">No rides found. Try another search.</p>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
+              {filteredRides.map((ride) => (
+                <div key={ride._id} className="rounded-2xl overflow-hidden shadow-lg bg-white hover:shadow-2xl transition">
+                  
+                  {/* Card Placeholder Image */}
+                  <div className="h-44 bg-gray-200">
+                    <img
+                      src="/bus.jpg"
+                      className="w-full h-full object-cover"
+                      alt="Ride bus"
+                    />
+                  </div>
+    
+                  <div className="p-6">
+                    <h3 className="text-xl font-bold text-[#3348A2]">
+                      {ride.origin} → {ride.destination}
+                    </h3>
+    
+                    <p className="text-gray-600 mt-2">
+                      Departure:{" "}
+                      <span className="font-medium">
+                        {ride.departure_time ? new Date(ride.departure_time).toLocaleString() : "Not set"}
+                      </span>
+                    </p>
+    
+                    <p className="text-gray-600 mt-1">Seats left: {ride.available_seats}</p>
+    
+                    <p className="text-2xl font-bold text-[#3348A2] mt-4">₦{ride.price}</p>
+    
+                    <div className="mt-6 flex justify-between items-center">
+                      <select
+                        value={seatCounts[ride._id] || 1}
+                        onChange={(e) =>
+                          handleSeatChange(ride._id, Number(e.target.value))
+                        }
+                        className="border border-gray-300 rounded-lg px-3 py-2"
+                      >
+                        {Array.from({ length: ride.available_seats }, (_, i) => i + 1).map((num) => (
+                          <option key={num} value={num}>{num}</option>
+                        ))}
+                      </select>
+    
+                      <button
+                        onClick={() => bookRide(ride._id)}
+                        className="bg-[#3348A2] hover:bg-[#263a85] text-white px-5 py-2 rounded-lg shadow-md transition"
+                      >
+                        Book Now
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+    
         </div>
       </div>
-
-      {/* Messages */}
-      {message.text && (
-        <div
-          className={`mb-8 p-4 rounded-xl text-center text-lg font-semibold shadow-md ${
-            message.type === "success"
-              ? "bg-green-100 text-green-700"
-              : "bg-red-100 text-red-700"
-          }`}
-        >
-          {message.text}
-        </div>
-      )}
-
-      {/* Rides */}
-      {filteredRides.length === 0 ? (
-        <p className="text-center text-gray-500 text-xl font-medium">
-          ❌ No rides found matching your search.
-        </p>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredRides.map((ride) => (
-            <div
-              key={ride._id}
-              className="bg-gradient-to-br from-white to-blue-50 border border-gray-200 rounded-3xl shadow-lg hover:shadow-2xl hover:scale-105 transition-transform p-8 flex flex-col justify-between"
-            >
-              <div>
-                {/* Route */}
-                <div className="flex items-center mb-4">
-                  <MapPin className="w-6 h-6 text-blue-600 mr-3" />
-                  <h3 className="text-xl md:text-2xl font-bold text-gray-900">
-                    {ride.origin} → {ride.destination}
-                  </h3>
-                </div>
-
-                {/* Departure */}
-                <p className="flex items-center text-gray-700 text-base mb-2">
-                  <CalendarDays className="w-5 h-5 text-blue-500 mr-2" />
-                  <span>
-                    {ride.departure_time
-                      ? new Date(ride.departure_time).toLocaleString()
-                      : "No time"}
-                  </span>
-                </p>
-
-                {/* Seats */}
-                <p className="flex items-center text-gray-700 text-base mb-2">
-                  <Users className="w-5 h-5 text-blue-500 mr-2" />
-                  <span>{ride.available_seats} seats left</span>
-                </p>
-
-                {/* Price */}
-                <p className="text-blue-700 font-extrabold text-2xl mt-4">
-                  ₦{ride.price || "0"}
-                </p>
-              </div>
-
-              {/* Actions */}
-              <div className="mt-6 flex items-center justify-between">
-                {ride.available_seats > 0 ? (
-                  <>
-                    <select
-                      value={seatCounts[ride._id] || 1}
-                      onChange={(e) =>
-                        handleSeatChange(ride._id, Number(e.target.value))
-                      }
-                      className="border border-gray-300 rounded-xl px-4 py-2 text-base focus:ring-2 focus:ring-blue-500"
-                    >
-                      {Array.from(
-                        { length: ride.available_seats },
-                        (_, i) => i + 1
-                      ).map((num) => (
-                        <option key={num} value={num}>
-                          {num}
-                        </option>
-                      ))}
-                    </select>
-                    <button
-                      onClick={() => bookRide(ride._id)}
-                      className="bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white px-6 py-3 rounded-2xl font-bold shadow-md transition"
-                    >
-                      Book Now
-                    </button>
-                  </>
-                ) : (
-                  <button
-                    disabled
-                    className="bg-gray-400 text-white px-6 py-3 rounded-xl cursor-not-allowed font-semibold"
-                  >
-                    Full
-                  </button>
-                )}
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
+    );
+    }    
