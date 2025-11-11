@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+
 export default function HomePage() {
   const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
@@ -14,11 +15,11 @@ export default function HomePage() {
 
           {/* DESKTOP MENU */}
           <nav className="hidden md:flex gap-10 text-[#3348A2] font-medium">
-            <a href="#" className="hover:text-gray-600">Home</a>
-            <a href="#about" className="hover:text-gray-600">About Us</a>
-            <a href="#services" className="hover:text-gray-600">Service</a>
-            <a href="#book" className="hover:text-gray-600">Book Ride</a>
-            <a href="#contact" className="hover:text-gray-600">Contact Us</a>
+            <a href="/" className="hover:text-gray-600">Home</a>
+            <a href="/about" className="hover:text-gray-600">About Us</a>
+            <a href="/services" className="hover:text-gray-600">Service</a>
+            <a href="/book" className="hover:text-gray-600">Book Ride</a>
+            <a href="/contact" className="hover:text-gray-600">Contact Us</a>
           </nav>
 
           {/* MOBILE TOGGLE BUTTON */}

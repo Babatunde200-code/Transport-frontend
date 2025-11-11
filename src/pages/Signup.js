@@ -30,7 +30,7 @@ const Signup = () => {
     }
 
     try {
-      const res = await axios.post(
+       await axios.post(
         "https://transport-2-0imo.onrender.com/api/signup/",
         {
           email: formData.email,
