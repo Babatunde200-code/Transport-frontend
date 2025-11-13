@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import useGoogleAuth from "../hooks/useGoogleAuth";
 import parkImage from "../assets/park1.jpg"; // ✅ same image
 
 const Login = () => {
   const navigate = useNavigate();
+  const handleGoogleAuth = useGoogleAuth();
 
   const [formData, setFormData] = useState({
     email: "",
@@ -112,12 +114,12 @@ const Login = () => {
           <div className="text-center my-4 text-gray-500">or continue with</div>
 
           <button
-            onClick={handleGoogleLogin}
-            className="w-full py-2 border rounded-lg flex items-center justify-center gap-2 hover:bg-gray-50 transition"
-          >
-            <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="" className="w-5" />
-            Login with Google
-          </button>
+      onClick={() => handleGoogleAuth(navigate)}
+      className="w-full py-2 border rounded-lg flex items-center justify-center gap-2 hover:bg-gray-50 transition"
+    >
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="" className="w-5" />
+      Login with Google
+    </button>
 
           <p className="text-center text-gray-600 mt-4">
             Don’t have an account?{" "}
