@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import parkImage from "../assets/park1.jpg"; // ✅ same image
+import parkImage from "../assets/park1.jpg";
+import GoogleAuthButton from "../components/GoogleAuthButton";
 
 const Login = () => {
   const navigate = useNavigate();

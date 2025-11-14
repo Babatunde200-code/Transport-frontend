@@ -3,6 +3,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import parkImage from "../assets/park.jpg"; //
 import asapLogo from "../assets/Asap_logo.png";
+import GoogleAuthButton from "../components/GoogleAuthButton";
+
 
 const Signup = () => {
   const [formData, setFormData] = useState({
