@@ -1,17 +1,21 @@
 import React from "react";
-import { auth, provider, signInWithPopup } from "../firebase";
+import { auth, provider } from "../firebase";
+import { signInWithPopup } from "firebase/auth/web-extension";
 
-export default function GoogleAuthButton({ text = "Sign in with Google" }) {
+export default function GoogleAuthButton({ text = "Continue with Google" }) {
   const handleGoogleAuth = async () => {
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
-      localStorage.setItem("token", user.accessToken);
+
+      // Save info
+      localStorage.setItem("token", await user.getIdToken());
       localStorage.setItem("email", user.email);
-      window.location.href = "/";
+
+      window.location.href = "/";  
     } catch (error) {
-      console.error(error);
-      alert("Authentication failed");
+      console.error("Google Auth Error:", error.message);
+      alert("Google login failed");
     }
   };
 

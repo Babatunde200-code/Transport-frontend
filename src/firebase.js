@@ -1,11 +1,7 @@
-// Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+import { getAuth, GoogleAuthProvider } from "firebase/auth/web-extension"; 
+// ^ IMPORTANT: firebase v12 requires /web-extension for auth
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyCgxUX2LXojOmWmMReQRnxVrVein-dmNNg",
   authDomain: "asaptravels-64c1d.firebaseapp.com",
@@ -16,9 +12,7 @@ const firebaseConfig = {
   measurementId: "G-477FSN6WFP"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-const provider = new GoogleAuthProvider();
 
-export { auth, provider, signInWithPopup };
+export const auth = getAuth(app);
+export const provider = new GoogleAuthProvider();
