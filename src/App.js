@@ -8,6 +8,7 @@ import VerifyToken from "./pages/VerifyToken";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import UserDashboard from "./pages/UserDashboard";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 // 👤 User features
 import Profile from "./pages/Profile";
@@ -47,7 +48,7 @@ function App() {
         <Route path="/review-booking" element={<ReviewBooking />} />
         <Route path="/payment" element={<PaymentPage />} ></Route>
         <Route path="/ticket" element={<TicketPage />} />
-
+        
 
         {/* 👨‍💼 Admin auth */}
         <Route path="/admin/signup" element={<SignupAdmin />} />
@@ -63,13 +64,14 @@ function App() {
           }
         />
         <Route
-          path="/edit-profile"
-          element={
-            <ProtectedRoute>
-              <EditProfile />
-            </ProtectedRoute>
+         path="/dashboard"
+         element={
+           <ProtectedRoute>
+              <Dashboard />
+           </ProtectedRoute>
           }
         />
+
         <Route
           path="/travel-plans"
           element={
