@@ -8,11 +8,8 @@ import VerifyToken from "./pages/VerifyToken";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
 import UserDashboard from "./pages/UserDashboard";
-import ProtectedRoute from "./components/ProtectedRoute";
-
 // 👤 User features
 import Profile from "./pages/Profile";
-import EditProfile from "./pages/EditProfile";
 import DriverTravelPlans from "./pages/DriverTravelPlans";
 import BookingForm from "./pages/BookingForm";
 import PaymentPage from "./pages/PaymentPage";
