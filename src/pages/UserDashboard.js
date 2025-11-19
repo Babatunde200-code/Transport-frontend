@@ -1,13 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import { FaBus, FaMoneyBillWave, FaHistory, FaClock, FaUser } from "react-icons/fa";
+import {
+  FaBus,
+  FaMoneyBillWave,
+  FaHistory,
+  FaClock,
+  FaBars,
+} from "react-icons/fa";
 
 export default function UserDashboard() {
-  return (
-    <div className="flex min-h-screen bg-gray-100">
+  const [menuOpen, setMenuOpen] = useState(false);
 
-      {/* ====================== SIDEBAR ====================== */}
-      <aside className="w-72 bg-[#1f2a40] text-white flex flex-col">
+  return (
+    <div className="flex flex-col md:flex-row min-h-screen bg-gray-100">
+
+      {/* ================= SIDEBAR (Responsive) ================= */}
+      <aside
+        className={`bg-[#1f2a40] text-white w-full md:w-64 flex-shrink-0
+        ${menuOpen ? "block" : "hidden md:block"}`}
+      >
         <div className="p-6 flex items-center gap-3 border-b border-gray-700">
           <img
             src="/profile.png"
@@ -20,22 +31,12 @@ export default function UserDashboard() {
           </div>
         </div>
 
-        <nav className="mt-6 flex-1 px-4">
-          <Link className="block py-3 px-3 hover:bg-[#24304f] rounded" to="/dashboard">
-            Dashboard
-          </Link>
-          <Link className="block py-3 px-3 hover:bg-[#24304f] rounded" to="/travel-history">
-            Travel History
-          </Link>
-          <Link className="block py-3 px-3 hover:bg-[#24304f] rounded" to="/payment-history">
-            Payment History
-          </Link>
-          <Link className="block py-3 px-3 hover:bg-[#24304f] rounded" to="/pending-payments">
-            Pending Payments
-          </Link>
-          <Link className="block py-3 px-3 hover:bg-[#24304f] rounded" to="/bookings">
-            All Bookings
-          </Link>
+        <nav className="mt-6 px-4 space-y-1">
+          <DashboardLink to="/dashboard" label="Dashboard" />
+          <DashboardLink to="/travel-history" label="Travel History" />
+          <DashboardLink to="/payment-history" label="Payment History" />
+          <DashboardLink to="/pending-payments" label="Pending Payments" />
+          <DashboardLink to="/bookings" label="All Bookings" />
         </nav>
 
         <div className="p-4 border-t border-gray-700">
@@ -45,23 +46,33 @@ export default function UserDashboard() {
         </div>
       </aside>
 
-      {/* ====================== MAIN DASHBOARD ====================== */}
+      {/* =============== MAIN CONTENT ================ */}
       <main className="flex-1">
 
         {/* TOP NAV */}
-        <header className="w-full bg-white shadow px-8 py-4 flex items-center justify-between">
-          <h1 className="text-2xl font-semibold text-gray-700">User Dashboard</h1>
+        <header className="bg-white shadow px-6 py-4 flex items-center justify-between">
+          <h1 className="text-xl md:text-2xl font-semibold text-gray-700">
+            User Dashboard
+          </h1>
+
+          {/* Mobile Menu Toggle Button */}
+          <button
+            className="md:hidden text-gray-700 text-2xl"
+            onClick={() => setMenuOpen(!menuOpen)}
+          >
+            <FaBars />
+          </button>
 
           <Link
             to="/book"
-            className="bg-[#3348A2] text-white px-5 py-2 rounded-lg shadow hover:bg-blue-900 transition"
+            className="hidden md:inline bg-[#3348A2] text-white px-4 py-2 rounded-lg shadow hover:bg-blue-900 transition"
           >
             Book a Ride
           </Link>
         </header>
 
         {/* CARDS */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 p-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 md:p-8">
           <DashboardCard
             icon={<FaBus className="text-yellow-500 text-4xl" />}
             label="Total Trips"
@@ -87,15 +98,15 @@ export default function UserDashboard() {
           />
         </div>
 
-        {/* Tables Section */}
-        <div className="p-8">
-          <h2 className="text-xl font-bold mb-4">Recent Bookings</h2>
+        {/* TABLE */}
+        <div className="p-4 md:p-8">
+          <h2 className="text-lg md:text-xl font-bold mb-4">Recent Bookings</h2>
 
-          <div className="bg-white rounded-xl shadow p-6">
-            <table className="w-full">
+          <div className="bg-white rounded-xl shadow p-4 overflow-x-auto">
+            <table className="w-full min-w-[550px]">
               <thead>
                 <tr className="border-b">
-                  <th className="text-left py-3">Route</th>
+                  <th className="py-2 text-left">Route</th>
                   <th className="text-left">Date</th>
                   <th className="text-left">Amount</th>
                   <th className="text-left">Status</th>
@@ -103,26 +114,9 @@ export default function UserDashboard() {
               </thead>
 
               <tbody>
-                <tr className="border-b">
-                  <td className="py-3">Ife → Ibadan</td>
-                  <td>12 Jan 2025</td>
-                  <td>₦5,150</td>
-                  <td className="text-green-600 font-medium">Paid</td>
-                </tr>
-
-                <tr className="border-b">
-                  <td className="py-3">Ibadan → Lagos</td>
-                  <td>05 Jan 2025</td>
-                  <td>₦10,100</td>
-                  <td className="text-red-600 font-medium">Pending</td>
-                </tr>
-
-                <tr>
-                  <td className="py-3">Ife → Akure</td>
-                  <td>28 Dec 2024</td>
-                  <td>₦7,000</td>
-                  <td className="text-green-600 font-medium">Paid</td>
-                </tr>
+                <BookingRow route="Ife → Ibadan" date="12 Jan 2025" amount="₦5,150" status="Paid" />
+                <BookingRow route="Ibadan → Lagos" date="05 Jan 2025" amount="₦10,100" status="Pending" />
+                <BookingRow route="Ife → Akure" date="28 Dec 2024" amount="₦7,000" status="Paid" />
               </tbody>
             </table>
           </div>
@@ -133,12 +127,37 @@ export default function UserDashboard() {
   );
 }
 
+/* COMPONENTS */
+function DashboardLink({ to, label }) {
+  return (
+    <Link
+      className="block py-3 px-3 hover:bg-[#24304f] rounded transition"
+      to={to}
+    >
+      {label}
+    </Link>
+  );
+}
+
 function DashboardCard({ icon, label, value }) {
   return (
-    <div className="bg-white p-6 rounded-xl shadow flex flex-col items-center text-center">
+    <div className="bg-white p-5 rounded-xl shadow flex flex-col items-center text-center">
       {icon}
-      <p className="mt-3 text-lg font-medium text-gray-600">{label}</p>
-      <p className="text-3xl font-bold text-gray-800 mt-1">{value}</p>
+      <p className="mt-2 text-sm md:text-lg font-medium text-gray-600">{label}</p>
+      <p className="text-xl md:text-3xl font-bold text-gray-800 mt-1">{value}</p>
     </div>
+  );
+}
+
+function BookingRow({ route, date, amount, status }) {
+  const statusColor = status === "Paid" ? "text-green-600" : "text-red-600";
+
+  return (
+    <tr className="border-b">
+      <td className="py-3">{route}</td>
+      <td>{date}</td>
+      <td>{amount}</td>
+      <td className={`${statusColor} font-medium`}>{status}</td>
+    </tr>
   );
 }
