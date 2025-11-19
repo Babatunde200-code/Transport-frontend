@@ -1,6 +1,4 @@
-import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-
-
+import { getAuth, GoogleAuthProvider} from "firebase/auth";
 // ^ IMPORTANT: firebase v12 requires /web-extension for auth
 
 const firebaseConfig = {
@@ -17,4 +15,3 @@ const app = initializeApp(firebaseConfig);
 
 export const auth = getAuth(app);
 export const provider = new GoogleAuthProvider();
-export { signInWithPopup };
