@@ -7,6 +7,7 @@ import Signup from "./pages/Signup";
 import VerifyToken from "./pages/VerifyToken";
 import ForgotPassword from "./pages/ForgotPassword";
 import ResetPassword from "./pages/ResetPassword";
+import UserDashboard from "./pages/UserDashboard";
 
 // 👤 User features
 import Profile from "./pages/Profile";
@@ -37,6 +38,7 @@ function App() {
         <Route path="/" element={<Home />} />
 
         {/* 🌍 Public routes */}
+        <Route path="/dashboard" element={<UserDashboard />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/verify" element={<VerifyToken />} />
