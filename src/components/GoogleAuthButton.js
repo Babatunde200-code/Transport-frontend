@@ -11,7 +11,7 @@ export default function GoogleAuthButton({ text = "Continue with Google" }) {
       localStorage.setItem("token", await user.getIdToken());
       localStorage.setItem("email", user.email);
 
-      window.location.href = "/";
+      window.location.href = "/dashboard";
     } catch (error) {
       console.error("Google Auth Error:", error.message);
       alert("Google login failed");
