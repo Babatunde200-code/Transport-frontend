@@ -1,9 +1,5 @@
-import { initializeApp } from "firebase/app";
-import {
-  getAuth,
-  GoogleAuthProvider,
-  signInWithPopup
-} from "firebase/auth";
+import { getAuth, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+
 
 // ^ IMPORTANT: firebase v12 requires /web-extension for auth
 
