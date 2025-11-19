@@ -64,12 +64,7 @@ export default function UserDashboard() {
             <FaBars />
           </button>
 
-          <button
-        onClick={() => navigate("/booking")}
-        className="bg-blue-600 text-white py-3 rounded-lg w-48 mx-auto block"
-      >
-        Book a Ride
-      </button>
+          
         </header>
 
         {/* CARDS */}
@@ -98,6 +93,12 @@ export default function UserDashboard() {
             value="24 Records"
           />
         </div>
+        <button
+        onClick={() => navigate("/booking")}
+        className="bg-blue-600 text-white py-3 rounded-lg w-48 mx-auto block"
+      >
+        Book a Ride
+      </button>
 
         {/* TABLE */}
         <div className="p-4 md:p-8">
