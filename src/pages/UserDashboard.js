@@ -35,17 +35,17 @@ export default function UserDashboard() {
       const authHeader = { Authorization: `Bearer ${token}` };
 
       const bookingsRes = await axios.get(
-        "https://your-backend.com/api/bookings",
+        "https://transport-2-0imo.onrender.com/api/bookings",
         { headers: authHeader }
       );
 
       const paymentsRes = await axios.get(
-        "https://your-backend.com/api/payments",
+        "https://transport-2-0imo.onrender.com/api/payments",
         { headers: authHeader }
       );
 
       const pendingRes = await axios.get(
-        "https://your-backend.com/api/payments/pending",
+        "https://transport-2-0imo.onrender.com/api/payments/pending",
         { headers: authHeader }
       );
 
