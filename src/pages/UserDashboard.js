@@ -66,7 +66,7 @@ export default function UserDashboard() {
 
           <button
         onClick={() => navigate("/booking")}
-        className="w-full bg-blue-100 text-white py-3 rounded-lg"
+        className="bg-blue-600 text-white py-3 rounded-lg w-48 mx-auto block"
       >
         Book a Ride
       </button>
