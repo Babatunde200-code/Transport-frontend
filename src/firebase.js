@@ -1,5 +1,5 @@
 import { getAuth, GoogleAuthProvider} from "firebase/auth";
-// ^ IMPORTANT: firebase v12 requires /web-extension for auth
+
 
 const firebaseConfig = {
   apiKey: "AIzaSyCgxUX2LXojOmWmMReQRnxVrVein-dmNNg",

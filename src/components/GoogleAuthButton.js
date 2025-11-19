@@ -1,6 +1,6 @@
 import React from "react";
 import { auth, provider } from "../firebase";
-import { signInWithPopup } from "firebase/auth/web-extension";
+import { signInWithPopup } from "firebase/auth";
 
 export default function GoogleAuthButton({ text = "Continue with Google" }) {
   const handleGoogleAuth = async () => {
@@ -8,11 +8,10 @@ export default function GoogleAuthButton({ text = "Continue with Google" }) {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
 
-      // Save info
       localStorage.setItem("token", await user.getIdToken());
       localStorage.setItem("email", user.email);
 
-      window.location.href = "/";  
+      window.location.href = "/";
     } catch (error) {
       console.error("Google Auth Error:", error.message);
       alert("Google login failed");
