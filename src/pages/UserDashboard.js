@@ -63,12 +63,12 @@ export default function UserDashboard() {
             <FaBars />
           </button>
 
-          <Link
-            to="/book"
-            className="hidden md:inline bg-[#3348A2] text-white px-4 py-2 rounded-lg shadow hover:bg-blue-900 transition"
-          >
-            Book a Ride
-          </Link>
+          <button
+        onClick={() => navigate("/booking")}
+        className="fixed bottom-4 right-4 bg-blue-600 text-white py-3 px-5 rounded-full shadow-lg md:static w-full"
+      >
+        Book a Ride
+      </button>
         </header>
 
         {/* CARDS */}
