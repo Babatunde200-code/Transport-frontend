@@ -1,5 +1,10 @@
-import { getAuth, GoogleAuthProvider} from "firebase/auth";
-
+// firebase.js
+import { initializeApp } from "firebase/app";
+import { 
+  getAuth, 
+  GoogleAuthProvider, 
+  signInWithPopup 
+} from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCgxUX2LXojOmWmMReQRnxVrVein-dmNNg",
@@ -8,10 +13,13 @@ const firebaseConfig = {
   storageBucket: "asaptravels-64c1d.firebasestorage.app",
   messagingSenderId: "905707659724",
   appId: "1:905707659724:web:a72f9f145812ac6c58fd69",
-  measurementId: "G-477FSN6WFP"
+  measurementId: "G-477FSN6WFP",
 };
 
+// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
+// Firebase Auth
 export const auth = getAuth(app);
 export const provider = new GoogleAuthProvider();
+export const googlePopup = signInWithPopup;
