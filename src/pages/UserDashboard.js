@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate  } from "react-router-dom";
 import {
   FaBus,
   FaMoneyBillWave,
@@ -10,6 +10,7 @@ import {
 
 export default function UserDashboard() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const navigate = useNavigate();
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-gray-100">
