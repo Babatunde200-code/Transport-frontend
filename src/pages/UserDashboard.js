@@ -20,6 +20,15 @@ export default function UserDashboard() {
   const [payments, setPayments] = useState([]);
   const [pending, setPending] = useState([]);
 
+  useEffect(() => {
+    var script = document.createElement("script");
+    script.src = "https://embed.tawk.to/692010955148001960c52574/1jaik1itg";
+    script.async = true;
+    script.charset = "UTF-8";
+    script.setAttribute("crossorigin", "*");
+    document.body.appendChild(script);
+  }, []);
+
   // ==================== PROTECT ROUTE =====================
   useEffect(() => {
     if (!token) {
