@@ -158,31 +158,37 @@ export default function BookingForm() {
 
                     {/* SEAT SELECTOR */}
                     <div className="mt-6 flex justify-between items-center">
-                      <select
-                        value={seatNumber[ride._id] || ""}
-                        onChange={(e) =>
-                          setSeatNumber((prev) => ({
-                            ...prev,
-                            [ride._id]: Number(e.target.value),
-                          }))
-                        }
-                        className="border border-gray-300 rounded-lg px-3 py-2"
-                      >
-                        <option value="">Select Seat</option>
-                        {availableSeats.map((seat) => (
-                          <option key={seat} value={seat}>
-                            Seat {seat}
-                          </option>
-                        ))}
-                      </select>
+  <select
+    value={seatNumber[ride._id] || ""}
+    onChange={(e) =>
+      setSeatNumber((prev) => ({
+        ...prev,
+        [ride._id]: Number(e.target.value),
+      }))
+    }
+    className="border border-gray-300 rounded-lg px-3 py-2"
+  >
+    <option value="">Select Seat</option>
 
-                      <button
-                        onClick={() => bookRide(ride._id)}
-                        className="bg-[#3348A2] hover:bg-[#263a85] text-white px-5 py-2 rounded-lg shadow-md"
-                      >
-                        Book Now
-                      </button>
-                    </div>
+    {/* Generate available seats dynamically */}
+    {Array.from(
+      { length: ride.available_seats },
+      (_, i) => i + 1
+    ).map((seat) => (
+      <option key={seat} value={seat}>
+        Seat {seat}
+      </option>
+    ))}
+  </select>
+
+  <button
+    onClick={() => bookRide(ride._id)}
+    className="bg-[#3348A2] hover:bg-[#263a85] text-white px-5 py-2 rounded-lg shadow-md"
+  >
+    Book Now
+  </button>
+</div>
+
                   </div>
                 </div>
               );
