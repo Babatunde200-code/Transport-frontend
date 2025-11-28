@@ -7,40 +7,50 @@ export default function UploadRide() {
     destination: "",
     departure_time: "",
     price: "",
-    available_seats: "",
+    total_seats: "",
   });
+
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+
     try {
       const token = localStorage.getItem("token");
 
-      // ✅ Ensure departure_time is in full ISO format
+      // FULL FIXED RIDE DATA SCHEMA
       const rideData = {
-        ...ride,
+        origin: ride.origin.trim(),
+        destination: ride.destination.trim(),
         departure_time: new Date(ride.departure_time).toISOString(),
-        available_seats: Number(ride.available_seats),
         price: Number(ride.price),
+        total_seats: Number(ride.total_seats),
+        available_seats: Number(ride.total_seats),  // SAME AS TOTAL
+        booked_seats: [], // IMPORTANT FOR seat selection display
       };
 
       await API.post("/api/admin/rides/", rideData, {
-        headers: { Authorization: `Bearer ${token}` },
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
       });
 
-      alert("✅ Ride created successfully!");
+      alert("Ride created successfully!");
+
       setRide({
         origin: "",
         destination: "",
         departure_time: "",
         price: "",
-        available_seats: "",
+        total_seats: "",
       });
+
     } catch (err) {
       console.error("Ride creation failed:", err.response?.data || err);
       alert(
-        `❌ Failed to create ride: ${
+        `Failed to create ride: ${
           err.response?.data?.error || "Something went wrong"
         }`
       );
@@ -52,6 +62,7 @@ export default function UploadRide() {
   return (
     <div className="p-6 max-w-lg mx-auto">
       <h2 className="text-2xl font-bold mb-4 text-blue-700">Upload Ride</h2>
+
       <form onSubmit={handleSubmit} className="space-y-3">
         <input
           placeholder="From (Origin)"
@@ -60,6 +71,7 @@ export default function UploadRide() {
           className="w-full p-2 border rounded"
           required
         />
+
         <input
           placeholder="To (Destination)"
           value={ride.destination}
@@ -67,6 +79,7 @@ export default function UploadRide() {
           className="w-full p-2 border rounded"
           required
         />
+
         <input
           type="datetime-local"
           value={ride.departure_time}
@@ -76,6 +89,7 @@ export default function UploadRide() {
           className="w-full p-2 border rounded"
           required
         />
+
         <input
           type="number"
           placeholder="Price"
@@ -84,16 +98,18 @@ export default function UploadRide() {
           className="w-full p-2 border rounded"
           required
         />
+
         <input
           type="number"
-          placeholder="Available Seats"
-          value={ride.available_seats}
+          placeholder="Total Seats"
+          value={ride.total_seats}
           onChange={(e) =>
-            setRide({ ...ride, available_seats: e.target.value })
+            setRide({ ...ride, total_seats: e.target.value })
           }
           className="w-full p-2 border rounded"
           required
         />
+
         <button
           type="submit"
           disabled={loading}
