@@ -158,28 +158,30 @@ export default function BookingForm() {
 
                     {/* SEAT SELECTOR */}
                     <div className="mt-6 flex justify-between items-center">
-  <select
-    value={seatNumber[ride._id] || ""}
-    onChange={(e) =>
-      setSeatNumber((prev) => ({
-        ...prev,
-        [ride._id]: Number(e.target.value),
-      }))
-    }
-    className="border border-gray-300 rounded-lg px-3 py-2"
-  >
-    <option value="">Select Seat</option>
+  
+                    <select
+  value={seatNumber[ride._id] || ""}
+  onChange={(e) =>
+    setSeatNumber((prev) => ({
+      ...prev,
+      [ride._id]: Number(e.target.value),
+    }))
+  }
+  className="border border-gray-300 rounded-lg px-3 py-2"
+>
+  <option value="">Select Seat</option>
 
-    {/* Generate available seats dynamically */}
-    {Array.from(
-      { length: ride.available_seats },
-      (_, i) => i + 1
-    ).map((seat) => (
+  {Array.from(
+    { length: ride.total_seats },
+    (_, i) => i + 1
+  )
+    .filter((seat) => !ride.booked_seats.includes(seat)) // ONLY FREE SEATS
+    .map((seat) => (
       <option key={seat} value={seat}>
         Seat {seat}
       </option>
     ))}
-  </select>
+</select>
 
   <button
     onClick={() => bookRide(ride._id)}
