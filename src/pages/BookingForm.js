@@ -65,7 +65,7 @@ export default function BookingForm() {
       setMessage({ text: "Booking successful!", type: "success" });
 
       navigate("/review-booking", {
-        state: { bookingId: res.data._id },
+        state: { bookingId: res.data.booking_id },
       });
     } catch (err) {
       setMessage({
