@@ -91,32 +91,46 @@ export default function HomePage() {
       </section>
 
       {/* TRAVEL PLANS SECTION */}
-      <section id="plans" className="py-20 bg-white text-center">
-        <h2 className="text-3xl font-bold mb-12 text-[#3348A2]">
-          Our Travel Plans
-        </h2>
+      <section className="py-20 bg-white text-center">
+  <h2 className="text-4xl font-extrabold text-[#3348A2] mb-4">
+    Why Nigerians Choose ASAP Travels
+  </h2>
 
-        <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-8 px-6">
-          {[ 
-            { title: "Economy Ride", price: "₦5,150 / Seat" },
-            { title: "Standard Ride", price: "₦7,500 / Seat" },
-            { title: "Business Ride", price: "₦12,000 / Seat" }
-          ].map((plan, i) => (
-            <div
-              key={i}
-              className="border p-8 rounded-xl shadow hover:shadow-xl transition bg-white"
-            >
-              <img src="/bus1.jpeg" alt="car" className="mx-auto mb-6 w-24" />
-              <h3 className="text-xl font-semibold mb-2">{plan.title}</h3>
-              <p className="text-[#3348A2] text-2xl font-bold mb-4">{plan.price}</p>
+  <p className="text-gray-600 max-w-2xl mx-auto mb-14">
+    We make interstate travel fast, safe, and stress-free — designed for the 
+    modern traveler who values comfort and reliability.
+  </p>
 
-              <button className="bg-[#3348A2] text-white px-5 py-2 rounded-lg hover:bg-[#2d3e82] transition">
-                Book Now
-              </button>
-            </div>
-          ))}
-        </div>
-      </section>
+  <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-10 px-6">
+    {[
+      {
+        icon: "🚍",
+        title: "Modern & Comfortable Buses",
+        desc: "Enjoy clean, spacious, and well-maintained vehicles for all your trips.",
+      },
+      {
+        icon: "🕒",
+        title: "On-Time Departures",
+        desc: "We value your time — no unnecessary delays or last-minute surprises.",
+      },
+      {
+        icon: "🛡️",
+        title: "Safe & Secure Travel",
+        desc: "Professional drivers and insured trips for complete peace of mind.",
+      },
+    ].map((item, i) => (
+      <div
+        key={i}
+        className="bg-gray-50 p-8 rounded-2xl shadow hover:shadow-xl transition"
+      >
+        <div className="text-5xl mb-4">{item.icon}</div>
+        <h3 className="text-xl font-semibold mb-2">{item.title}</h3>
+        <p className="text-gray-600">{item.desc}</p>
+      </div>
+    ))}
+  </div>
+</section>
+
 
       {/* FEATURES */}
       <section className="py-20 bg-[#f4f6ff] text-center">
