@@ -2,13 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import {
-  FaBus,
-  FaMoneyBillWave,
-  FaHistory,
-  FaClock,
-  FaBars,
-} from "react-icons/fa";
+import { FaBus, FaMoneyBillWave, FaHistory, FaClock, FaBars } from "react-icons/fa";
 
 export default function UserDashboard() {
   const navigate = useNavigate();
@@ -20,6 +14,7 @@ export default function UserDashboard() {
   const [payments, setPayments] = useState([]);
   const [pending, setPending] = useState([]);
 
+  // Live Chat Script
   useEffect(() => {
     var script = document.createElement("script");
     script.src = "https://embed.tawk.to/692010955148001960c52574/1jaik1itg";
@@ -29,16 +24,12 @@ export default function UserDashboard() {
     document.body.appendChild(script);
   }, []);
 
-  // ==================== PROTECT ROUTE =====================
+  // Protect route
   useEffect(() => {
-    if (!token) {
-      navigate("/login");
-    } else {
-      fetchDashboardData();
-    }
+    if (!token) navigate("/login");
+    else fetchDashboardData();
   }, []);
 
-  // ==================== FETCH DATA ========================
   const fetchDashboardData = async () => {
     try {
       const authHeader = { Authorization: `Bearer ${token}` };
@@ -66,13 +57,11 @@ export default function UserDashboard() {
     }
   };
 
-  // ==================== COUNTS FOR CARDS =======================
   const totalTrips = bookings.length;
   const totalPayments =
     payments.reduce((sum, p) => sum + Number(p.amount || 0), 0) || 0;
   const totalPending = pending.length;
 
-  // ==================== LOGOUT =======================
   const handleLogout = () => {
     localStorage.removeItem("token");
     navigate("/login");
@@ -81,7 +70,7 @@ export default function UserDashboard() {
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-gray-100">
 
-      {/* ========== SIDEBAR ========== */}
+      {/* Sidebar */}
       <aside
         className={`bg-[#1f2a40] text-white w-full md:w-64 flex-shrink-0
         ${menuOpen ? "block" : "hidden md:block"}`}
@@ -100,10 +89,6 @@ export default function UserDashboard() {
 
         <nav className="mt-6 px-4 space-y-1">
           <DashboardLink to="/dashboard" label="Dashboard" />
-          <DashboardLink to="/travel-history" label="Travel History" />
-          <DashboardLink to="/payment-history" label="Payment History" />
-          <DashboardLink to="/pending-payments" label="Pending Payments" />
-          <DashboardLink to="/bookings" label="All Bookings" />
         </nav>
 
         <div className="p-4 border-t border-gray-700">
@@ -116,10 +101,10 @@ export default function UserDashboard() {
         </div>
       </aside>
 
-      {/* ========== MAIN CONTENT ========== */}
+      {/* Main content */}
       <main className="flex-1">
 
-        {/* ====== TOP NAV ====== */}
+        {/* Top Nav */}
         <header className="bg-white shadow px-6 py-4 flex items-center justify-between">
           <h1 className="text-xl md:text-2xl font-semibold text-gray-700">
             User Dashboard
@@ -133,26 +118,23 @@ export default function UserDashboard() {
           </button>
         </header>
 
-        {/* ====== SUMMARY CARDS ====== */}
+        {/* Summary Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 md:p-8">
           <DashboardCard
             icon={<FaBus className="text-yellow-500 text-4xl" />}
             label="Total Trips"
             value={totalTrips}
           />
-
           <DashboardCard
             icon={<FaMoneyBillWave className="text-green-500 text-4xl" />}
             label="Total Payments"
             value={`₦${totalPayments}`}
           />
-
           <DashboardCard
             icon={<FaClock className="text-blue-500 text-4xl" />}
             label="Pending Payments"
             value={totalPending}
           />
-
           <DashboardCard
             icon={<FaHistory className="text-red-500 text-4xl" />}
             label="Travel History"
@@ -160,7 +142,7 @@ export default function UserDashboard() {
           />
         </div>
 
-        {/* ====== BOOK A RIDE BUTTON ====== */}
+        {/* Book Ride button */}
         <button
           onClick={() => navigate("/booking")}
           className="bg-blue-600 text-white py-2 px-6 rounded-lg w-fit mx-auto block"
@@ -168,7 +150,23 @@ export default function UserDashboard() {
           Book a Ride
         </button>
 
-        {/* ====== TABLE FOR RECENT BOOKINGS ====== */}
+        {/* --- NEW SECTION: DROP-DOWN FOR HISTORY & PAYMENTS --- */}
+        <div className="p-4 md:p-8">
+          <h2 className="text-lg md:text-xl font-bold mb-3">Quick Navigation</h2>
+
+          <select
+            className="w-full md:w-1/2 p-3 rounded-lg shadow border"
+            onChange={(e) => navigate(e.target.value)}
+          >
+            <option value="">Select an option</option>
+            <option value="/travel-history">Travel History</option>
+            <option value="/payment-history">Payment History</option>
+            <option value="/pending-payments">Pending Payments</option>
+            <option value="/bookings">All Bookings</option>
+          </select>
+        </div>
+
+        {/* Recent Bookings Table */}
         <div className="p-4 md:p-8">
           <h2 className="text-lg md:text-xl font-bold mb-4">Recent Bookings</h2>
 
@@ -206,7 +204,8 @@ export default function UserDashboard() {
   );
 }
 
-/* ================= SUB COMPONENTS ================= */
+/* ---- SUB COMPONENTS ---- */
+
 function DashboardLink({ to, label }) {
   return (
     <Link
