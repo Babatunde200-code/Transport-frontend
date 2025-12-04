@@ -19,7 +19,7 @@ const ResetPassword = () => {
 
     try {
       const res = await fetch(
-        `https://transport-2-0imo.onrender.com/reset-password/${uid}/${token}/`,
+        `https://transport-2-0imo.onrender.com/api/reset-password/${uid}/${token}/`,
         {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
