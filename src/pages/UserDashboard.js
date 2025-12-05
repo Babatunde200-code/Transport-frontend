@@ -2,7 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 
-import { FaBus, FaMoneyBillWave, FaHistory, FaClock, FaBars } from "react-icons/fa";
+import {
+  FaBus,
+  FaMoneyBillWave,
+  FaHistory,
+  FaClock,
+  FaBars,
+} from "react-icons/fa";
 
 export default function UserDashboard() {
   const navigate = useNavigate();
@@ -10,19 +16,9 @@ export default function UserDashboard() {
 
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const [bookings, setBookings] = useState([]);
-  const [payments, setPayments] = useState([]);
-  const [pending, setPending] = useState([]);
-
-  // Live Chat Script
-  useEffect(() => {
-    var script = document.createElement("script");
-    script.src = "https://embed.tawk.to/692010955148001960c52574/1jaik1itg";
-    script.async = true;
-    script.charset = "UTF-8";
-    script.setAttribute("crossorigin", "*");
-    document.body.appendChild(script);
-  }, []);
+  const [dashboardBookings, setDashboardBookings] = useState([]);
+  const [dashboardPayments, setDashboardPayments] = useState(0);
+  const [pendingPayments, setPendingPayments] = useState(0);
 
   // Protect route
   useEffect(() => {
@@ -34,33 +30,31 @@ export default function UserDashboard() {
     try {
       const authHeader = { Authorization: `Bearer ${token}` };
 
+      // NEW BACKEND ENDPOINTS (correct)
       const bookingsRes = await axios.get(
-        "https://transport-2-0imo.onrender.com/api/bookings",
+        "https://transport-2-0imo.onrender.com/api/dashboard/bookings/",
         { headers: authHeader }
       );
 
       const paymentsRes = await axios.get(
-        "https://transport-2-0imo.onrender.com/api/payments",
+        "https://transport-2-0imo.onrender.com/api/dashboard/payments/",
         { headers: authHeader }
       );
 
       const pendingRes = await axios.get(
-        "https://transport-2-0imo.onrender.com/api/payments/pending",
+        "https://transport-2-0imo.onrender.com/api/dashboard/payments/pending/",
         { headers: authHeader }
       );
 
-      setBookings(bookingsRes.data);
-      setPayments(paymentsRes.data);
-      setPending(pendingRes.data);
+      setDashboardBookings(bookingsRes.data.recent_bookings || []);
+      setDashboardPayments(paymentsRes.data.total_payments || 0);
+      setPendingPayments(pendingRes.data.pending_payments || 0);
     } catch (err) {
       console.error("Dashboard Fetch Error:", err);
     }
   };
 
-  const totalTrips = bookings.length;
-  const totalPayments =
-    payments.reduce((sum, p) => sum + Number(p.amount || 0), 0) || 0;
-  const totalPending = pending.length;
+  const totalTrips = dashboardBookings.length;
 
   const handleLogout = () => {
     localStorage.removeItem("token");
@@ -69,11 +63,11 @@ export default function UserDashboard() {
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-gray-100">
-
       {/* Sidebar */}
       <aside
-        className={`bg-[#1f2a40] text-white w-full md:w-64 flex-shrink-0
-        ${menuOpen ? "block" : "hidden md:block"}`}
+        className={`bg-[#1f2a40] text-white w-full md:w-64 flex-shrink-0 ${
+          menuOpen ? "block" : "hidden md:block"
+        }`}
       >
         <div className="p-6 flex items-center gap-3 border-b border-gray-700">
           <img
@@ -103,7 +97,6 @@ export default function UserDashboard() {
 
       {/* Main content */}
       <main className="flex-1">
-
         {/* Top Nav */}
         <header className="bg-white shadow px-6 py-4 flex items-center justify-between">
           <h1 className="text-xl md:text-2xl font-semibold text-gray-700">
@@ -128,12 +121,12 @@ export default function UserDashboard() {
           <DashboardCard
             icon={<FaMoneyBillWave className="text-green-500 text-4xl" />}
             label="Total Payments"
-            value={`₦${totalPayments}`}
+            value={`₦${dashboardPayments}`}
           />
           <DashboardCard
             icon={<FaClock className="text-blue-500 text-4xl" />}
             label="Pending Payments"
-            value={totalPending}
+            value={pendingPayments}
           />
           <DashboardCard
             icon={<FaHistory className="text-red-500 text-4xl" />}
@@ -142,7 +135,7 @@ export default function UserDashboard() {
           />
         </div>
 
-        {/* Book Ride button */}
+        {/* Book Ride */}
         <button
           onClick={() => navigate("/booking")}
           className="bg-blue-600 text-white py-2 px-6 rounded-lg w-fit mx-auto block"
@@ -150,7 +143,7 @@ export default function UserDashboard() {
           Book a Ride
         </button>
 
-        {/* --- NEW SECTION: DROP-DOWN FOR HISTORY & PAYMENTS --- */}
+        {/* Navigation Dropdown */}
         <div className="p-4 md:p-8">
           <h2 className="text-lg md:text-xl font-bold mb-3">Quick Navigation</h2>
 
@@ -171,7 +164,7 @@ export default function UserDashboard() {
           <h2 className="text-lg md:text-xl font-bold mb-4">Recent Bookings</h2>
 
           <div className="bg-white rounded-xl shadow p-4 overflow-x-auto">
-            {bookings.length > 0 ? (
+            {dashboardBookings.length > 0 ? (
               <table className="w-full min-w-[550px]">
                 <thead>
                   <tr className="border-b">
@@ -183,10 +176,10 @@ export default function UserDashboard() {
                 </thead>
 
                 <tbody>
-                  {bookings.map((b, i) => (
+                  {dashboardBookings.map((b, i) => (
                     <BookingRow
                       key={i}
-                      route={`${b.from} → ${b.to}`}
+                      route={`${b.origin} → ${b.destination}`}
                       date={b.date}
                       amount={`₦${b.amount}`}
                       status={b.payment_status}
@@ -204,7 +197,7 @@ export default function UserDashboard() {
   );
 }
 
-/* ---- SUB COMPONENTS ---- */
+/* ---- Components ---- */
 
 function DashboardLink({ to, label }) {
   return (
