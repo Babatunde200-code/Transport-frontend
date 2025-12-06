@@ -29,30 +29,31 @@ export default function UserDashboard() {
   const fetchDashboardData = async () => {
     try {
       const authHeader = { Authorization: `Bearer ${token}` };
-
-      // NEW BACKEND ENDPOINTS (correct)
+  
       const bookingsRes = await axios.get(
-        "https://transport-2-0imo.onrender.com/api/dashboard/bookings/",
+        "https://transport-2-0imo.onrender.com/api/dashboard/bookings",
         { headers: authHeader }
       );
-
+  
       const paymentsRes = await axios.get(
-        "https://transport-2-0imo.onrender.com/api/dashboard/payments/",
+        "https://transport-2-0imo.onrender.com/api/dashboard/payments",
         { headers: authHeader }
       );
-
+  
       const pendingRes = await axios.get(
-        "https://transport-2-0imo.onrender.com/api/dashboard/payments/pending/",
+        "https://transport-2-0imo.onrender.com/api/dashboard/payments/pending",
         { headers: authHeader }
       );
-
+  
       setDashboardBookings(bookingsRes.data.recent_bookings || []);
       setDashboardPayments(paymentsRes.data.total_payments || 0);
       setPendingPayments(pendingRes.data.pending_payments || 0);
+  
     } catch (err) {
       console.error("Dashboard Fetch Error:", err);
     }
   };
+  
 
   const totalTrips = dashboardBookings.length;
 
