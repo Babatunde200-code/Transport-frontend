@@ -19,8 +19,9 @@ export default function UserDashboard() {
   const [dashboardBookings, setDashboardBookings] = useState([]);
   const [dashboardPayments, setDashboardPayments] = useState(0);
   const [pendingPayments, setPendingPayments] = useState(0);
+  const [loading, setLoading] = useState(true);
 
-  // Protect route
+  // Protect route & fetch dashboard
   useEffect(() => {
     if (!token) navigate("/login");
     else fetchDashboardData();
@@ -29,31 +30,33 @@ export default function UserDashboard() {
   const fetchDashboardData = async () => {
     try {
       const authHeader = { Authorization: `Bearer ${token}` };
-  
+
+      // FIXED: add trailing slash at the end of every Django URL
       const bookingsRes = await axios.get(
-        "https://transport-2-0imo.onrender.com/api/dashboard/bookings",
+        "https://transport-2-0imo.onrender.com/api/dashboard/bookings/",
         { headers: authHeader }
       );
-  
+
       const paymentsRes = await axios.get(
-        "https://transport-2-0imo.onrender.com/api/dashboard/payments",
+        "https://transport-2-0imo.onrender.com/api/dashboard/payments/",
         { headers: authHeader }
       );
-  
+
       const pendingRes = await axios.get(
-        "https://transport-2-0imo.onrender.com/api/dashboard/payments/pending",
+        "https://transport-2-0imo.onrender.com/api/dashboard/payments/pending/",
         { headers: authHeader }
       );
-  
+
       setDashboardBookings(bookingsRes.data.recent_bookings || []);
       setDashboardPayments(paymentsRes.data.total_payments || 0);
       setPendingPayments(pendingRes.data.pending_payments || 0);
-  
+
     } catch (err) {
       console.error("Dashboard Fetch Error:", err);
+    } finally {
+      setLoading(false);
     }
   };
-  
 
   const totalTrips = dashboardBookings.length;
 
@@ -61,6 +64,14 @@ export default function UserDashboard() {
     localStorage.removeItem("token");
     navigate("/login");
   };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen text-lg font-semibold">
+        Loading dashboard...
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col md:flex-row min-h-screen bg-gray-100">
@@ -160,7 +171,7 @@ export default function UserDashboard() {
           </select>
         </div>
 
-        {/* Recent Bookings Table */}
+        {/* Recent Bookings */}
         <div className="p-4 md:p-8">
           <h2 className="text-lg md:text-xl font-bold mb-4">Recent Bookings</h2>
 
@@ -180,10 +191,10 @@ export default function UserDashboard() {
                   {dashboardBookings.map((b, i) => (
                     <BookingRow
                       key={i}
-                      route={`${b.origin} → ${b.destination}`}
-                      date={b.date}
-                      amount={`₦${b.amount}`}
-                      status={b.payment_status}
+                      route={`${b.ride.origin} → ${b.ride.destination}`}
+                      date={b.ride.departure_time}
+                      amount={`₦${b.total_price}`}
+                      status={b.status}
                     />
                   ))}
                 </tbody>
@@ -234,7 +245,7 @@ function BookingRow({ route, date, amount, status }) {
       <td className="py-3">{route}</td>
       <td>{date}</td>
       <td>{amount}</td>
-      <td className={`${statusColor} font-medium`}>{status}</td>
+      <td className={`${statusColor} font-medium capitalize`}>{status}</td>
     </tr>
   );
 }
