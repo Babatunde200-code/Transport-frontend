@@ -1,240 +1,426 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { FaBus, FaMoneyBillWave, FaHistory, FaClock, FaBars, FaSyncAlt, FaPlus } from "react-icons/fa";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  FaBus, FaMoneyBillWave, FaHistory, FaClock,
+  FaBars, FaSyncAlt, FaPlus, FaTimes, FaSignOutAlt,
+  FaTachometerAlt,
+} from "react-icons/fa";
+
+/* ── Sub-components ─────────────────────────────────────────── */
+
+function SummaryCard({ icon, label, value, gradient, delay = 0 }) {
+  return (
+    <motion.div
+      className={`relative overflow-hidden rounded-2xl p-6 text-white ${gradient}`}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ delay, duration: 0.5 }}
+      whileHover={{ y: -3 }}
+    >
+      {/* Background orb */}
+      <div className="absolute -right-4 -bottom-4 w-24 h-24 rounded-full bg-white/10 blur-xl" />
+
+      <div className="relative">
+        <div className="text-3xl mb-3 opacity-90">{icon}</div>
+        <p className="text-sm font-medium text-white/70 mb-1">{label}</p>
+        <p className="text-2xl font-black">{value}</p>
+      </div>
+    </motion.div>
+  );
+}
+
+function StatusBadge({ status }) {
+  const s = (status || "").toLowerCase();
+  const classes =
+    s === "paid"
+      ? "bg-green-500/15 text-green-400 border-green-500/30"
+      : s === "pending"
+      ? "bg-yellow-500/15 text-yellow-400 border-yellow-500/30"
+      : "bg-slate-500/15 text-slate-400 border-slate-500/30";
+  return (
+    <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-semibold border ${classes}`}>
+      <span className="w-1.5 h-1.5 rounded-full bg-current" />
+      {status || "—"}
+    </span>
+  );
+}
+
+/* ── Main Component ─────────────────────────────────────────── */
 
 export default function UserDashboard() {
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
+  const token    = localStorage.getItem("token");
 
   const [menuOpen, setMenuOpen] = useState(false);
-
   const [bookings, setBookings] = useState([]);
   const [payments, setPayments] = useState([]);
   const [pendingPaymentsList, setPendingPaymentsList] = useState([]);
+  const [loading, setLoading]   = useState(true);
+  const [error,   setError]     = useState("");
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  // ---------- Helper to normalize booking object ----------
   const parseBookingItem = (b) => {
-    const bookingId = b.booking_id || b._id || b.id || "";
-    const origin =
-      b.route_from || (b.ride && (b.ride.origin || b.ride.from)) || b.origin || b.from || "Unknown";
-    const destination =
-      b.route_to || (b.ride && (b.ride.destination || b.ride.to)) || b.destination || b.to || "Unknown";
-    const date =
-      b.date || (b.ride && b.ride.departure_time) || b.created_at || b.createdAt || "";
-    const amount = b.amount ?? b.total_price ?? b.price ?? b.total ?? 0;
-    const status = b.status ?? b.payment_status ?? b.paymentStatus ?? "pending";
-    const seatNumber = b.seat_number ?? b.seatCount ?? null;
-
+    const bookingId    = b.booking_id || b._id || b.id || "";
+    const origin       = b.route_from || (b.ride && (b.ride.origin || b.ride.from)) || b.origin || b.from || "Unknown";
+    const destination  = b.route_to || (b.ride && (b.ride.destination || b.ride.to)) || b.destination || b.to || "Unknown";
+    const date         = b.date || (b.ride && b.ride.departure_time) || b.created_at || b.createdAt || "";
+    const amount       = b.amount ?? b.total_price ?? b.price ?? b.total ?? 0;
+    const status       = b.status ?? b.payment_status ?? b.paymentStatus ?? "pending";
+    const seatNumber   = b.seat_number ?? b.seatCount ?? null;
     return { bookingId, origin, destination, date, amount, status, seatNumber };
   };
 
-  const authHeader = token ? { Authorization: `Bearer ${token}` } : null;
-
-  // ---------- Fetch dashboard stats ----------
   const fetchDashboardData = useCallback(async () => {
+    const authHeader = token ? { Authorization: `Bearer ${token}` } : null;
     setLoading(true);
     setError("");
-
-    if (!token) {
-      setError("Not authenticated. Please login.");
-      setLoading(false);
-      return;
-    }
-
+    if (!token) { setError("Not authenticated. Please login."); setLoading(false); return; }
     try {
       const [bRes, pRes, pendingRes] = await Promise.all([
-        axios.get("https://transport-2-0imo.onrender.com/api/dashboard/bookings/", { headers: authHeader }),
-        axios.get("https://transport-2-0imo.onrender.com/api/dashboard/payments/", { headers: authHeader }),
+        axios.get("https://transport-2-0imo.onrender.com/api/dashboard/bookings/",         { headers: authHeader }),
+        axios.get("https://transport-2-0imo.onrender.com/api/dashboard/payments/",         { headers: authHeader }),
         axios.get("https://transport-2-0imo.onrender.com/api/dashboard/payments/pending/", { headers: authHeader }),
       ]);
-
-      const bookingsData = Array.isArray(bRes.data)
-        ? bRes.data
-        : bRes.data.recent_bookings || [];
-
-      const paymentsData = Array.isArray(pRes.data)
-        ? pRes.data
-        : pRes.data.payments || [];
-
-      const pendingData = Array.isArray(pendingRes.data)
-        ? pendingRes.data
-        : pendingRes.data.pending || [];
-
-      setBookings(bookingsData);
-      setPayments(paymentsData);
-      setPendingPaymentsList(pendingData);
-    } catch (err) {
-      console.error("Dashboard fetch error:", err);
+      setBookings(Array.isArray(bRes.data) ? bRes.data : bRes.data.recent_bookings || []);
+      setPayments(Array.isArray(pRes.data) ? pRes.data : pRes.data.payments || []);
+      setPendingPaymentsList(Array.isArray(pendingRes.data) ? pendingRes.data : pendingRes.data.pending || []);
+    } catch {
       setError("Failed to load dashboard data.");
     } finally {
       setLoading(false);
     }
   }, [token]);
 
-  useEffect(() => {
-    fetchDashboardData();
-  }, [fetchDashboardData]);
+  useEffect(() => { fetchDashboardData(); }, [fetchDashboardData]);
 
-  // ---------- Calculations ----------
-  const totalTrips = bookings.length;
-  const totalPaymentsAmount = payments.reduce((sum, p) => {
+  const totalTrips           = bookings.length;
+  const totalPaymentsAmount  = payments.reduce((sum, p) => {
     const v = Number(p.amount ?? p.total ?? p.price ?? 0);
     return sum + (isNaN(v) ? 0 : v);
   }, 0);
-  const totalPendingCount = pendingPaymentsList.length;
+  const totalPendingCount    = pendingPaymentsList.length;
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    navigate("/login");
-  };
+  const handleLogout = () => { localStorage.removeItem("token"); navigate("/login"); };
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-gray-600">Loading dashboard…</p>
+      <div className="min-h-screen bg-navy-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 rounded-2xl brand-gradient-bg flex items-center justify-center mx-auto mb-4 animate-pulse-slow">
+            <FaTachometerAlt className="text-white text-xl" />
+          </div>
+          <p className="text-slate-400 text-sm">Loading your dashboard…</p>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col md:flex-row min-h-screen bg-gray-100">
-      {/* ---------- Sidebar ---------- */}
-      <aside className={`bg-[#1f2a40] text-white w-full md:w-64 flex-shrink-0 ${menuOpen ? "block" : "hidden md:block"}`}>
-        <div className="p-6 flex items-center gap-3 border-b border-gray-700">
-          <img src="/profile.png" alt="user" className="w-12 h-12 rounded-full border" />
-          <div>
-            <p className="font-semibold text-lg">User</p>
-            <p className="text-green-400 text-sm">● Online</p>
-          </div>
-        </div>
+    <div className="flex min-h-screen bg-navy-900">
 
-        <nav className="mt-6 px-4 space-y-1">
-          <Link to="/dashboard" className="block py-3 px-3 hover:bg-[#24304f] rounded transition">
-            Dashboard
-          </Link>
-        </nav>
+      {/* ── SIDEBAR ──────────────────────────────────────── */}
+      <AnimatePresence>
+        {(menuOpen || true) && (
+          <motion.aside
+            className={`
+              fixed md:relative z-40 h-full md:h-auto
+              w-64 flex-shrink-0 flex flex-col
+              border-r border-white/5
+              transition-transform duration-300
+              ${menuOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
+            `}
+            style={{ background: "linear-gradient(180deg, #0F1535 0%, #0A0E2A 100%)" }}
+          >
+            {/* Logo */}
+            <div className="p-6 border-b border-white/5">
+              <Link to="/" className="flex items-center gap-2">
+                <div className="w-9 h-9 rounded-xl brand-gradient-bg flex items-center justify-center font-black text-sm shadow-brand">
+                  AT
+                </div>
+                <span className="text-base font-bold">
+                  <span className="gradient-text">ASAP</span>
+                  <span className="text-white ml-1">Travels</span>
+                </span>
+              </Link>
+            </div>
 
-        <div className="p-4 border-t border-gray-700">
-          <button onClick={handleLogout} className="w-full py-2 bg-red-500 rounded text-sm font-semibold">
-            Logout
-          </button>
-        </div>
-      </aside>
+            {/* Profile */}
+            <div className="p-6 border-b border-white/5">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-full bg-gradient-to-br from-brand-600 to-cyan-500 flex items-center justify-center font-black text-white text-lg shadow-brand">
+                  U
+                </div>
+                <div>
+                  <p className="font-semibold text-white text-sm">My Account</p>
+                  <span className="inline-flex items-center gap-1 text-xs text-green-400">
+                    <span className="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse" />
+                    Online
+                  </span>
+                </div>
+              </div>
+            </div>
 
-      {/* ---------- Main Content ---------- */}
-      <main className="flex-1">
-        {/* Header */}
-        <header className="bg-white shadow px-6 py-4 flex items-center justify-between">
-          <h1 className="text-xl md:text-2xl font-semibold text-gray-700">User Dashboard</h1>
+            {/* Nav */}
+            <nav className="flex-1 p-4 space-y-1">
+              <Link
+                to="/dashboard"
+                className="flex items-center gap-3 py-3 px-4 rounded-xl text-sm font-medium
+                           bg-brand-600/15 text-brand-400 border border-brand-600/20"
+              >
+                <FaTachometerAlt className="w-4 h-4" />
+                Dashboard
+              </Link>
+              <Link
+                to="/profile"
+                className="flex items-center gap-3 py-3 px-4 rounded-xl text-sm font-medium
+                           text-slate-400 hover:text-white hover:bg-white/5 transition-all"
+              >
+                <span className="w-4 h-4 text-center">👤</span>
+                My Profile
+              </Link>
+              <Link
+                to="/my-bookings"
+                className="flex items-center gap-3 py-3 px-4 rounded-xl text-sm font-medium
+                           text-slate-400 hover:text-white hover:bg-white/5 transition-all"
+              >
+                <FaBus className="w-4 h-4" />
+                My Bookings
+              </Link>
+              <Link
+                to="/travel-plans"
+                className="flex items-center gap-3 py-3 px-4 rounded-xl text-sm font-medium
+                           text-slate-400 hover:text-white hover:bg-white/5 transition-all"
+              >
+                <FaHistory className="w-4 h-4" />
+                Travel Plans
+              </Link>
+            </nav>
 
+            {/* Logout */}
+            <div className="p-4 border-t border-white/5">
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-3 w-full py-3 px-4 rounded-xl text-sm font-medium
+                           text-red-400 hover:bg-red-500/10 hover:text-red-300 transition-all"
+              >
+                <FaSignOutAlt className="w-4 h-4" />
+                Sign Out
+              </button>
+            </div>
+          </motion.aside>
+        )}
+      </AnimatePresence>
+
+      {/* Sidebar overlay (mobile) */}
+      {menuOpen && (
+        <div
+          className="fixed inset-0 bg-black/60 z-30 md:hidden"
+          onClick={() => setMenuOpen(false)}
+        />
+      )}
+
+      {/* ── MAIN CONTENT ─────────────────────────────────── */}
+      <main className="flex-1 overflow-y-auto">
+
+        {/* Top bar */}
+        <header className="sticky top-0 z-20 flex items-center justify-between px-6 py-4 border-b border-white/5"
+          style={{ background: "rgba(10, 14, 42, 0.95)", backdropFilter: "blur(20px)" }}
+        >
           <div className="flex items-center gap-3">
-            <button title="Refresh" onClick={fetchDashboardData} className="p-2 rounded bg-gray-100 hover:bg-gray-200">
-              <FaSyncAlt />
+            <button
+              className="md:hidden w-9 h-9 rounded-lg border border-white/10 flex items-center justify-center text-slate-400 hover:text-white transition-colors"
+              onClick={() => setMenuOpen(!menuOpen)}
+            >
+              {menuOpen ? <FaTimes /> : <FaBars />}
             </button>
-            <button className="md:hidden text-gray-700 text-2xl" onClick={() => setMenuOpen(v => !v)}>
-              <FaBars />
-            </button>
+            <div>
+              <h1 className="text-lg font-bold text-white">Dashboard</h1>
+              <p className="text-xs text-slate-500">Welcome back! Here's your overview.</p>
+            </div>
           </div>
+
+          <button
+            title="Refresh data"
+            onClick={fetchDashboardData}
+            className="flex items-center gap-2 text-sm text-slate-400 hover:text-white px-3 py-2 rounded-lg border border-white/10 hover:bg-white/5 transition-all"
+          >
+            <FaSyncAlt className="w-3.5 h-3.5" />
+            <span className="hidden sm:inline">Refresh</span>
+          </button>
         </header>
 
-        {/* ---------- Summary Cards ---------- */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 md:p-8">
-          <SummaryCard icon={<FaBus className="text-yellow-500 text-4xl" />} label="Total Trips" value={totalTrips} />
-          <SummaryCard icon={<FaMoneyBillWave className="text-green-500 text-4xl" />} label="Total Payments" value={`₦${totalPaymentsAmount.toFixed(2)}`} />
-          <SummaryCard icon={<FaClock className="text-blue-500 text-4xl" />} label="Pending Payments" value={totalPendingCount} />
-          <SummaryCard icon={<FaHistory className="text-red-500 text-4xl" />} label="Travel History" value={`${totalTrips} Records`} />
-        </div>
+        <div className="p-6 md:p-8 space-y-8">
 
-        {/* ✅ BOOK A RIDE BUTTON (RESTORED) */}
-        <div className="px-4 md:px-8">
-          <button
+          {/* ── Summary Cards ─────────────────────────── */}
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <SummaryCard
+              icon={<FaBus />}
+              label="Total Trips"
+              value={totalTrips}
+              gradient="bg-gradient-to-br from-brand-600 to-indigo-700"
+              delay={0}
+            />
+            <SummaryCard
+              icon={<FaMoneyBillWave />}
+              label="Total Spent"
+              value={`₦${totalPaymentsAmount.toLocaleString()}`}
+              gradient="bg-gradient-to-br from-emerald-600 to-teal-700"
+              delay={0.1}
+            />
+            <SummaryCard
+              icon={<FaClock />}
+              label="Pending Payments"
+              value={totalPendingCount}
+              gradient="bg-gradient-to-br from-orange-500 to-amber-600"
+              delay={0.2}
+            />
+            <SummaryCard
+              icon={<FaHistory />}
+              label="Travel History"
+              value={`${totalTrips} Records`}
+              gradient="bg-gradient-to-br from-violet-600 to-purple-700"
+              delay={0.3}
+            />
+          </div>
+
+          {/* ── Book a Ride CTA ────────────────────── */}
+          <motion.button
             onClick={() => navigate("/booking")}
-            className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white py-3 px-8 rounded-lg font-semibold shadow mx-auto"
+            className="w-full flex items-center justify-center gap-3 py-4 rounded-2xl font-bold text-white text-base shadow-brand transition-all duration-300 hover:shadow-neon"
+            style={{ background: "linear-gradient(135deg, #3B5BDB 0%, #00D4FF 100%)" }}
+            whileHover={{ scale: 1.01 }}
+            whileTap={{ scale: 0.99 }}
           >
-            <FaPlus />
-            Book a Ride
-          </button>
-        </div>
+            <FaPlus className="w-4 h-4" />
+            Book a New Ride
+          </motion.button>
 
-        {/* ---------- Recent Bookings ---------- */}
-        <div className="p-4 md:p-8">
-          <h2 className="text-lg md:text-xl font-bold mb-4">Recent Bookings</h2>
+          {/* ── Error ─────────────────────────────── */}
+          {error && (
+            <div className="glass-card border-red-500/20 p-4 text-center text-red-400 text-sm">
+              ⚠️ {error}
+            </div>
+          )}
 
-          {error && <div className="mb-4 text-red-600">{error}</div>}
+          {/* ── Recent Bookings ────────────────────── */}
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-bold text-white">Recent Bookings</h2>
+              <Link to="/my-bookings" className="text-sm text-cyan-400 hover:text-cyan-300 transition-colors">
+                View all →
+              </Link>
+            </div>
 
-          <div className="bg-white rounded-xl shadow p-4 overflow-x-auto">
-            {bookings.length === 0 ? (
-              <p className="text-center text-gray-600">No booking records yet.</p>
-            ) : (
-              <table className="w-full min-w-[650px]">
-                <thead>
-                  <tr className="border-b">
-                    <th className="py-2 text-left">Route</th>
-                    <th>Date</th>
-                    <th>Seat</th>
-                    <th>Amount</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {bookings.map((raw, idx) => {
-                    const b = parseBookingItem(raw);
-                    return (
-                      <tr key={b.bookingId || idx} className="border-b">
-                        <td className="py-3">{b.origin} → {b.destination}</td>
-                        <td>{b.date ? new Date(b.date).toLocaleString() : "-"}</td>
-                        <td>{b.seatNumber ?? "-"}</td>
-                        <td>₦{(Number(b.amount) || 0).toLocaleString()}</td>
-                        <td className={`${(b.status || "").toLowerCase() === "paid" ? "text-green-600" : "text-yellow-700"} font-medium`}>
-                          {b.status}
-                        </td>
+            <div className="glass-card overflow-hidden">
+              {bookings.length === 0 ? (
+                <div className="text-center py-16">
+                  <p className="text-4xl mb-3">🚍</p>
+                  <p className="text-slate-400">No bookings yet.</p>
+                  <button
+                    onClick={() => navigate("/booking")}
+                    className="mt-4 btn-primary text-sm px-5 py-2"
+                  >
+                    Book Your First Ride
+                  </button>
+                </div>
+              ) : (
+                <div className="overflow-x-auto">
+                  <table className="w-full min-w-[600px]">
+                    <thead>
+                      <tr className="border-b border-white/5">
+                        {["Route", "Date", "Seat", "Amount", "Status"].map((h) => (
+                          <th key={h} className="py-4 px-6 text-left text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                            {h}
+                          </th>
+                        ))}
                       </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            )}
+                    </thead>
+                    <tbody>
+                      {bookings.map((raw, idx) => {
+                        const b = parseBookingItem(raw);
+                        return (
+                          <motion.tr
+                            key={b.bookingId || idx}
+                            className="border-b border-white/5 hover:bg-white/3 transition-colors"
+                            initial={{ opacity: 0, x: -10 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ delay: idx * 0.04 }}
+                          >
+                            <td className="py-4 px-6">
+                              <span className="font-medium text-white text-sm">
+                                {b.origin}
+                                <span className="text-slate-500 mx-1.5">→</span>
+                                {b.destination}
+                              </span>
+                            </td>
+                            <td className="py-4 px-6 text-sm text-slate-400">
+                              {b.date ? new Date(b.date).toLocaleDateString() : "—"}
+                            </td>
+                            <td className="py-4 px-6 text-sm text-slate-400">
+                              {b.seatNumber ? `Seat ${b.seatNumber}` : "—"}
+                            </td>
+                            <td className="py-4 px-6 text-sm font-semibold text-white">
+                              ₦{(Number(b.amount) || 0).toLocaleString()}
+                            </td>
+                            <td className="py-4 px-6">
+                              <StatusBadge status={b.status} />
+                            </td>
+                          </motion.tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
 
-        {/* ---------- Recent Payments ---------- */}
-        <div className="p-4 md:p-8">
-          <h2 className="text-lg md:text-xl font-bold mb-4">Recent Payments</h2>
+          {/* ── Recent Payments ─────────────────────── */}
+          <div>
+            <div className="flex items-center justify-between mb-4">
+              <h2 className="text-lg font-bold text-white">Recent Payments</h2>
+            </div>
 
-          <div className="bg-white rounded-xl shadow p-4">
-            {payments.length === 0 ? (
-              <p className="text-center text-gray-600">No payments yet.</p>
-            ) : (
-              <ul className="space-y-3">
-                {payments.map((p, i) => (
-                  <li key={p.payment_id ?? p._id ?? i} className="flex justify-between items-center border rounded p-3">
-                    <div>
-                      <p className="font-medium">₦{Number(p.amount ?? p.total ?? p.price ?? 0).toLocaleString()}</p>
-                      <p className="text-sm text-gray-500">Transaction: {p.transaction_id ?? "-"}</p>
-                    </div>
-                    <div className="text-sm text-gray-600">{p.status ?? "paid"}</div>
-                  </li>
-                ))}
-              </ul>
-            )}
+            <div className="glass-card p-0 overflow-hidden">
+              {payments.length === 0 ? (
+                <div className="text-center py-12">
+                  <p className="text-4xl mb-3">💳</p>
+                  <p className="text-slate-400">No payments recorded yet.</p>
+                </div>
+              ) : (
+                <ul className="divide-y divide-white/5">
+                  {payments.map((p, i) => (
+                    <motion.li
+                      key={p.payment_id ?? p._id ?? i}
+                      className="flex items-center justify-between px-6 py-4 hover:bg-white/3 transition-colors"
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ delay: i * 0.04 }}
+                    >
+                      <div className="flex items-center gap-4">
+                        <div className="w-10 h-10 rounded-xl bg-emerald-500/15 border border-emerald-500/20 flex items-center justify-center">
+                          <FaMoneyBillWave className="text-emerald-400 w-4 h-4" />
+                        </div>
+                        <div>
+                          <p className="font-semibold text-white text-sm">
+                            ₦{Number(p.amount ?? p.total ?? p.price ?? 0).toLocaleString()}
+                          </p>
+                          <p className="text-xs text-slate-500">
+                            Txn: {p.transaction_id ?? "—"}
+                          </p>
+                        </div>
+                      </div>
+                      <StatusBadge status={p.status ?? "paid"} />
+                    </motion.li>
+                  ))}
+                </ul>
+              )}
+            </div>
           </div>
+
         </div>
       </main>
-    </div>
-  );
-}
-
-/* ---------- Subcomponents ---------- */
-function SummaryCard({ icon, label, value }) {
-  return (
-    <div className="bg-white p-5 rounded-xl shadow flex flex-col items-center text-center">
-      {icon}
-      <p className="mt-2 text-sm md:text-lg font-medium text-gray-600">{label}</p>
-      <p className="text-xl md:text-3xl font-bold text-gray-800 mt-1">{value}</p>
     </div>
   );
 }

@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -5,3 +7,179 @@
 @import "swiper/css";
 @import "swiper/css/navigation";
 @import "swiper/css/pagination";
+
+/* ── Global Reset & Base ─────────────────────────────────── */
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Inter', system-ui, sans-serif;
+    background-color: #0A0E2A;
+    color: #E2E8F0;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Custom scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #0A0E2A;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #3B5BDB;
+    border-radius: 3px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #00D4FF;
+  }
+}
+
+/* ── Component Utilities ─────────────────────────────────── */
+@layer components {
+
+  /* Glass card */
+  .glass-card {
+    background: rgba(15, 21, 53, 0.6);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(59, 91, 219, 0.2);
+    border-radius: 1rem;
+  }
+
+  .glass-card-light {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 1rem;
+  }
+
+  /* Gradient text */
+  .gradient-text {
+    background: linear-gradient(135deg, #3B5BDB 0%, #00D4FF 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Brand gradient background */
+  .brand-gradient-bg {
+    background: linear-gradient(135deg, #3B5BDB 0%, #00D4FF 100%);
+  }
+
+  /* Input field – dark themed */
+  .dark-input {
+    @apply w-full bg-navy-800 border border-brand-800 text-white placeholder-slate-500
+           rounded-xl px-4 py-3 outline-none transition-all duration-200
+           focus:border-brand-600 focus:ring-2 focus:ring-brand-600/20 focus:bg-navy-700;
+  }
+
+  /* Primary button */
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3
+           text-white font-semibold rounded-xl transition-all duration-300
+           bg-brand-gradient shadow-brand
+           hover:shadow-neon hover:scale-105 active:scale-95;
+    background: linear-gradient(135deg, #3B5BDB 0%, #00D4FF 100%);
+  }
+
+  /* Secondary button */
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-3
+           text-white font-semibold rounded-xl transition-all duration-300
+           border border-brand-600/50 bg-transparent
+           hover:bg-brand-600/10 hover:border-brand-600 active:scale-95;
+  }
+
+  /* Stat badge */
+  .stat-badge {
+    @apply glass-card px-4 py-2 flex items-center gap-2 text-sm font-medium;
+  }
+
+  /* Section heading */
+  .section-heading {
+    @apply text-3xl md:text-4xl font-extrabold;
+  }
+
+  /* Nav link */
+  .nav-link {
+    @apply text-slate-300 hover:text-white transition-colors duration-200
+           relative after:absolute after:bottom-0 after:left-0 after:h-0.5
+           after:w-0 after:bg-cyan-neon after:transition-all after:duration-300
+           hover:after:w-full;
+  }
+}
+
+/* ── Animations ──────────────────────────────────────────── */
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-10px); }
+}
+
+@keyframes gradientShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% 0; }
+  100% { background-position:  200% 0; }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+.animate-gradient {
+  background-size: 200% 200%;
+  animation: gradientShift 6s ease infinite;
+}
+
+.loading-shimmer {
+  background: linear-gradient(90deg, #1A2150 25%, #243070 50%, #1A2150 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+/* ── Ticket Styles ───────────────────────────────────────── */
+.ticket-perforation {
+  position: relative;
+}
+
+.ticket-perforation::before {
+  content: '';
+  position: absolute;
+  left: -12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  background: #04071A;
+  border-radius: 50%;
+  z-index: 10;
+}
+
+.ticket-perforation::after {
+  content: '';
+  position: absolute;
+  right: -12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 24px;
+  height: 24px;
+  background: #04071A;
+  border-radius: 50%;
+  z-index: 10;
+}
