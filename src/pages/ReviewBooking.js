@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { motion } from "framer-motion";
+import { ArrowRight, Clock, Users, ShieldCheck } from "lucide-react";
 
 export default function ReviewBookingPage() {
   const [booking, setBooking] = useState(null);
@@ -12,7 +14,6 @@ export default function ReviewBookingPage() {
 
   const token = localStorage.getItem("token");
   const API_BASE = "https://transport-2-0imo.onrender.com/api";
-
   const bookingId = location.state?.bookingId;
 
   useEffect(() => {
@@ -27,8 +28,6 @@ export default function ReviewBookingPage() {
         const res = await axios.get(`${API_BASE}/bookings/${bookingId}/`, {
           headers: { Authorization: `Bearer ${token}` },
         });
-
-        console.log("Loaded booking:", res.data);
         setBooking(res.data);
       } catch (err) {
         console.error("Error fetching booking:", err);
@@ -42,86 +41,155 @@ export default function ReviewBookingPage() {
   }, [bookingId, token]);
 
   if (loading) {
-    return <p className="text-center mt-10 text-gray-600">Loading booking...</p>;
+    return (
+      <div className="min-h-screen bg-navy-900 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 rounded-2xl brand-gradient-bg flex items-center justify-center mx-auto mb-4 animate-pulse-slow">
+            <span className="text-2xl">📋</span>
+          </div>
+          <p className="text-slate-400">Loading booking details...</p>
+        </div>
+      </div>
+    );
   }
 
   if (error) {
     return (
-      <p className="text-center mt-10 text-red-600 font-medium">{error}</p>
-    );
-  }
-
-  if (!booking) {
-    return (
-      <p className="text-center mt-10 text-gray-500">No booking found.</p>
+      <div className="min-h-screen bg-navy-900 flex items-center justify-center p-6">
+        <div className="glass-card p-10 max-w-sm w-full text-center">
+          <p className="text-4xl mb-4">⚠️</p>
+          <p className="text-red-400 font-semibold mb-2">{error}</p>
+          <button onClick={() => navigate("/booking")} className="btn-primary w-full py-3 mt-4">
+            Go to Booking
+          </button>
+        </div>
+      </div>
     );
   }
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-50 px-4">
-      <div className="w-full max-w-2xl bg-white rounded-2xl shadow-lg p-8 md:p-12">
-        
-        {/* Title */}
-        <h2 className="text-2xl md:text-3xl font-bold text-blue-700 mb-8 text-center">
-          Review Your Booking
-        </h2>
+    <div
+      className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden bg-navy-900"
+      style={{ background: "linear-gradient(135deg, #04071A 0%, #0A0E2A 100%)" }}
+    >
+      {/* Background orbs */}
+      <div className="absolute top-1/4 -left-32 w-80 h-80 rounded-full bg-brand-600/15 blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-1/4 -right-32 w-80 h-80 rounded-full bg-cyan-neon/8 blur-[100px] pointer-events-none" />
 
-        {/* Booking Details */}
-        <div className="space-y-5 text-gray-700 text-lg md:text-xl">
+      <motion.div
+        className="w-full max-w-xl relative"
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, ease: "easeOut" }}
+      >
+        {/* Back button */}
+        <button
+          onClick={() => navigate(-1)}
+          className="flex items-center gap-2 text-slate-400 hover:text-white text-sm mb-6 transition-colors"
+        >
+          ← Back
+        </button>
 
-          <p>
-            <span className="font-semibold">Route:</span>{" "}
-            {booking.ride?.origin} → {booking.ride?.destination}
-          </p>
-
-          <p>
-            <span className="font-semibold">Departure:</span>{" "}
-            {booking.ride?.departure_time
-              ? new Date(booking.ride.departure_time).toLocaleString()
-              : "No time"}
-          </p>
-
-          <p>
-            <span className="font-semibold">Seat Count:</span>{" "}
-            {booking.seat_count}
-          </p>
-
-          <p>
-            <span className="font-semibold">Total Price:</span>{" "}
-            ₦{booking.total_price}
-          </p>
-
-          <p>
-            <span className="font-semibold">Status:</span>{" "}
-            <span
-              className={`px-3 py-1 rounded-full text-sm font-medium ${
-                booking.status === "paid"
-                  ? "bg-green-200 text-green-800"
-                  : "bg-yellow-200 text-yellow-800"
-              }`}
-            >
-              {booking.status}
-            </span>
-          </p>
-        </div>
-
-        {/* Pay Now */}
-        <div className="mt-10 flex justify-center">
-          <button
-            onClick={() =>
-              navigate("/payment", {
-                state: {
-                  bookingId: bookingId,
-                  amount: booking.total_price,
-                },
-              })
-            }
-            className="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white font-semibold text-lg md:text-xl px-10 py-4 rounded-2xl shadow-md transition-all"
+        <div className="glass-card overflow-hidden">
+          {/* Header */}
+          <div
+            className="p-6 text-center"
+            style={{ background: "linear-gradient(135deg, #1E3A8A 0%, #3B5BDB 100%)" }}
           >
-            Pay Now
-          </button>
+            <div className="w-16 h-16 rounded-2xl bg-white/15 flex items-center justify-center mx-auto mb-3 text-3xl">
+              📋
+            </div>
+            <h2 className="text-2xl font-black text-white mb-1">Review Your Booking</h2>
+            <p className="text-blue-200 text-sm">Please verify details before proceeding to payment</p>
+          </div>
+
+          {/* Details Body */}
+          <div className="p-8 space-y-6">
+            {/* Route */}
+            <div className="p-5 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-between">
+              <div>
+                <p className="text-xs text-slate-500 uppercase tracking-wider mb-1">From</p>
+                <p className="text-lg font-bold text-white">{booking?.ride?.origin}</p>
+              </div>
+              <div className="flex flex-col items-center flex-1 px-4 text-slate-500">
+                <span className="text-xs">🚍</span>
+                <div className="w-full h-px border-t border-dashed border-white/20 my-1" />
+              </div>
+              <div className="text-right">
+                <p className="text-xs text-slate-500 uppercase tracking-wider mb-1">To</p>
+                <p className="text-lg font-bold text-white">{booking?.ride?.destination}</p>
+              </div>
+            </div>
+
+            {/* Meta Table */}
+            <div className="space-y-4">
+              <div className="flex justify-between py-3 border-b border-white/5 text-sm">
+                <span className="text-slate-400 flex items-center gap-2">
+                  <Clock className="w-4 h-4 text-brand-400" /> Departure Time
+                </span>
+                <span className="text-white font-medium">
+                  {booking?.ride?.departure_time
+                    ? new Date(booking.ride.departure_time).toLocaleString()
+                    : "Not Specified"}
+                </span>
+              </div>
+              <div className="flex justify-between py-3 border-b border-white/5 text-sm">
+                <span className="text-slate-400 flex items-center gap-2">
+                  <Users className="w-4 h-4 text-brand-400" /> Seat Number
+                </span>
+                <span className="text-white font-mono font-bold bg-navy-800 border border-white/10 px-3 py-1 rounded-lg">
+                  Seat {booking?.seat_number || "Assigned"}
+                </span>
+              </div>
+              <div className="flex justify-between py-3 border-b border-white/5 text-sm">
+                <span className="text-slate-400 flex items-center gap-2">
+                  <ShieldCheck className="w-4 h-4 text-brand-400" /> Booking Status
+                </span>
+                <span
+                  className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold border ${
+                    booking?.status === "paid"
+                      ? "bg-green-500/10 border-green-500/30 text-green-400"
+                      : "bg-yellow-500/10 border-yellow-500/30 text-yellow-400"
+                  }`}
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-current" />
+                  {booking?.status}
+                </span>
+              </div>
+            </div>
+
+            {/* Total Price */}
+            <div
+              className="rounded-2xl p-6 text-center"
+              style={{ background: "linear-gradient(135deg, rgba(59,91,219,0.15) 0%, rgba(0,212,255,0.05) 100%)", border: "1px solid rgba(59,91,219,0.2)" }}
+            >
+              <p className="text-slate-400 text-sm mb-1">Total Trip Fare</p>
+              <p className="text-4xl font-black gradient-text">
+                ₦{(booking?.total_price || 0).toLocaleString()}
+              </p>
+            </div>
+
+            {/* Checkout CTA */}
+            <motion.button
+              onClick={() =>
+                navigate("/payment", {
+                  state: {
+                    bookingId: bookingId,
+                    amount: booking.total_price,
+                  },
+                })
+              }
+              className="w-full py-4 font-bold text-base text-white rounded-xl transition-all duration-300 hover:shadow-neon hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2"
+              style={{ background: "linear-gradient(135deg, #3B5BDB 0%, #00D4FF 100%)" }}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+            >
+              Proceed to Payment <ArrowRight className="w-4 h-4" />
+            </motion.button>
+          </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 }
+

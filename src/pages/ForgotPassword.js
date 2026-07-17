@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
-import Navbar from '../components/Navbar';
+import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { FaEnvelope, FaArrowLeft } from 'react-icons/fa';
 
 const ForgotPassword = () => {
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -35,46 +38,89 @@ const ForgotPassword = () => {
   };
 
   return (
-    <>
-      <Navbar />
-      <div className="min-h-screen flex items-center justify-center bg-blue-50 p-4">
-        <div className="bg-white p-8 shadow-lg rounded-xl w-full max-w-md">
-          <h2 className="text-xl font-bold mb-4 text-blue-700 text-center">
-            Forgot Password
-          </h2>
+    <div
+      className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden bg-navy-900 text-white"
+      style={{ background: "linear-gradient(135deg, #04071A 0%, #0A0E2A 100%)" }}
+    >
+      {/* Background orbs */}
+      <div className="absolute top-1/4 -left-32 w-80 h-80 rounded-full bg-brand-600/15 blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-1/4 -right-32 w-80 h-80 rounded-full bg-cyan-neon/8 blur-[100px] pointer-events-none" />
 
-          {message && (
-            <p className="text-center text-sm text-green-600 mb-2">{message}</p>
-          )}
-          {error && (
-            <p className="text-center text-sm text-red-600 mb-2">{error}</p>
-          )}
+      <motion.div
+        className="w-full max-w-md relative"
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, ease: "easeOut" }}
+      >
+        {/* Back button */}
+        <button
+          onClick={() => navigate('/login')}
+          className="flex items-center gap-2 text-slate-400 hover:text-white text-sm mb-6 transition-colors"
+        >
+          <FaArrowLeft className="w-3.5 h-3.5" /> Back to Login
+        </button>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <input
-              type="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={e => setEmail(e.target.value)}
-              required
-              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-400 outline-none"
-            />
+        <div className="glass-card overflow-hidden">
+          {/* Header */}
+          <div
+            className="p-6 text-center"
+            style={{ background: "linear-gradient(135deg, #1E3A8A 0%, #3B5BDB 100%)" }}
+          >
+            <div className="w-16 h-16 rounded-2xl bg-white/15 flex items-center justify-center mx-auto mb-3 text-3xl">
+              🔑
+            </div>
+            <h2 className="text-2xl font-black text-white mb-1">Forgot Password</h2>
+            <p className="text-blue-200 text-sm">Reset your password securely</p>
+          </div>
 
-            <button
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="p-8 space-y-5">
+            {message && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-green-500/10 border border-green-500/30 text-green-400 px-4 py-3 rounded-xl text-sm"
+              >
+                ✅ {message}
+              </motion.div>
+            )}
+            {error && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 rounded-xl text-sm"
+              >
+                ⚠️ {error}
+              </motion.div>
+            )}
+
+            <div>
+              <label className="block text-sm font-medium text-slate-300 mb-2 flex items-center gap-2">
+                <FaEnvelope className="text-cyan-neon" /> Email Address
+              </label>
+              <input
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+                required
+                className="dark-input"
+              />
+            </div>
+
+            <motion.button
               type="submit"
               disabled={loading}
-              className={`w-full py-2 rounded-lg text-white transition ${
-                loading
-                  ? 'bg-blue-300 cursor-not-allowed'
-                  : 'bg-blue-600 hover:bg-blue-700'
-              }`}
+              className="btn-primary w-full py-4 text-base mt-2 disabled:opacity-60 disabled:cursor-not-allowed"
+              whileHover={{ scale: loading ? 1 : 1.02 }}
+              whileTap={{ scale: loading ? 1 : 0.98 }}
             >
-              {loading ? 'Please wait...' : 'Send Reset Code'}
-            </button>
+              {loading ? 'Please wait...' : 'Send Reset Link →'}
+            </motion.button>
           </form>
         </div>
-      </div>
-    </>
+      </motion.div>
+    </div>
   );
 };
 

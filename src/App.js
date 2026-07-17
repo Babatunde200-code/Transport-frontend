@@ -17,6 +17,9 @@ import MyBookings from "./pages/MyBookings";
 import ReviewBooking from "./pages/ReviewBooking";
 import TicketPage from "./pages/TicketPage";
 
+import CreateTravelPlan from "./pages/CreateTravelPlan";
+import EditTravelPlan from "./pages/EditTravelPlan";
+
 // 👨‍💼 Admin features
 import SignupAdmin from "./Admin/Signup_admin";
 import LoginAdmin from "./Admin/Login_admin";
@@ -74,6 +77,22 @@ function App() {
           element={
             <ProtectedRoute>
               <DriverTravelPlans />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/travel-plans/create"
+          element={
+            <ProtectedRoute>
+              <CreateTravelPlan />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/travel-plans/:id/edit"
+          element={
+            <ProtectedRoute>
+              <EditTravelPlan />
             </ProtectedRoute>
           }
         />

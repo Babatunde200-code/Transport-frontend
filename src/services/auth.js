@@ -2,11 +2,11 @@
 import { jwtDecode } from 'jwt-decode';
 
 export const getAuthToken = () => {
-  return localStorage.getItem('access');
+  return localStorage.getItem('token') || localStorage.getItem('access');
 };
 
 export const getAccessToken = () => {
-  return localStorage.getItem('access');
+  return localStorage.getItem('token') || localStorage.getItem('access');
 };
 
 export const getRefreshToken = () => {
@@ -29,3 +29,4 @@ export const getUserEmail = () => {
   const user = getUserInfo();
   return user?.email || '';
 };
+

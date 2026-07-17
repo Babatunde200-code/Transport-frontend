@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import Navbar from '../components/Navbar';
+import { motion } from 'framer-motion';
+import { FaLock, FaCheck } from 'react-icons/fa';
 
 const ResetPassword = () => {
   const { uid, token } = useParams();
@@ -43,59 +44,93 @@ const ResetPassword = () => {
   };
 
   return (
-    <>
-      <Navbar />
+    <div
+      className="min-h-screen flex items-center justify-center p-6 relative overflow-hidden bg-navy-900 text-white"
+      style={{ background: "linear-gradient(135deg, #04071A 0%, #0A0E2A 100%)" }}
+    >
+      {/* Background orbs */}
+      <div className="absolute top-1/4 -left-32 w-80 h-80 rounded-full bg-brand-600/15 blur-[100px] pointer-events-none" />
+      <div className="absolute bottom-1/4 -right-32 w-80 h-80 rounded-full bg-cyan-neon/8 blur-[100px] pointer-events-none" />
 
-      <div className="min-h-screen flex items-center justify-center bg-blue-50 p-4">
-        <div className="bg-white p-8 shadow-lg rounded-xl w-full max-w-md">
+      <motion.div
+        className="w-full max-w-md relative"
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7, ease: "easeOut" }}
+      >
+        <div className="glass-card overflow-hidden">
+          {/* Header */}
+          <div
+            className="p-6 text-center"
+            style={{ background: "linear-gradient(135deg, #1E3A8A 0%, #3B5BDB 100%)" }}
+          >
+            <div className="w-16 h-16 rounded-2xl bg-white/15 flex items-center justify-center mx-auto mb-3 text-3xl">
+              🔒
+            </div>
+            <h2 className="text-2xl font-black text-white mb-1">Reset Password</h2>
+            <p className="text-blue-200 text-sm">Choose a strong new password for your account</p>
+          </div>
 
-          <h2 className="text-xl font-bold mb-4 text-blue-700 text-center">
-            Reset Your Password
-          </h2>
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="p-8 space-y-5">
+            {message && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-red-500/10 border border-red-500/30 text-red-400 px-4 py-3 rounded-xl text-sm"
+              >
+                ⚠️ {message}
+              </motion.div>
+            )}
 
-          {message && (
-            <p className="text-sm text-center text-red-600 mb-3">{message}</p>
-          )}
+            {success && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="bg-green-500/10 border border-green-500/30 text-green-400 px-4 py-3 rounded-xl text-sm"
+              >
+                ✅ {success}
+              </motion.div>
+            )}
 
-          {success && (
-            <p className="text-sm text-center text-green-600 mb-3">{success}</p>
-          )}
+            <div>
+              <label className="block text-sm font-medium text-slate-300 mb-2 flex items-center gap-2">
+                <FaLock className="text-cyan-neon" /> New Password
+              </label>
+              <input
+                type="password"
+                placeholder="••••••••"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="dark-input"
+              />
+            </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <input
-              type="password"
-              placeholder="Enter new password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="w-full p-3 border rounded-lg focus:ring-2 focus:ring-blue-400"
-            />
-
-            <button
+            <motion.button
               type="submit"
               disabled={loading}
-              className={`w-full py-2 rounded-lg text-white transition
-                ${loading ? 'bg-blue-400' : 'bg-blue-600 hover:bg-blue-700'}
-              `}
+              className="btn-primary w-full py-4 text-base mt-2 disabled:opacity-60 disabled:cursor-not-allowed"
+              whileHover={{ scale: loading ? 1 : 1.02 }}
+              whileTap={{ scale: loading ? 1 : 0.98 }}
             >
-              {loading ? 'Processing...' : 'Reset Password'}
-            </button>
+              {loading ? 'Processing...' : 'Reset Password →'}
+            </motion.button>
           </form>
 
           {success && (
-            <div className="text-center mt-4">
-              <a
-                href="/login"
-                className="inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
+            <div className="px-8 pb-8 text-center">
+              <button
+                onClick={() => navigate('/login')}
+                className="btn-secondary w-full py-3 text-sm flex items-center justify-center gap-2"
               >
-                Go to Login
-              </a>
+                Go to Login <FaCheck className="text-green-400" />
+              </button>
             </div>
           )}
-
         </div>
-      </div>
-    </>
+      </motion.div>
+    </div>
   );
 };
 
