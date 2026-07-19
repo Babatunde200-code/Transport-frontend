@@ -156,6 +156,14 @@ export default function ReviewBookingPage() {
                   {booking?.status}
                 </span>
               </div>
+              <div className="flex justify-between py-3 border-b border-white/5 text-sm">
+                <span className="text-slate-400 flex items-center gap-2">
+                  <span className="text-brand-400 font-bold">₦</span> Trip Price
+                </span>
+                <span className="text-white font-bold">
+                  ₦{Number(booking?.total_price || booking?.amount || 0).toLocaleString()}
+                </span>
+              </div>
             </div>
 
             {/* Total Price */}

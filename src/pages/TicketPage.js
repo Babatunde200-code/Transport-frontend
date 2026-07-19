@@ -85,6 +85,7 @@ export default function TicketPage() {
     { label: "Departure",       value: new Date(booking.ride?.departure_time).toLocaleString() },
     { label: "Seat Number",     value: booking.seat_number || "To be assigned" },
     { label: "Pickup Location", value: booking.pickup_location || "—" },
+    { label: "Price / Fare",    value: `₦${Number(booking.total_price || booking.amount || 0).toLocaleString()}` },
     { label: "Booking ID",      value: `#${booking.id}` },
     { label: "Company",         value: "ASAP Travels" },
   ];
